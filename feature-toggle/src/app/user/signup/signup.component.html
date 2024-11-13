@@ -1,0 +1,54 @@
+<div class="mb-4 h2 text-sucess text-start">
+    Sign up
+</div>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <input class="form-control bg-body-secondary" placeholder="Full Name" formControlName="fullName">
+        <div class="error-feedback"
+            *ngIf="hasDisplayableError('fullName') && userForm.controls['fullName'].hasError('required')">
+            Please enter your full name
+        </div>
+    </div>
+    <div class="mb-3">
+        <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
+        <div class="error-feedback" *ngIf="hasDisplayableError('email')">
+            <div *ngIf="userForm.controls['email'].hasError('required')">
+                Please enter your email address
+            </div>
+            <div *ngIf="userForm.controls['email'].hasError('email')">
+                Please enter your valid email address
+            </div>
+
+        </div>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control bg-body-secondary" placeholder="Password" formControlName="password">
+        <div class="error-feedback" *ngIf="hasDisplayableError('password')">
+            <div *ngIf="userForm.controls['password'].hasError('required')">
+                Please enter your password.
+            </div>
+            <div *ngIf="userForm.controls['password'].hasError('minlength')">
+                Atleast 6 characters required.
+            </div>
+            <div *ngIf="userForm.controls['password'].hasError('pattern')">
+                One or more special character(s).
+            </div>
+
+        </div>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control bg-body-secondary" placeholder="Confirm Password"
+            formControlName="confirmPassword">
+
+        <div class="error-feedback" *ngIf="hasDisplayableError('confirmPassword') && userForm.controls['confirmPassword'].hasError('passwordMismatch')">
+           
+            Password doesn't match
+
+        </div>
+    </div>
+    <button type="submit" class="btn w-100 rounded-3">
+        Register
+    </button>
+    <p class="mt-3 text-center">Already have an account? <a routerLink="/user/login">Login</a></p>
+
+</form>
