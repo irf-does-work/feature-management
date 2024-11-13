@@ -22,8 +22,20 @@ namespace FeatureToggle.Application.Requests.Commands.UserCommands
         {
             
             User newUser = new User(request.Email,request.Name);
-            var result = await _userManager.CreateAsync(newUser, request.Password);
 
+            if (!request.Email.EndsWith("@geekywolf.com"))
+            {
+                return new AddUserResponse
+                {
+                    Success = false,
+                    Message = "Failed to create user",
+                    Errors = new List<string> { "EMAIL IS NOT A GW MAIL!" }
+                };
+            }
+
+            var result = await _userManager.CreateAsync(newUser, request.Password);
+            
+            
             if (result.Succeeded)
             {
                 
