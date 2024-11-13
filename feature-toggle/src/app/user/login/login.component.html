@@ -5,11 +5,24 @@
 
     <div class="mb-3">
         <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
-        <div class="error-feedback"
-            *ngIf="hasDisplayableError('email') && userForm.controls['email'].hasError('required')">
 
-            Please enter your email address.
+        <!-- <div class="error-feedback"
+            *ngIf="hasDisplayableError('email') && (userForm.controls['email'].hasError('required') || userForm.controls['email'].hasError('pattern'))">
+            <div>
+                Please enter your email address.
+            </div>
+            
 
+        </div> -->
+
+        <div class="error-feedback" 
+        *ngIf="hasDisplayableError('email')">
+            <div *ngIf="userForm.controls['email'].hasError('required')">
+                Please enter your email address
+            </div>
+            <div *ngIf="userForm.controls['email'].hasError('email') || userForm.controls['email'].hasError('pattern')">
+                Please enter your valid email address
+            </div>
         </div>
     </div>
     <div class="mb-3">

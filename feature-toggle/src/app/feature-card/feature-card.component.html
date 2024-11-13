@@ -1,335 +1,62 @@
-<!-- Recipe Cards -->
-<div class="m-5">
-    <!-- <div *ngIf="!loading"> -->
+<div class="mx-5 mt-5 mb-4 ">
     <div class="row">
-        <!-- <div *ngFor="let recipe of filteredRecipes" class="col-md-4 mb-3"> -->
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
+        <div *ngFor="let feature of paginatedFeatures" class="col-md-3 mb-3">
+            <div class="card" [ngClass]="{
+            'status-border-feature': feature.type === 'feature',
+            'status-border-active': feature.type === 'release' && feature.status === 'enabled',
+            'status-border-inactive': feature.type === 'release' && feature.status === 'disabled'
+          }">
                 <div class="card-body">
-                    <h4 class="card-title">Invoice Generation</h4>
+                    <h4 class="card-title">{{ feature.name }}</h4>
+                    <p class="card-text">{{ feature.type === 'feature' ? 'Feature Toggle' : 'Release Toggle' }}</p>
 
-                    <p class="card-text">Release Toggle</p>
+                    <!-- Feature Toggle Buttons -->
+                    <div *ngIf="feature.type === 'feature'">
+                        <button type="button" class="btn btn-primary" (click)="openDrawer()">Enable</button>
+                        <button type="button" class="btn btn-primary ms-2" (click)="closeDrawer()">Disable</button>
 
+                    </div>
 
-                    <button type="button" class="btn btn-danger">Disable</button>
-
+                    <!-- Release Toggle Button -->
+                    <div *ngIf="feature.type === 'release'">
+                        <button type="button"
+                            [ngClass]="feature.status === 'enabled' ? 'btn btn-danger' : 'btn btn-success'"
+                            (click)="feature.status = feature.status === 'enabled' ? 'disabled' : 'enabled'">
+                            {{ feature.status === 'enabled' ? 'Disable' : 'Enable' }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-feature">
-                <div class="card-body">
-                    <h4 class="card-title">Tax Calculation</h4>
-
-                    <p class="card-text">Feature Toggle</p>
-                    <button type="button" class="btn btn-primary" (click)="openDrawer()">Enable</button>
-                    <button type="button" class="btn btn-primary ms-2" (click)="closeDrawer()">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-inactive">
-                <div class="card-body">
-                    <h4 class="card-title">Fraud Detection</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-success">Enable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Transaction History</h4>
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Mobile Payment</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-inactive">
-                <div class="card-body">
-                    <h4 class="card-title">Currency Exchange</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-success">Enable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Invoice Generation</h4>
-
-                    <p class="card-text">Release Toggle</p>
-
-
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-feature">
-                <div class="card-body">
-                    <h4 class="card-title">Tax Calculation</h4>
-
-                    <p class="card-text">Feature Toggle</p>
-                    <button type="button" class="btn btn-primary">Enable</button>
-                    <button type="button" class="btn btn-primary ms-2">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-inactive">
-                <div class="card-body">
-                    <h4 class="card-title">Fraud Detection</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-success">Enable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Transaction History</h4>
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Mobile Payment</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-inactive">
-                <div class="card-body">
-                    <h4 class="card-title">Currency Exchange</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-success">Enable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Invoice Generation</h4>
-
-                    <p class="card-text">Release Toggle</p>
-
-
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-feature">
-                <div class="card-body">
-                    <h4 class="card-title">Tax Calculation</h4>
-
-                    <p class="card-text">Feature Toggle</p>
-                    <button type="button" class="btn btn-primary">Enable</button>
-                    <button type="button" class="btn btn-primary ms-2">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-inactive">
-                <div class="card-body">
-                    <h4 class="card-title">Fraud Detection</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-success">Enable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Transaction History</h4>
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-active">
-                <div class="card-body">
-                    <h4 class="card-title">Mobile Payment</h4>
-
-
-                    <p class="card-text">Release Toggle</p>
-                    <button type="button" class="btn btn-danger">Disable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="col-md-3 mb-3">
-            <div class="card status-border-inactive">
-                <div class="card-body">
-                    <h4 class="card-title">Currency Exchange</h4>
-
-
-                    <p class="card-text">Release Toggle</p> <!-- Cooking duration -->
-                    <button type="button" class="btn btn-success">Enable</button>
-
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <app-drawer></app-drawer>
-        <!-- </div> -->
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('drawerToggle').addEventListener('click', function () {
-            document.getElementById('drawer').classList.add('open');
-            document.getElementById('drawerOverlay').classList.add('active');
-        });
 
-        document.getElementById('closeDrawer').addEventListener('click', function () {
-            document.getElementById('drawer').classList.remove('open');
-            document.getElementById('drawerOverlay').classList.remove('active');
-        });
 
-        document.getElementById('drawerOverlay').addEventListener('click', function () {
-            document.getElementById('drawer').classList.remove('open');
-            document.getElementById('drawerOverlay').classList.remove('active');
-        });
-    </script>
+    <!-- Drawer Component -->
+    <div *ngIf="isOpen"><app-drawer></app-drawer></div>
+</div>
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center pb-2">
+        <!-- Previous Button -->
+        <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" href="#" (click)="previousPage();$event.preventDefault()" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <!-- Page Numbers -->
+        <li class="page-item" *ngFor="let page of [].constructor(totalPages()); let i = index"
+            [class.active]="currentPage === i + 1">
+            <a class="page-link" href="#" (click)="goToPage(i + 1);$event.preventDefault()">{{ i + 1 }}</a>
+        </li>
+
+        <!-- Next Button -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages()">
+            <a class="page-link" href="#" (click)="nextPage();$event.preventDefault()" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

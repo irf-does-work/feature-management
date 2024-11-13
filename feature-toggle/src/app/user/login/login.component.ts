@@ -21,7 +21,7 @@ export class LoginComponent {
     this.userForm = this.fb.group<IuseForm>({
       email: new FormControl(
         '',
-        [Validators.required,]
+        [Validators.required,Validators.pattern(/^[a-zA-Z0-9._%+-]+@geekywolf\.com$/)]
       ),
       password: new FormControl('', Validators.required)
     });

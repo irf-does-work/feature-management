@@ -34,7 +34,7 @@ export class SignupComponent {
     this.userForm = this.fb.group<IuseForm>({
       fullName: new FormControl('', Validators.required),
       email: new FormControl('', [
-        Validators.required,Validators.email,
+        Validators.required,Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@geekywolf\.com$/)
         //Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
       ]),
       password: new FormControl('', [

@@ -15,10 +15,9 @@
             <div *ngIf="userForm.controls['email'].hasError('required')">
                 Please enter your email address
             </div>
-            <div *ngIf="userForm.controls['email'].hasError('email')">
+            <div *ngIf="userForm.controls['email'].hasError('email') || userForm.controls['email'].hasError('pattern')">
                 Please enter your valid email address
             </div>
-
         </div>
     </div>
     <div class="mb-3">

@@ -31,7 +31,7 @@ export class FeatureService {
     }
   }
 
-
+public open:boolean=false;
 
 
   

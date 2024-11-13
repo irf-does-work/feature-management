@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FeatureService } from '../feature.service';
 import { CommonModule } from '@angular/common';
 
@@ -15,8 +15,12 @@ export class DrawerComponent{
 
   constructor(public drawerService: FeatureService) {}
 
+
+
+
   ngOnInit(): void {
     this.drawerService.drawerOpen$.subscribe(() => {
+      console.log('opened');
       this.isOpen = true;
     });
 
@@ -24,6 +28,22 @@ export class DrawerComponent{
       this.isOpen = false;
     });
   }
+
+  openDrawer() {
+    this.drawerService.open=true;
+    console.log(this.drawerService.open)
+
+    this.drawerService.openDrawer();
+    
+  }
+
+  closeDrawer() {
+    this.drawerService.open=false;
+    console.log(this.drawerService.open)
+
+    this.drawerService.closeDrawer();
+  }
+
 
   toggleDrawer() {
     if (this.isOpen) {
