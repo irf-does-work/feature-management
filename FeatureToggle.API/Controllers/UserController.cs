@@ -21,5 +21,7 @@ namespace FeatureToggle.API.Controllers
         {
             return await _mediator.Send(command);
         }
+
+        [HttpGet("signin")]
     }
 }
