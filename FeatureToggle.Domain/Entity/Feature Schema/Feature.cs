@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace FeatureToggle.Domain.Entity.Custom_Schema
 {
-    internal class BusinessFeatureFlag
+    public class Feature
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public List<BusinessFeatureFlag> BusinessFeatures { get; set; }
     }
 }
