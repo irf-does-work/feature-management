@@ -5,9 +5,21 @@
 
     <div class="mb-3">
         <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
+        <div class="error-feedback"
+            *ngIf="hasDisplayableError('email') && userForm.controls['email'].hasError('required')">
+
+            Please enter your email address.
+
+        </div>
     </div>
     <div class="mb-3">
         <input type="password" class="form-control bg-body-secondary" placeholder="Password" formControlName="password">
+        <div class="error-feedback"
+            *ngIf="hasDisplayableError('password') && userForm.controls['password'].hasError('required')">
+
+            Please enter your password.
+
+        </div>
     </div>
 
     <button type="submit" class="btn w-100 rounded-3">
