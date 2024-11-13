@@ -20,10 +20,15 @@ builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<UserContext>()
     .AddDefaultTokenProviders();
 
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+!#$%^&*()";
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.@";
     options.User.RequireUniqueEmail = true; 
+    options.Password.RequireNonAlphanumeric = false;           
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireDigit = false;
 });
 
 
