@@ -10,6 +10,15 @@ namespace FeatureToggle.Domain.Entity.User_Schema
     public class User : IdentityUser
     {
         public string Name { get; set; }
-        public List<Log>? Logs { get; set; }
+        public List<Log> Logs { get; set; }
+
+        public User() { }
+
+        public User(string email, string name)
+        {
+            Email = email;
+            Name = name;
+            UserName = email;
+        }
     }
 }
