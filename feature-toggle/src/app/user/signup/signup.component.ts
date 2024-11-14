@@ -3,18 +3,24 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { FeatureService } from '../../feature.service';
 import { Router, RouterLink } from '@angular/router';
 import { ValidatorFn, ValidationErrors,ReactiveFormsModule} from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { SignUpForm } from '../../interface/feature.interface';
 
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterLink,CommonModule],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
-  userForm: FormGroup;
+  userForm : FormGroup<SignUpForm>;
+  // userForm: FormGroup<{
+  //   fullName: FormControl<string | null>;
+  //   email: FormControl<string | null>;
+  //   password: FormControl<string | null>;
+  //   confirmPassword: FormControl<string | null>;
+  // }>;
 
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl) : null => {
@@ -31,7 +37,7 @@ export class SignupComponent {
 
   constructor(private fb: FormBuilder, private userService: FeatureService, private router: Router) {
 
-    this.userForm = this.fb.group<IuseForm>({
+    this.userForm = this.fb.group({
       fullName: new FormControl('', Validators.required),
       email: new FormControl('', [
         Validators.required,Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@geekywolf\.com$/)
@@ -94,12 +100,4 @@ export class SignupComponent {
       return Boolean(control?.invalid) && (this.isSubmitted || Boolean(control?.touched) || Boolean(control?.dirty))
 
   }
-}
-
-
-interface IuseForm {
-  fullName: FormControl<string | null>;
-  email: FormControl<string | null>;
-  password: FormControl<string | null>;
-  confirmPassword: FormControl<string | null>;
 }

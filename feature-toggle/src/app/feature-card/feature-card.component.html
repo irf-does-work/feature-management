@@ -1,39 +1,45 @@
 <div class="mx-5 mt-5 mb-4 ">
     <div class="row">
-        <div *ngFor="let feature of paginatedFeatures" class="col-md-3 mb-3">
+
+        @for (feature of paginatedFeatures; track feature) {
+        <div class="col-md-3 mb-3">
             <div class="card" [ngClass]="{
-            'status-border-feature': feature.type === 'feature',
-            'status-border-active': feature.type === 'release' && feature.status === 'enabled',
-            'status-border-inactive': feature.type === 'release' && feature.status === 'disabled'
-          }">
+                'status-border-feature': feature.type === featureTypeEnum.Feature,
+                'status-border-active': feature.type === featureTypeEnum.Release && feature.status === featureStatusEnum.Enabled,
+                'status-border-inactive': feature.type === featureTypeEnum.Release && feature.status === featureStatusEnum.Disabled
+              }">
                 <div class="card-body">
                     <h4 class="card-title">{{ feature.name }}</h4>
                     <p class="card-text">{{ feature.type === 'feature' ? 'Feature Toggle' : 'Release Toggle' }}</p>
 
                     <!-- Feature Toggle Buttons -->
-                    <div *ngIf="feature.type === 'feature'">
-                        <button type="button" class="btn btn-primary" (click)="openDrawer()">Enable</button>
-                        <button type="button" class="btn btn-primary ms-2" (click)="closeDrawer()">Disable</button>
+                    <!-- <div *ngIf="feature.type === 'feature'"> -->
 
-                    </div>
+                    @if(feature.type === 'feature'){
+                        <button type="button" class="btn btn-primary" (click)="openDialog()">Enable</button>
+                        <button type="button" class="btn btn-primary ms-2" (click)="openDialog()">Disable</button>
+                    }
+                    <!-- </div> -->
 
                     <!-- Release Toggle Button -->
-                    <div *ngIf="feature.type === 'release'">
+                    <!-- <div *ngIf="feature.type === 'release'"> -->
+                    @if(feature.type === 'release'){
                         <button type="button"
                             [ngClass]="feature.status === 'enabled' ? 'btn btn-danger' : 'btn btn-success'"
-                            (click)="feature.status = feature.status === 'enabled' ? 'disabled' : 'enabled'">
+                            (click)="feature.status = feature.status === featureStatusEnum.Enabled ? featureStatusEnum.Disabled : featureStatusEnum.Enabled">
                             {{ feature.status === 'enabled' ? 'Disable' : 'Enable' }}
                         </button>
-                    </div>
+                    }
+                    <!-- </div> -->
+                     
                 </div>
             </div>
+
         </div>
+    }
+
     </div>
 
-
-
-    <!-- Drawer Component -->
-    <div *ngIf="isOpen"><app-drawer></app-drawer></div>
 </div>
 
 

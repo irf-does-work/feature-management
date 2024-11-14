@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [
+    RouterOutlet,
+    // BrowserAnimationsModule,
+    // MatDialogModule,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

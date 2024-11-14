@@ -4,46 +4,80 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
         <input class="form-control bg-body-secondary" placeholder="Full Name" formControlName="fullName">
-        <div class="error-feedback"
-            *ngIf="hasDisplayableError('fullName') && userForm.controls['fullName'].hasError('required')">
+
+        @if (hasDisplayableError('fullName') && userForm.controls['fullName'].hasError('required')) {
+        <div class="error-feedback">
             Please enter your full name
         </div>
+        }
+
+
     </div>
     <div class="mb-3">
         <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
-        <div class="error-feedback" *ngIf="hasDisplayableError('email')">
-            <div *ngIf="userForm.controls['email'].hasError('required')">
+
+
+        @if (hasDisplayableError('email')) {
+        <div class="error-feedback">
+
+            @if (userForm.controls['email'].hasError('required')) {
+            <div>
                 Please enter your email address
             </div>
-            <div *ngIf="userForm.controls['email'].hasError('email') || userForm.controls['email'].hasError('pattern')">
+            }
+
+            @if (userForm.controls['email'].hasError('email') || userForm.controls['email'].hasError('pattern')) {
+            <div>
                 Please enter your valid email address
             </div>
+            }
+
         </div>
+        }
+
+
     </div>
     <div class="mb-3">
         <input type="password" class="form-control bg-body-secondary" placeholder="Password" formControlName="password">
-        <div class="error-feedback" *ngIf="hasDisplayableError('password')">
-            <div *ngIf="userForm.controls['password'].hasError('required')">
+
+        @if (hasDisplayableError('password')) {
+        <div class="error-feedback">
+
+            @if (userForm.controls['password'].hasError('required')) {
+            <div>
                 Please enter your password.
             </div>
-            <div *ngIf="userForm.controls['password'].hasError('minlength')">
+            }
+
+            @if (userForm.controls['password'].hasError('minlength')) {
+            <div>
                 Atleast 6 characters required.
             </div>
-            <div *ngIf="userForm.controls['password'].hasError('pattern')">
+            }
+
+            @if (userForm.controls['password'].hasError('pattern')) {
+            <div>
                 One or more special character(s).
             </div>
+            }
 
         </div>
+        }   
+
+
+        
+
     </div>
     <div class="mb-3">
         <input type="password" class="form-control bg-body-secondary" placeholder="Confirm Password"
             formControlName="confirmPassword">
 
-        <div class="error-feedback" *ngIf="hasDisplayableError('confirmPassword') && userForm.controls['confirmPassword'].hasError('passwordMismatch')">
-           
+        @if (hasDisplayableError('confirmPassword') && userForm.controls['confirmPassword'].hasError('passwordMismatch')) {
+        <div class="error-feedback">
             Password doesn't match
-
         </div>
+        }
+
     </div>
     <button type="submit" class="btn w-100 rounded-3">
         Register

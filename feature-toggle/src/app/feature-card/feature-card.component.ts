@@ -1,75 +1,78 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { DrawerComponent } from '../drawer/drawer.component';
 import { FeatureService } from '../feature.service';
+import { DialogComponent } from '../dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FeatureStatus, FeatureType } from '../enum/feature.enum';
+import { Feature } from '../interface/feature.interface';
 
-interface Feature {
-  name: string;
-  type: 'feature' | 'release';
-  status: 'enabled' | 'disabled';
-}
+
+// enum FeatureType {
+//   Feature = 'feature',
+//   Release = 'release'
+// }
+
+// enum FeatureStatus {
+//   Enabled = 'enabled',
+//   Disabled = 'disabled'
+// }
+
+
+// interface Feature {
+//   name: string;
+//   type: FeatureType;
+//   status: FeatureStatus;
+// }
 
 @Component({
   selector: 'app-feature-card',
   standalone: true,
-  imports: [CommonModule, RouterModule, DrawerComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './feature-card.component.html',
   styleUrls: ['./feature-card.component.scss']
 })
 export class FeatureCardComponent {
+  
+  constructor(public dialog: MatDialog, ) {}
+
+  // featureTypeEnum : FeatureType;  
+  // featureStatusEnum : FeatureStatus; 
   features: Feature[] = [
-    { name: 'Invoice Generation', type: 'release', status: 'enabled' },
-    { name: 'Tax Calculation', type: 'feature', status: 'disabled' },
-    { name: 'Fraud Detection', type: 'release', status: 'disabled' },
-    { name: 'Transaction History', type: 'release', status: 'enabled' },
-    { name: 'Mobile Payment', type: 'release', status: 'enabled' },
-    { name: 'Currency Exchange', type: 'release', status: 'disabled' },
-    { name: 'Batch Processing', type: 'release', status: 'disabled' },
-    { name: 'Verify Bank', type: 'feature', status: 'disabled' },
-    { name: 'Invoice Template', type: 'release', status: 'disabled' },
-    { name: 'Automated Payment', type: 'release', status: 'disabled' },
-    { name: 'Audit Logs', type: 'release', status: 'disabled' },
-    { name: 'Report Generator', type: 'release', status: 'disabled' },
-    { name: 'User Analytics', type: 'feature', status: 'enabled' },
-    { name: 'Data Sync', type: 'release', status: 'enabled' },
-    { name: 'Payment Gateway', type: 'release', status: 'disabled' },
-    { name: 'Currency Conversion', type: 'feature', status: 'disabled' },
-    { name: 'Fraud Detection V2', type: 'release', status: 'enabled' },
-    { name: 'Billing Cycle', type: 'release', status: 'disabled' },
-    { name: 'Account Management', type: 'feature', status: 'enabled' },
-    { name: 'Dynamic Pricing', type: 'release', status: 'disabled' },
-    { name: 'Credit Score Check', type: 'release', status: 'disabled' },
-    { name: 'Customer Feedback', type: 'feature', status: 'enabled' },
-    { name: 'Live Chat Support', type: 'feature', status: 'disabled' },
-    { name: 'Data Encryption', type: 'release', status: 'enabled' },
-    { name: 'API Throttling', type: 'release', status: 'disabled' },
-    { name: 'Mobile Notifications', type: 'feature', status: 'enabled' },
-    { name: 'Transaction Security', type: 'release', status: 'enabled' },
-    { name: 'Password Reset', type: 'feature', status: 'disabled' }
+    { name: 'Invoice Generation', type: FeatureType.Release, status: FeatureStatus.Enabled },
+    { name: 'Tax Calculation', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+    { name: 'Fraud Detection', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Transaction History', type: FeatureType.Release, status: FeatureStatus.Enabled},
+    { name: 'Mobile Payment', type: FeatureType.Release, status: FeatureStatus.Enabled },
+    { name: 'Currency Exchange', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Batch Processing', type: FeatureType.Release, status: FeatureStatus.Disabled},
+    { name: 'Verify Bank', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+    { name: 'Invoice Template', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Automated Payment', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Audit Logs', type: FeatureType.Release, status: FeatureStatus.Disabled},
+    { name: 'Report Generator', type: FeatureType.Release, status: FeatureStatus.Disabled},
+    { name: 'User Analytics', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+    { name: 'Data Sync', type:FeatureType.Release, status: FeatureStatus.Enabled },
+    { name: 'Payment Gateway', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Currency Conversion', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+    { name: 'Fraud Detection V2', type: FeatureType.Release, status: FeatureStatus.Enabled },
+    { name: 'Billing Cycle', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Account Management', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+    { name: 'Dynamic Pricing', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Credit Score Check', type: FeatureType.Release, status: FeatureStatus.Disabled},
+    { name: 'Customer Feedback', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+    { name: 'Live Chat Support', type: FeatureType.Feature, status: FeatureStatus.Disabled},
+    { name: 'Data Encryption', type: FeatureType.Release, status: FeatureStatus.Enabled },
+    { name: 'API Throttling', type: FeatureType.Release, status: FeatureStatus.Disabled },
+    { name: 'Mobile Notifications', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+    { name: 'Transaction Security', type: FeatureType.Release, status: FeatureStatus.Enabled },
+    { name: 'Password Reset', type: FeatureType.Feature, status: FeatureStatus.Disabled }
   ];
 
-
-  isOpen = false;
-
-
-  constructor(public drawerService: FeatureService) {}
+  business: string | undefined; 
+  name: string | undefined; 
 
 
-  openDrawer() {
-    this.drawerService.open=true;
-    console.log(this.drawerService.open)
-
-    this.drawerService.openDrawer();
-    
-  }
-
-  closeDrawer() {
-    this.drawerService.open=false;
-    console.log(this.drawerService.open)
-
-    this.drawerService.closeDrawer();
-  }
 
 
   itemsPerPage: number = 12;
@@ -101,4 +104,16 @@ export class FeatureCardComponent {
       this.currentPage--;
     }
   }
+
+  openDialog(): void { 
+    let dialogRef = this.dialog.open(DialogComponent, { 
+      width: '20%', 
+      data: { name: this.name, animal: this.business } 
+    }); 
+  
+    dialogRef.afterClosed().subscribe(result => { 
+      this.business = result; 
+    }); 
+  } 
+
 }

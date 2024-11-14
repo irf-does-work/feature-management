@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FeatureService } from '../../feature.service';
+import { LoginAccept, LoginForm } from '../../interface/feature.interface';
+
+
 
 @Component({
   selector: 'app-login',
@@ -12,13 +15,13 @@ import { FeatureService } from '../../feature.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  userForm: FormGroup;
+  userForm: FormGroup<LoginForm>;
   isSubmitted: boolean = false;
 
   constructor(private fb: FormBuilder, private router: Router,
     private userService: FeatureService
   ) {
-    this.userForm = this.fb.group<IuseForm>({
+    this.userForm = this.fb.group({
       email: new FormControl(
         '',
         [Validators.required,Validators.pattern(/^[a-zA-Z0-9._%+-]+@geekywolf\.com$/)]
@@ -29,36 +32,36 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.userForm.valid) {
-      const { email, password } = this.userForm.value;
+      //const { email, password } = this.userForm.value;
+      const userDetails : LoginAccept = {
+        email: this.userForm.value.email ?? '',
+        password: this.userForm.value.password ?? ''
+      }
 
-      this.userService.login({ email, password }).subscribe({
+      this.userService.login(userDetails).subscribe({
         next: (response) => {
           const userId = response.userId;
-          console.log('User logged in successfully:', userId);
+          // console.log('User logged in successfully:', userId);
 
           this.router.navigate(['/home-page']);
-          console.log(this.userService.userId);
-          console.log("Hi123") // Redirect on successful login
+          // console.log(this.userService.userId);
+          
         },
         error: (error) => {
-          console.error('Error during login:', error);
+          // console.error('Error during login:', error);
           alert('Invalid login credentials');
         }
       });
     }
   }
 
-  hasDisplayableError(controlName: string): Boolean {
+  hasDisplayableError(controlName: string): boolean {
     const control = this.userForm.get(controlName);
-    return Boolean(control?.invalid) && (this.isSubmitted || Boolean(control?.touched) || Boolean(control?.dirty))
+    return !!control?.invalid && (this.isSubmitted || control?.touched)
 
   }
 }
 
 
 
-interface IuseForm {
-  email: FormControl<string | null>;
-  password: FormControl<string | null>;
-}
 
