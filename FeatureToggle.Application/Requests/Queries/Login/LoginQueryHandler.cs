@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FeatureToggle.Application.Requests.Queries.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, int>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginResponse>
     {
         private UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
@@ -24,7 +24,7 @@ namespace FeatureToggle.Application.Requests.Queries.Login
             _userManager = userManager;
             _configuration = configuration;
         }
-        public async Task<int> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
@@ -37,19 +37,25 @@ namespace FeatureToggle.Application.Requests.Queries.Login
                     {
                         new Claim("UserID",user.Id.ToString())
                     }),
-                    Expires = DateTime.UtcNow.AddMinutes(60),
+                    Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(signInKey,SecurityAlgorithms.HmacSha256Signature)
                 };
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var securityToken = tokenHandler.CreateToken(tokenDescriptor);
                 var token = tokenHandler.WriteToken(securityToken);
 
-                return token;
+                return new LoginResponse { Token = token };
             }
             else
             {
-                //return BadRequest
+                return new LoginResponse { ErrorMessage = "Incorrect Username or Password" };
             }
         }
+    }
+
+    public class LoginResponse
+    {
+        public string? Token { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 }

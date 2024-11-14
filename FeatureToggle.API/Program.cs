@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text;
 using FeatureToggle.Domain.Entity.User_Schema;
+using FeatureToggle.Domain.Validators;
 using FeatureToggle.Infrastructure.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,8 @@ builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<UserContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddTransient<UserValidator>();
+
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -38,7 +42,7 @@ builder.Services.AddAuthentication(x =>
                                     {
                                         x.DefaultAuthenticateScheme =
                                         x.DefaultChallengeScheme =
-                                        x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; 
+                                        x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                                     })
                                     .AddJwtBearer(x =>
                                     {
