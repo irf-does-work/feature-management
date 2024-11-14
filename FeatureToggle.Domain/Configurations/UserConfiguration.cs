@@ -14,7 +14,7 @@ namespace FeatureToggle.Domain.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-           // builder.ToTable("User", "UserDB");
+            builder.ToTable("User", "UserDB");
 
             builder.Property(x => x.Name)
                     .IsRequired();
