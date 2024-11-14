@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Text;
+using FeatureToggle.Application.Requests.Commands.UserCommands;
+using FeatureToggle.Domain.ConfigurationModels;
 using FeatureToggle.Domain.Entity.User_Schema;
 using FeatureToggle.Domain.Validators;
 using FeatureToggle.Infrastructure.Models;
@@ -25,7 +27,10 @@ builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<UserContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddTransient<UserValidator>();
+builder.Services.Configure<Authentication>(builder.Configuration.GetSection("Authentication"));
+//builder.Services.AddTransient<UserValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AddUserCommandValidator>();
+
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -51,7 +56,7 @@ builder.Services.AddAuthentication(x =>
                                         {
                                             ValidateIssuerSigningKey = true,
                                             IssuerSigningKey = new SymmetricSecurityKey(
-                                                Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:JWTSecret"]!))
+                                                Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JWTSecret"]!))
                                         };
                                     });
 

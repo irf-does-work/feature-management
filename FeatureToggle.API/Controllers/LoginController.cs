@@ -18,7 +18,7 @@ namespace FeatureToggle.API.Controllers
         }
 
         [HttpPost]
-        public async Task<LoginResponse> SignIn(LoginQuery query)
+        public async Task<LoginResponse> SignIn(LoginCommand query)
         {
             return await _mediator.Send(query);
         }

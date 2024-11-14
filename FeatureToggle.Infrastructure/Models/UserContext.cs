@@ -13,7 +13,7 @@ namespace FeatureToggle.Infrastructure.Models
 {
     public class UserContext : IdentityDbContext<User>
     {
-        public DbSet<Log> Log { get; set; }
+        public DbSet<Log> Logs { get; set; }  //Log to logs
         public UserContext(DbContextOptions<UserContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,6 +21,7 @@ namespace FeatureToggle.Infrastructure.Models
             base.OnModelCreating(modelBuilder); // for Identity
             modelBuilder.ApplyConfiguration(new LogConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            //modelBuilder.AddConventions
         }
 
     }

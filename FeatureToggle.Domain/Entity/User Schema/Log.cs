@@ -9,13 +9,13 @@ namespace FeatureToggle.Domain.Entity.User_Schema
 {
     public class Log
     {
-        public int Id { get; set; }
-        public User User { get; set; }
-        public string UserId { get; set; }
-        public BusinessFeatureFlag BusinessFeature { get; set; }
-        public int BusinessFeatureId { get; set; }
-        public DateTime Time { get; set; }
-        public Actions Action { get; set; }
+        public int Id { get; private set; }
+        public User User { get; private set; }
+        public string UserId { get; private set; }
+        public BusinessFeatureFlag BusinessFeature { get; private set; }
+        public int BusinessFeatureId { get; private set; }
+        public DateTime Time { get; private set; }
+        public Actions Action { get; private set; }
 
         public enum Actions
         {

@@ -5,31 +5,33 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using FeatureToggle.Domain.ConfigurationModels;
 using FeatureToggle.Domain.Entity.User_Schema;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FeatureToggle.Application.Requests.Queries.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginResponse>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
     {
-        private UserManager<User> _userManager;
-        private readonly IConfiguration _configuration;
+        private readonly UserManager<User> _userManager;  
+        private readonly IOptionsMonitor<Authentication> _optionsMonitor;
 
-        public LoginQueryHandler(UserManager<User> userManager, IConfiguration configuration)
+        public LoginCommandHandler(UserManager<User> userManager, IOptionsMonitor<Authentication> optionsMonitor)
         {
             _userManager = userManager;
-            _configuration = configuration;
+            _optionsMonitor = optionsMonitor;
         }
-        public async Task<LoginResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                var secretKey = _configuration["AppSettings:JWTSecret"];
+                var secretKey = _optionsMonitor.CurrentValue.JWTSecret;
                 var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {

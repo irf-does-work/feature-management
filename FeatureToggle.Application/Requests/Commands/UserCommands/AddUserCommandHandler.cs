@@ -11,23 +11,14 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FeatureToggle.Application.Requests.Commands.UserCommands
 {
-    public class AddUserCommandHandler : IRequestHandler<AddUserCommand, AddUserResponse>
+    public class AddUserCommandHandler(UserManager<User> userManager, IValidator<AddUserCommand> userValidator) : IRequestHandler<AddUserCommand, AddUserResponse>
     {
-        private readonly UserManager<User> _userManager;
-        private readonly UserValidator _userValidator;
-
-        public AddUserCommandHandler(UserManager<User> userManager, UserValidator userValidator)
-        {
-            _userManager = userManager;
-            _userValidator = userValidator;
-        }
-
         public async Task<AddUserResponse> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
             
             User newUser = new User(request.Email,request.Name);  //use '!' ??
 
-            var validationResult = await _userValidator.ValidateAsync(newUser, cancellationToken);
+            var validationResult = await userValidator.ValidateAsync(request, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -48,7 +39,7 @@ namespace FeatureToggle.Application.Requests.Commands.UserCommands
             //    };
             //}
 
-            var result = await _userManager.CreateAsync(newUser, request.Password);
+            var result = await userManager.CreateAsync(newUser, request.Password);
             
             
             if (result.Succeeded)
