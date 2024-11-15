@@ -16,7 +16,7 @@ namespace FeatureToggle.Application.Requests.Commands.UserCommands
         public async Task<AddUserResponse> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
             
-            User newUser = new User(request.Email,request.Name);  //use '!' ??
+            User newUser = new User(request.Email, request.Name);  //use '!' ??
 
             var validationResult = await userValidator.ValidateAsync(request, cancellationToken);
 
@@ -29,15 +29,7 @@ namespace FeatureToggle.Application.Requests.Commands.UserCommands
                     Errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList()
                 };
             }
-            //if (!request.Email.EndsWith("@geekywolf.com"))
-            //{
-            //    return new AddUserResponse
-            //    {
-            //        Success = false,
-            //        Message = "Failed to create user",
-            //        Errors = new List<string> { "EMAIL IS NOT A GW MAIL!" }
-            //    };
-            //}
+
 
             var result = await userManager.CreateAsync(newUser, request.Password);
             
@@ -68,7 +60,7 @@ namespace FeatureToggle.Application.Requests.Commands.UserCommands
     public class AddUserResponse
     {
         public bool Success { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
         public List<string> Errors { get; set; } = new List<string>();
     }
 }
