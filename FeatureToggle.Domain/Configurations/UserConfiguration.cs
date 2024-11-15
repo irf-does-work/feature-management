@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FeatureToggle.Domain.Entity.User_Schema;
+using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,7 +14,7 @@ namespace FeatureToggle.Domain.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("User", "UserDB");
+            builder.ToTable("User", "featuremanagement");
 
             builder.Property(x => x.Name)
                     .IsRequired();

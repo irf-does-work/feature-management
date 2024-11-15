@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Text;
 using FeatureToggle.Application.Requests.Commands.UserCommands;
 using FeatureToggle.Domain.ConfigurationModels;
-using FeatureToggle.Domain.Entity.User_Schema;
+using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using FeatureToggle.Domain.Validators;
 using FeatureToggle.Infrastructure.Models;
 using FluentValidation;
@@ -21,10 +21,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddIdentityApiEndpoints<User>()
-                .AddEntityFrameworkStores<UserContext>();
+                .AddEntityFrameworkStores<FeatureManagementContext>();
 ///below used addidentity earlier
 builder.Services.AddIdentityCore<User>()
-    .AddEntityFrameworkStores<UserContext>()
+    .AddEntityFrameworkStores<FeatureManagementContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.Configure<Authentication>(builder.Configuration.GetSection("Authentication"));
@@ -60,8 +60,8 @@ builder.Services.AddAuthentication(x =>
                                         };
                                     });
 
-builder.Services.AddDbContext<UserContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("UserDbContext")));
-builder.Services.AddDbContext<FeatureContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureDbContext")));
+builder.Services.AddDbContext<FeatureManagementContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureManagementConnection")));
+//builder.Services.AddDbContext<FeatureContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureDbContext")));
 
 builder.Services.AddMediatR(x =>
     x.RegisterServicesFromAssembly(Assembly.Load("FeatureToggle.Application"))

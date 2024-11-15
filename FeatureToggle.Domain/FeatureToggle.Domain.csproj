@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FeatureToggle.Infrastructure\FeatureToggle.Infrastructure.csproj" />
+    <Folder Include="Entity\BusinessSchema\" />
   </ItemGroup>
 
 </Project>

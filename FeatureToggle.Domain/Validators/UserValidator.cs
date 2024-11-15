@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FeatureToggle.Domain.Entity.User_Schema;
+using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using FluentValidation;
 
 namespace FeatureToggle.Domain.Validators

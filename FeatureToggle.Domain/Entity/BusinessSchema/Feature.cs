@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FeatureToggle.Domain.Entity.Custom_Schema
+namespace FeatureToggle.Domain.Entity.BusinessSchema;
+
+public partial class Feature
 {
-    public class Feature
-    {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public List<BusinessFeatureFlag> BusinessFeatures { get; private set; }
-    }
+    public int FeatureId { get; set; }
+
+    public string FeatureName { get; set; } = null!;
+
+    public int FeatureTypeId { get; set; }
+
+    public virtual ICollection<BusinessFeatureFlag> BusinessFeatureFlags { get; set; } = new List<BusinessFeatureFlag>();
 }
