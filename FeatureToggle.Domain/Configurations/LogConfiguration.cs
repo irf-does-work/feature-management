@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FeatureToggle.Domain.Entity.Custom_Schema;
-using FeatureToggle.Domain.Entity.User_Schema;
+using FeatureToggle.Domain.Entity.BusinessSchema;
+using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

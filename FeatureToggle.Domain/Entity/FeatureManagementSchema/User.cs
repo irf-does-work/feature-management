@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace FeatureToggle.Domain.Entity.User_Schema
-{
+namespace FeatureToggle.Domain.Entity.FeatureManagementSchema { 
     public class User : IdentityUser
     {
         public string Name { get; set; }

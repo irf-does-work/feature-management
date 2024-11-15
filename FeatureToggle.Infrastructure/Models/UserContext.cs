@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FeatureToggle.Domain.Configurations;
-using FeatureToggle.Domain.Entity.User_Schema;
+using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

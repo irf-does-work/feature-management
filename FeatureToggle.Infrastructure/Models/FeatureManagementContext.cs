@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FeatureToggle.Domain.Configurations;
-using FeatureToggle.Domain.Entity.User_Schema;
+﻿using FeatureToggle.Domain.Configurations;
+using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +7,7 @@ namespace FeatureToggle.Infrastructure.Models
 {
     public class FeatureManagementContext : IdentityDbContext<User>
     {
-        public DbSet<Log> Logs { get; set; }  //Log to logs
+        public DbSet<Log> Logs { get; set; }  
         public FeatureManagementContext(DbContextOptions<FeatureManagementContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

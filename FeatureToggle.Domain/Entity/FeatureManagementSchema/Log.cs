@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FeatureToggle.Domain.Entity.Custom_Schema;
+using FeatureToggle.Domain.Entity.BusinessSchema;
 
-namespace FeatureToggle.Domain.Entity.User_Schema
+namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
 {
     public class Log
     {
