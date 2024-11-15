@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { LoginAccept, LoginForm, SignUpForm } from './interface/feature.interface';
+import { LoginAccept, LoginForm, SignUpAccept, SignUpForm } from './interface/feature.interface';
 
 
 @Injectable({
@@ -39,7 +39,7 @@ export class FeatureService {
     // );
   }
 
-  addUser(data: SignUpForm): Observable<any> {
+  addUser(data: SignUpAccept): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/AddUser`, data);
   }
 }

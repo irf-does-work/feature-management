@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { FeatureService } from '../../feature.service';
 import { Router, RouterLink } from '@angular/router';
 import { ValidatorFn, ValidationErrors,ReactiveFormsModule} from '@angular/forms';
-import { SignUpForm } from '../../interface/feature.interface';
+import { SignUpAccept, SignUpForm } from '../../interface/feature.interface';
 
 
 @Component({
@@ -67,14 +67,18 @@ export class SignupComponent {
   onSubmit() {
     this.isSubmitted = true;
     if (this.userForm.valid) {
-      const { fullName, email, password } = this.userForm.value;
-
+      // const { fullName, email, password } = this.userForm.value;
+      const userData : SignUpAccept = {
+        fullName: this.userForm.value.fullName ?? '',
+        email : this.userForm.value.email ?? '',
+        password : this.userForm.value.email ?? '',
+      }
       // Create user object for API
-      const userData = {
-        name: fullName,
-        email: email,
-        password: password
-      };
+      // const userData = {
+      //   name: fullName,
+      //   email: email,
+      //   password: password
+      // };
 
       // Call addUser method from the UserService
       this.userService.addUser(userData).subscribe({

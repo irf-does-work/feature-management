@@ -18,6 +18,12 @@ export interface SignUpForm {
     confirmPassword : FormControl<string | null>;
 }
 
+export interface SignUpAccept {
+    fullName : string | null;
+    email: string | null;
+    password: string | null;
+}
+
 export interface Feature {
     name: string;
     type: FeatureType;

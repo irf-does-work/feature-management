@@ -36,8 +36,8 @@ export class FeatureCardComponent {
   
   constructor(public dialog: MatDialog, ) {}
 
-  // featureTypeEnum : FeatureType;  
-  // featureStatusEnum : FeatureStatus; 
+  featureTypeEnum = FeatureType;  
+  featureStatusEnum = FeatureStatus; 
   features: Feature[] = [
     { name: 'Invoice Generation', type: FeatureType.Release, status: FeatureStatus.Enabled },
     { name: 'Tax Calculation', type: FeatureType.Feature, status: FeatureStatus.Disabled },
