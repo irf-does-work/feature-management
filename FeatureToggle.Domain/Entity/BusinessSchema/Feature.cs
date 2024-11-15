@@ -12,4 +12,6 @@ public partial class Feature
     public int FeatureTypeId { get; set; }
 
     public virtual ICollection<BusinessFeatureFlag> BusinessFeatureFlags { get; set; } = new List<BusinessFeatureFlag>();
+
+    public virtual FeatureType FeatureType { get; set; } = null!;
 }

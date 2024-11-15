@@ -22,9 +22,9 @@ namespace FeatureToggle.Domain.Configurations
                    .WithMany(x => x.Logs)
                    .HasForeignKey(x => x.UserId);
 
-            //builder.HasOne(x => x.BusinessFeature)
-            //       .WithMany()
-            //       .HasForeignKey(x => x.BusinessFeatureId);
+            builder.HasOne(x => x.FeatureFlag)
+                   .WithMany()
+                   .HasForeignKey(x => x.FeatureFlagId);
         }
     }
 }

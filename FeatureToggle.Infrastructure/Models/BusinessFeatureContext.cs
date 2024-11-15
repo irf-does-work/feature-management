@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using FeatureToggle.Infrastructure.Models;
+﻿using FeatureToggle.Domain.Entity.BusinessSchema;
 using Microsoft.EntityFrameworkCore;
-using FeatureToggle.Domain.Entity.BusinessSchema;
 
-namespace FeatureToggle.Infrastructure.Models2;
+namespace FeatureToggle.Infrastructure.Models;
 
 public partial class BusinessFeatureContext : DbContext
 {
@@ -22,6 +19,8 @@ public partial class BusinessFeatureContext : DbContext
     public virtual DbSet<BusinessFeatureFlag> BusinessFeatureFlags { get; set; }
 
     public virtual DbSet<Feature> Features { get; set; }
+
+    public virtual DbSet<FeatureType> FeatureTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -84,6 +83,7 @@ public partial class BusinessFeatureContext : DbContext
         modelBuilder.Entity<BusinessFeatureFlag>(entity =>
         {
             entity.HasKey(e => e.FeatureFlagId);
+            
 
             entity
                 .ToTable("BusinessFeatureFlag", "business")
@@ -130,6 +130,29 @@ public partial class BusinessFeatureContext : DbContext
 
             entity.Property(e => e.FeatureId).ValueGeneratedNever();
             entity.Property(e => e.FeatureTypeId).HasDefaultValue(1);
+
+            entity.HasOne(d => d.FeatureType).WithMany(p => p.Features)
+                .HasForeignKey(d => d.FeatureTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<FeatureType>(entity =>
+        {
+            entity
+                .ToTable("FeatureType", "business")
+                .ToTable(tb => tb.IsTemporal(ttb =>
+                    {
+                        ttb.UseHistoryTable("FeatureType", "businessHT");
+                        ttb
+                            .HasPeriodStart("PeriodStart")
+                            .HasColumnName("PeriodStart");
+                        ttb
+                            .HasPeriodEnd("PeriodEnd")
+                            .HasColumnName("PeriodEnd");
+                    }));
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(20);
         });
         modelBuilder.HasSequence<int>("Seq_Batch_1", "accountspayable").StartsAt(1001L);
         modelBuilder.HasSequence<int>("Seq_Bill_1", "accountspayable").StartsAt(1001L);

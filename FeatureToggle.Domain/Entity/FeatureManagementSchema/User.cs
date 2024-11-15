@@ -11,6 +11,7 @@ namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
     {
         public string Name { get; set; }
         public List<Log> Logs { get; set; }
+        public bool IsAdmin { get; set; }
 
         public User() { }
 

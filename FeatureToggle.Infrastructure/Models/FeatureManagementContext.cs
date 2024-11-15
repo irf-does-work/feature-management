@@ -12,7 +12,7 @@ namespace FeatureToggle.Infrastructure.Models
 {
     public class FeatureManagementContext : IdentityDbContext<User>
     {
-        public DbSet<Log> Logs { get; set; }  //Log to logs
+        public DbSet<Log> Logs { get; set; }  
         public FeatureManagementContext(DbContextOptions<FeatureManagementContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
