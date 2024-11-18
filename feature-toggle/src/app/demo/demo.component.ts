@@ -25,7 +25,7 @@ interface Business {
 
 export class DemoComponent {
   
-  business?: Business; // Initialize as undefined
+  business?: Business; 
   constructor(public dialog: MatDialog) {} 
   
   openDialog(): void { 
@@ -43,26 +43,14 @@ export class DemoComponent {
   featureTypeEnum = FeatureType;  
   featureStatusEnum = FeatureStatus; 
 
-  // Store selected filter values
   selectedFilters: string[] = [];
 
-  // Applies filters when the button is clicked
   applyFilters(): void {
-    // Clear previously selected filters
     this.selectedFilters = [];
 
-    // Select all checkboxes and gather their values if checked
     const checkboxes = document.querySelectorAll('.form-check-input');
 
-    // checkboxes.forEach((checkbox: HTMLInputElement) => {
-    //   if (checkbox.checked) {
-    //     this.selectedFilters.push(checkbox.value);
-    //   }
-    // });
-
-
     checkboxes.forEach((checkbox) => {
-      // Use type assertion to cast each checkbox as HTMLInputElement
       const inputElement = checkbox as HTMLInputElement;
       if (inputElement.checked) {
         this.selectedFilters.push(inputElement.value);
@@ -70,6 +58,5 @@ export class DemoComponent {
     });
 
     console.log('Selected Filters:', this.selectedFilters);
-    // Implement your filtering logic based on selectedFilters
   }
 }
