@@ -10,14 +10,14 @@ namespace FeatureToggle.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IMediator mediator) : ControllerBase
+    public class UserController(IMediator mediator, CancellationToken cancellationToken) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
 
         [HttpPost]
         public async Task<AddUserResponseDTO> AddUser(AddUserCommand command)
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(command,cancellationToken);
         }
         
         
