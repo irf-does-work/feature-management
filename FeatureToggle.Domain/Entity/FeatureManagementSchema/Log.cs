@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FeatureToggle.Domain.Entity.BusinessSchema;
-
-namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
+﻿namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
 {
     public class Log
     {

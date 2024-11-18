@@ -1,9 +1,6 @@
 ﻿using FeatureToggle.Application.DTOs;
 using FeatureToggle.Application.Requests.Commands.UserCommands;
-using FeatureToggle.Application.Requests.Queries.Login;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers

@@ -1,5 +1,4 @@
 ﻿using FeatureToggle.Domain.Configurations;
-using FeatureToggle.Domain.Entity.BusinessSchema;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

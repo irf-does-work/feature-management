@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using FeatureToggle.Application.DTOs;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
-using FeatureToggle.Domain.Validators;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

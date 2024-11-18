@@ -3,13 +3,11 @@ using System.Text;
 using FeatureToggle.Application.Requests.Commands.UserCommands;
 using FeatureToggle.Domain.ConfigurationModels;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
-using FeatureToggle.Domain.Validators;
 using FeatureToggle.Infrastructure.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
