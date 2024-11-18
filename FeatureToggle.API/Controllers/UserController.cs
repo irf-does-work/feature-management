@@ -1,4 +1,5 @@
-﻿using FeatureToggle.Application.Requests.Commands.UserCommands;
+﻿using FeatureToggle.Application.DTOs;
+using FeatureToggle.Application.Requests.Commands.UserCommands;
 using FeatureToggle.Application.Requests.Queries.Login;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,7 @@ namespace FeatureToggle.API.Controllers
         }
 
         [HttpPost]
-        public async Task<AddUserResponse> AddUser(AddUserCommand command)
+        public async Task<AddUserResponseDTO> AddUser(AddUserCommand command)
         {
             return await _mediator.Send(command);
         }

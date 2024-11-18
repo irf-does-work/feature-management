@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FeatureToggle.Infrastructure.Migrations.User
+namespace FeatureToggle.Infrastructure.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20241113092917_UsernameAdded")]
-    partial class UsernameAdded
+    [DbContext(typeof(FeatureManagementContext))]
+    [Migration("20241118103655_FeatManMig2")]
+    partial class FeatManMig2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,67 +25,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.Custom_Schema.Business", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Business");
-                });
-
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.Custom_Schema.BusinessFeatureFlag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BusinessId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FeatureId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BusinessId");
-
-                    b.HasIndex("FeatureId");
-
-                    b.ToTable("BusinessFeatureFlag");
-                });
-
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.Custom_Schema.Feature", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Feature");
-                });
-
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.User_Schema.Log", b =>
+            modelBuilder.Entity("FeatureToggle.Domain.Entity.FeatureManagementSchema.Log", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,7 +36,10 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                     b.Property<int>("Action")
                         .HasColumnType("int");
 
-                    b.Property<int>("BusinessFeatureId")
+                    b.Property<int?>("BusinessId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FeatureId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Time")
@@ -108,14 +51,12 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BusinessFeatureId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("Log", "UserDB");
+                    b.ToTable("Log", "featuremanagement");
                 });
 
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.User_Schema.User", b =>
+            modelBuilder.Entity("FeatureToggle.Domain.Entity.FeatureManagementSchema.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -132,6 +73,9 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -181,7 +125,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("User", "UserDB");
+                    b.ToTable("User", "featuremanagement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -208,7 +152,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("AspNetRole", "featuremanagement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -233,7 +177,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("AspNetRoleClaim", "featuremanagement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -258,7 +202,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("AspNetUserClaim", "featuremanagement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -280,7 +224,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("AspNetUserLogin", "featuremanagement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -295,7 +239,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("AspNetUserRole", "featuremanagement");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -314,43 +258,16 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("AspNetUserToken", "featuremanagement");
                 });
 
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.Custom_Schema.BusinessFeatureFlag", b =>
+            modelBuilder.Entity("FeatureToggle.Domain.Entity.FeatureManagementSchema.Log", b =>
                 {
-                    b.HasOne("FeatureToggle.Domain.Entity.Custom_Schema.Business", "Business")
-                        .WithMany("BusinessFeatures")
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FeatureToggle.Domain.Entity.Custom_Schema.Feature", "Feature")
-                        .WithMany("BusinessFeatures")
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Business");
-
-                    b.Navigation("Feature");
-                });
-
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.User_Schema.Log", b =>
-                {
-                    b.HasOne("FeatureToggle.Domain.Entity.Custom_Schema.BusinessFeatureFlag", "BusinessFeature")
-                        .WithMany()
-                        .HasForeignKey("BusinessFeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FeatureToggle.Domain.Entity.User_Schema.User", "User")
+                    b.HasOne("FeatureToggle.Domain.Entity.FeatureManagementSchema.User", "User")
                         .WithMany("Logs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BusinessFeature");
 
                     b.Navigation("User");
                 });
@@ -366,7 +283,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("FeatureToggle.Domain.Entity.User_Schema.User", null)
+                    b.HasOne("FeatureToggle.Domain.Entity.FeatureManagementSchema.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -375,7 +292,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("FeatureToggle.Domain.Entity.User_Schema.User", null)
+                    b.HasOne("FeatureToggle.Domain.Entity.FeatureManagementSchema.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -390,7 +307,7 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FeatureToggle.Domain.Entity.User_Schema.User", null)
+                    b.HasOne("FeatureToggle.Domain.Entity.FeatureManagementSchema.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -399,24 +316,14 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("FeatureToggle.Domain.Entity.User_Schema.User", null)
+                    b.HasOne("FeatureToggle.Domain.Entity.FeatureManagementSchema.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.Custom_Schema.Business", b =>
-                {
-                    b.Navigation("BusinessFeatures");
-                });
-
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.Custom_Schema.Feature", b =>
-                {
-                    b.Navigation("BusinessFeatures");
-                });
-
-            modelBuilder.Entity("FeatureToggle.Domain.Entity.User_Schema.User", b =>
+            modelBuilder.Entity("FeatureToggle.Domain.Entity.FeatureManagementSchema.User", b =>
                 {
                     b.Navigation("Logs");
                 });

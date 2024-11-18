@@ -60,8 +60,8 @@ builder.Services.AddAuthentication(x =>
                                         };
                                     });
 
-builder.Services.AddDbContext<FeatureManagementContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("UserDbContext")));
-builder.Services.AddDbContext<FeatureContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureDbContext")));
+builder.Services.AddDbContext<FeatureManagementContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureManagementDbContext")));
+builder.Services.AddDbContext<BusinessContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureManagementDbContext")));
 
 builder.Services.AddMediatR(x =>
     x.RegisterServicesFromAssembly(Assembly.Load("FeatureToggle.Application"))

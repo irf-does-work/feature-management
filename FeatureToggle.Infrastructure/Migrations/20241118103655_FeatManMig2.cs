@@ -2,29 +2,29 @@
 
 #nullable disable
 
-namespace FeatureToggle.Infrastructure.Migrations.User
+namespace FeatureToggle.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UsernameAdded : Migration
+    public partial class FeatManMig2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
-                schema: "UserDB",
+            migrationBuilder.AddColumn<bool>(
+                name: "IsAdmin",
+                schema: "featuremanagement",
                 table: "User",
-                type: "nvarchar(max)",
+                type: "bit",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Name",
-                schema: "UserDB",
+                name: "IsAdmin",
+                schema: "featuremanagement",
                 table: "User");
         }
     }

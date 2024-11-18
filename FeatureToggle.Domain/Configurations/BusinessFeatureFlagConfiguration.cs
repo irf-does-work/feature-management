@@ -13,7 +13,7 @@ namespace FeatureToggle.Domain.Configurations
     {
         public void Configure(EntityTypeBuilder<BusinessFeatureFlag> builder)
         {
-            builder.ToTable("BusinessFeatureFlag", "FeatureDB");
+            builder.ToTable("BusinessFeatureFlag", "business");
 
             builder.HasOne(bf => bf.Business)
               .WithMany(b => b.BusinessFeatures)

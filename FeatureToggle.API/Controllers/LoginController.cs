@@ -1,4 +1,5 @@
-﻿using FeatureToggle.Application.Requests.Queries.Login;
+﻿using FeatureToggle.Application.DTOs;
+using FeatureToggle.Application.Requests.Queries.Login;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace FeatureToggle.API.Controllers
         }
 
         [HttpPost]
-        public async Task<LoginResponse> SignIn(LoginCommand query)
+        public async Task<LoginResponseDTO> SignIn(GetAuthTokenQuery command)
         {
-            return await _mediator.Send(query);
+            return await _mediator.Send(command);
         }
     }
 }

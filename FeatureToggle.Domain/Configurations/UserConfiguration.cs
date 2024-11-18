@@ -14,14 +14,14 @@ namespace FeatureToggle.Domain.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("User", "UserDB");
+            builder.ToTable("User", "featuremanagement");
 
             builder.Property(x => x.Name)
                     .IsRequired();
                     
-            builder.HasMany(x => x.Logs)
-              .WithOne(x => x.User)
-              .HasForeignKey(x => x.UserId);
+            //builder.HasMany(x => x.Logs)
+            //  .WithOne(x => x.User)
+            //  .HasForeignKey(x => x.UserId);
         }
     }
 }

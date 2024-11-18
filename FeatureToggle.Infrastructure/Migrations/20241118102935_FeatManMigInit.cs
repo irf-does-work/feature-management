@@ -3,19 +3,20 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FeatureToggle.Infrastructure.Migrations.User
+namespace FeatureToggle.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FeatureMig1 : Migration
+    public partial class FeatManMigInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "UserDB");
+                name: "featuremanagement");
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
+                name: "AspNetRole",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -25,41 +26,16 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Business",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Business", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Feature",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Feature", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRole", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "User",
-                schema: "UserDB",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -81,7 +57,8 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
+                name: "AspNetRoleClaim",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -92,44 +69,19 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRoleClaim", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        name: "FK_AspNetRoleClaim_AspNetRole_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        principalSchema: "featuremanagement",
+                        principalTable: "AspNetRole",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BusinessFeatureFlag",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BusinessId = table.Column<int>(type: "int", nullable: false),
-                    FeatureId = table.Column<int>(type: "int", nullable: false),
-                    IsEnabled = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BusinessFeatureFlag", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BusinessFeatureFlag_Business_BusinessId",
-                        column: x => x.BusinessId,
-                        principalTable: "Business",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BusinessFeatureFlag_Feature_FeatureId",
-                        column: x => x.FeatureId,
-                        principalTable: "Feature",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
+                name: "AspNetUserClaim",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -140,18 +92,19 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUserClaim", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_User_UserId",
+                        name: "FK_AspNetUserClaim_User_UserId",
                         column: x => x.UserId,
-                        principalSchema: "UserDB",
+                        principalSchema: "featuremanagement",
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
+                name: "AspNetUserLogin",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -161,18 +114,19 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_AspNetUserLogin", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_User_UserId",
+                        name: "FK_AspNetUserLogin_User_UserId",
                         column: x => x.UserId,
-                        principalSchema: "UserDB",
+                        principalSchema: "featuremanagement",
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
+                name: "AspNetUserRole",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -180,24 +134,26 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_AspNetUserRole", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        name: "FK_AspNetUserRole_AspNetRole_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        principalSchema: "featuremanagement",
+                        principalTable: "AspNetRole",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_User_UserId",
+                        name: "FK_AspNetUserRole_User_UserId",
                         column: x => x.UserId,
-                        principalSchema: "UserDB",
+                        principalSchema: "featuremanagement",
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
+                name: "AspNetUserToken",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -207,11 +163,11 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_AspNetUserToken", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_User_UserId",
+                        name: "FK_AspNetUserToken_User_UserId",
                         column: x => x.UserId,
-                        principalSchema: "UserDB",
+                        principalSchema: "featuremanagement",
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -219,13 +175,14 @@ namespace FeatureToggle.Infrastructure.Migrations.User
 
             migrationBuilder.CreateTable(
                 name: "Log",
-                schema: "UserDB",
+                schema: "featuremanagement",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    BusinessFeatureId = table.Column<int>(type: "int", nullable: false),
+                    FeatureId = table.Column<int>(type: "int", nullable: false),
+                    BusinessId = table.Column<int>(type: "int", nullable: true),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Action = table.Column<int>(type: "int", nullable: false)
                 },
@@ -233,78 +190,61 @@ namespace FeatureToggle.Infrastructure.Migrations.User
                 {
                     table.PrimaryKey("PK_Log", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Log_BusinessFeatureFlag_BusinessFeatureId",
-                        column: x => x.BusinessFeatureId,
-                        principalTable: "BusinessFeatureFlag",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Log_User_UserId",
                         column: x => x.UserId,
-                        principalSchema: "UserDB",
+                        principalSchema: "featuremanagement",
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                table: "AspNetRoles",
+                schema: "featuremanagement",
+                table: "AspNetRole",
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
+                name: "IX_AspNetRoleClaim_RoleId",
+                schema: "featuremanagement",
+                table: "AspNetRoleClaim",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinessFeatureFlag_BusinessId",
-                table: "BusinessFeatureFlag",
-                column: "BusinessId");
+                name: "IX_AspNetUserClaim_UserId",
+                schema: "featuremanagement",
+                table: "AspNetUserClaim",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinessFeatureFlag_FeatureId",
-                table: "BusinessFeatureFlag",
-                column: "FeatureId");
+                name: "IX_AspNetUserLogin_UserId",
+                schema: "featuremanagement",
+                table: "AspNetUserLogin",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Log_BusinessFeatureId",
-                schema: "UserDB",
-                table: "Log",
-                column: "BusinessFeatureId");
+                name: "IX_AspNetUserRole_RoleId",
+                schema: "featuremanagement",
+                table: "AspNetUserRole",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Log_UserId",
-                schema: "UserDB",
+                schema: "featuremanagement",
                 table: "Log",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                schema: "UserDB",
+                schema: "featuremanagement",
                 table: "User",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                schema: "UserDB",
+                schema: "featuremanagement",
                 table: "User",
                 column: "NormalizedUserName",
                 unique: true,
@@ -315,39 +255,36 @@ namespace FeatureToggle.Infrastructure.Migrations.User
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "AspNetRoleClaim",
+                schema: "featuremanagement");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+                name: "AspNetUserClaim",
+                schema: "featuremanagement");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+                name: "AspNetUserLogin",
+                schema: "featuremanagement");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+                name: "AspNetUserRole",
+                schema: "featuremanagement");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                name: "AspNetUserToken",
+                schema: "featuremanagement");
 
             migrationBuilder.DropTable(
                 name: "Log",
-                schema: "UserDB");
+                schema: "featuremanagement");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "BusinessFeatureFlag");
+                name: "AspNetRole",
+                schema: "featuremanagement");
 
             migrationBuilder.DropTable(
                 name: "User",
-                schema: "UserDB");
-
-            migrationBuilder.DropTable(
-                name: "Business");
-
-            migrationBuilder.DropTable(
-                name: "Feature");
+                schema: "featuremanagement");
         }
     }
 }
