@@ -1,12 +1,69 @@
 <p>demo works!</p>
-<button mat-raised-button (click)="openDialog()"> 
-    Pick one 
-</button> 
-<br> 
- 
+<div class="container w-100 aligin-content-center">
+    <div class="dropdown">
+        <!-- <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Filter button
+        </button> -->
+        <button type="button" class="btn btn-primary ms-3" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-filter"></i></button>
+        <ul class="dropdown-menu w-25" aria-labelledby="dropdownMenuButton1">
+
+            <div class="mx-3">
+                <li>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [value]=featureTypeEnum.Feature id="filterAction1">
+                        <label class="form-check-label" for="filterAction1">
+                            Feature Toggle
+                        </label>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [value]=featureTypeEnum.Release id="filterAction2">
+                        <label class="form-check-label" for="filterAction2">
+                            Release Toggle
+                        </label>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Enabled id="filterAction3">
+                        <label class="form-check-label" for="filterAction3">
+                            Enabled
+                        </label>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Disabled id="filterAction4">
+                        <label class="form-check-label" for="filterAction4">
+                            Disabled
+                        </label>
+                    </div>
+                </li>
+                <li class="mt-2">
+                    <button class="btn btn-primary w-100" (click)="applyFilters();">Apply Filter</button>
+                </li>
+            </div>
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+<button mat-raised-button (click)="openDialog()">
+    Pick one
+</button>
+<br>
+
 
 @if (business) {
-<span style="background-color: brown;"> 
-    You choose: <i>{{business.name}}</i> 
-</span> 
+<span style="background-color: brown;">
+    You choose: <i>{{business.name}}</i>
+</span>
 }

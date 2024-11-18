@@ -35,6 +35,8 @@ import { Feature } from '../interface/feature.interface';
 export class FeatureCardComponent {
   
   constructor(public dialog: MatDialog, ) {}
+  
+  isAdmin = 0;
 
   featureTypeEnum = FeatureType;  
   featureStatusEnum = FeatureStatus; 
@@ -114,6 +116,7 @@ export class FeatureCardComponent {
     dialogRef.afterClosed().subscribe(result => { 
       this.business = result; 
     }); 
+    
   } 
 
 }

@@ -4,6 +4,7 @@ import { FeatureService } from '../../feature.service';
 import { Router, RouterLink } from '@angular/router';
 import { ValidatorFn, ValidationErrors,ReactiveFormsModule} from '@angular/forms';
 import { SignUpAccept, SignUpForm } from '../../interface/feature.interface';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -35,7 +36,11 @@ export class SignupComponent {
     return null;
   }
 
-  constructor(private fb: FormBuilder, private userService: FeatureService, private router: Router) {
+  constructor(private fb: FormBuilder, 
+    private userService: FeatureService, 
+    private router: Router,
+    private toastr: ToastrService
+  ) {
 
     this.userForm = this.fb.group({
       fullName: new FormControl('', Validators.required),
@@ -83,19 +88,22 @@ export class SignupComponent {
       // Call addUser method from the UserService
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {
-          console.log('User registered successfully:', response);
-          alert("User registered successfully");
+          // console.log('User registered successfully:', response);
+          // alert("User registered successfully");
+          this.toastr.success('New user created!','Registration Successful')
 
 
           this.router.navigate(['user/login']);
         },
         error: (error: any) => {
-          console.error('Error during registration:', error);
+          // console.error('Error during registration:', error);
+          this.toastr.error('User was not created','Registration Unsuccessful')
 
         }
       });
     } else {
-      console.log('Form is invalid');
+      // console.log('Form is invalid');
+      this.toastr.error('Enter valid details','Registration Unsuccessful')
     }
   }
 

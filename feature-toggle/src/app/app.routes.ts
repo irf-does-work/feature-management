@@ -18,5 +18,5 @@ export const routes: Routes = [
     },
     {path: 'home', component: HomeComponent},
     {path: 'demo', component: DemoComponent},
-    {path: '',component: HomeComponent}
+    {path: '',component: HomeComponent},
 ];

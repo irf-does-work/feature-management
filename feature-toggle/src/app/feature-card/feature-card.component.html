@@ -10,33 +10,53 @@
               }">
                 <div class="card-body">
                     <h4 class="card-title">{{ feature.name }}</h4>
-                    <p class="card-text">{{ feature.type === 'feature' ? 'Feature Toggle' : 'Release Toggle' }}</p>
+                    <p class="card-text">{{ feature.type === featureTypeEnum.Feature ? 'Feature Toggle' : 'Release Toggle' }}</p>
 
                     <!-- Feature Toggle Buttons -->
-                    <!-- <div *ngIf="feature.type === 'feature'"> -->
 
                     @if(feature.type === 'feature'){
-                        <button type="button" class="btn btn-primary" (click)="openDialog()">Enable</button>
-                        <button type="button" class="btn btn-primary ms-2" (click)="openDialog()">Disable</button>
+                    <button type="button" class="btn btn-primary" (click)="openDialog()">Enable</button>
+                    <button type="button" class="btn btn-primary ms-2" (click)="openDialog()">Disable</button>
                     }
-                    <!-- </div> -->
 
                     <!-- Release Toggle Button -->
-                    <!-- <div *ngIf="feature.type === 'release'"> -->
                     @if(feature.type === 'release'){
-                        <button type="button"
-                            [ngClass]="feature.status === 'enabled' ? 'btn btn-danger' : 'btn btn-success'"
-                            (click)="feature.status = feature.status === featureStatusEnum.Enabled ? featureStatusEnum.Disabled : featureStatusEnum.Enabled">
-                            {{ feature.status === 'enabled' ? 'Disable' : 'Enable' }}
+                    <!-- <button type="button"
+                            [ngClass]="feature.status === featureStatusEnum.Enabled ? 'btn btn-danger' : 'btn btn-success'"
+                            (click)="feature.status = feature.status === featureStatusEnum.Enabled && isAdmin ? featureStatusEnum.Disabled : featureStatusEnum.Enabled">
+                            {{ feature.status === featureStatusEnum.Enabled ? 'Disable' : 'Enable' }}
+                        </button> -->
+
+                        @if(feature.status === featureStatusEnum.Disabled){
+                        <button type="button" class="btn btn-success" (click)="feature.status = featureStatusEnum.Enabled">
+                            Enable
                         </button>
+
+                        }
+
+                        @if(feature.status === featureStatusEnum.Enabled && isAdmin){
+                        <button type="button" class="btn btn-danger" (click)="feature.status = featureStatusEnum.Disabled">
+                            Disable
+                        </button>
+
+                        }
+
+                        @if (feature.status === featureStatusEnum.Enabled && !isAdmin) {
+                        <div class="text-center">
+                            <div class="badge bg-danger text-dark text-wrap w-75 my-1">
+                                <p class="m-1">To disable contact Admin</p>
+                            </div>
+                        </div>
+                        }
+
+
                     }
-                    <!-- </div> -->
-                     
+
                 </div>
             </div>
 
         </div>
-    }
+        }
 
     </div>
 
