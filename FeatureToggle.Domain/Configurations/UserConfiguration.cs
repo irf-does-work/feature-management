@@ -12,10 +12,8 @@ namespace FeatureToggle.Domain.Configurations
 
             builder.Property(x => x.Name)
                     .IsRequired();
-                    
-            //builder.HasMany(x => x.Logs)
-            //  .WithOne(x => x.User)
-            //  .HasForeignKey(x => x.UserId);
+
+
         }
     }
 }
