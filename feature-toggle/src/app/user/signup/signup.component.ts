@@ -109,7 +109,7 @@ export class SignupComponent {
 
   hasDisplayableError(controlName: string ):Boolean {
       const control = this.userForm.get(controlName);
-      return Boolean(control?.invalid) && (this.isSubmitted || Boolean(control?.touched) || Boolean(control?.dirty))
+      return Boolean(control?.invalid) && (this.isSubmitted || Boolean(control?.touched))
 
   }
 }

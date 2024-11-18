@@ -8,11 +8,13 @@ import {MatSelectModule} from '@angular/material/select';
 
 
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FeatureStatus } from '../enum/feature.enum';
 
 
 interface Business {
   name: string;
   businessId: string;
+  status: FeatureStatus;
 }
 
 @Component({
@@ -35,34 +37,21 @@ interface Business {
 
 
 export class DialogComponent {
+  businessControl = new FormControl<Business | null>(null, Validators.required);
+
   constructor( 
     public dialogRef: MatDialogRef<DialogComponent>, 
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: { businesses: Business[]}
     // private cd : ChangeDetectorRef
   ) { } 
-
-
-  businessControl = new FormControl<Business | null>(null, Validators.required);
-  selectFormControl = new FormControl('', Validators.required);
-  businesses: Business[] = [
-    {name: 'Business 1', businessId: '1'},
-    {name: 'Business 2', businessId: '2'},
-    {name: 'Business 3', businessId: '3'},
-    {name: 'Business 4', businessId: '4'},
-    {name: 'Business 5', businessId: '5'},
-    {name: 'Business 6', businessId: '6'},
-    {name: 'Business 7', businessId: '7'},
-    {name: 'Business 8', businessId: '8'},
-    {name: 'Business 9', businessId: '9'},
-    {name: 'Business 10', businessId: '10'},
-
-  ];
-
-
-
   
   onCancel(): void { 
     this.dialogRef.close(); 
   } 
 
+  onConfirm(): void {
+    if (this.businessControl.valid) {
+      this.dialogRef.close(this.businessControl.value); 
+    }
+  }
 }

@@ -8,22 +8,12 @@ import { FeatureStatus, FeatureType } from '../enum/feature.enum';
 import { Feature } from '../interface/feature.interface';
 
 
-// enum FeatureType {
-//   Feature = 'feature',
-//   Release = 'release'
-// }
+interface Business {
+  name: string;
+  businessId: string;
+  status: FeatureStatus;
+}
 
-// enum FeatureStatus {
-//   Enabled = 'enabled',
-//   Disabled = 'disabled'
-// }
-
-
-// interface Feature {
-//   name: string;
-//   type: FeatureType;
-//   status: FeatureStatus;
-// }
 
 @Component({
   selector: 'app-feature-card',
@@ -32,11 +22,13 @@ import { Feature } from '../interface/feature.interface';
   templateUrl: './feature-card.component.html',
   styleUrls: ['./feature-card.component.scss']
 })
+
+
 export class FeatureCardComponent {
   
   constructor(public dialog: MatDialog, ) {}
   
-  isAdmin = 0;
+  isAdmin = 1;
 
   featureTypeEnum = FeatureType;  
   featureStatusEnum = FeatureStatus; 
@@ -99,6 +91,21 @@ export class FeatureCardComponent {
     { name: 'Password Reset', type: FeatureType.Feature, status: FeatureStatus.Disabled }
   ];
 
+  businesses: Business[] = [
+    {name: 'Business 1', businessId: '1',status: FeatureStatus.Enabled},
+    {name: 'Business 2', businessId: '2', status: FeatureStatus.Disabled},
+    {name: 'Business 3', businessId: '3', status: FeatureStatus.Disabled},
+    {name: 'Business 4', businessId: '4',status: FeatureStatus.Enabled},
+    {name: 'Business 5', businessId: '5',status: FeatureStatus.Enabled},
+    {name: 'Business 6', businessId: '6',status: FeatureStatus.Disabled},
+    {name: 'Business 7', businessId: '7',status: FeatureStatus.Disabled},
+    {name: 'Business 8', businessId: '8',status: FeatureStatus.Enabled},
+    {name: 'Business 9', businessId: '9',status: FeatureStatus.Enabled},
+    {name: 'Business 10', businessId: '10',status: FeatureStatus.Disabled},
+
+  ];
+
+
   business: string | undefined; 
   name: string | undefined; 
 
@@ -135,16 +142,57 @@ export class FeatureCardComponent {
     }
   }
 
-  openDialog(): void { 
-    let dialogRef = this.dialog.open(DialogComponent, { 
-      width: '20%', 
-      data: { name: this.name, animal: this.business } 
-    }); 
+  // openDialog(action: FeatureStatus.Enabled | FeatureStatus.Disabled): void { 
+
+  //   // const filteredFeatures = this.features.filter(feature =>
+  //   //   action === FeatureStatus.Enabled ? feature.status === FeatureStatus.Disabled : feature.status === FeatureStatus.Enabled
+  //   // );
+
+
+  //   const filteredFeatures = this.businesses
+  //       .filter(feature => action === FeatureStatus.Enabled ? feature.status === FeatureStatus.Disabled : feature.status === FeatureStatus.Enabled)
+  //       .map(feature => ({ 
+  //         // name: feature.name,
+  //          status: feature.status 
+  //         }));
+
+  //   // const filteredFeatures = this.features
+  //   // .filter(feature => FeatureStatus.Enabled ? feature.status === FeatureStatus.Disabled : feature.status === FeatureStatus.Enabled)
+  //   // .map(feature => ({ name: feature.name, status: feature.status }));
+
+  //   console.log(filteredFeatures)
+
+  //   let dialogRef = this.dialog.open(DialogComponent, { 
+  //     width: '20%', 
+  //     data: { name: this.name, id: this.business ,status: filteredFeatures } 
+  //   }); 
   
-    dialogRef.afterClosed().subscribe(result => { 
-      this.business = result; 
-    }); 
+  //   dialogRef.afterClosed().subscribe(result => { 
+  //     this.business = result; 
+  //     console.log(this.business)
+  //   }); 
     
-  } 
+  // } 
+
+
+  openDialog(action: FeatureStatus.Enabled | FeatureStatus.Disabled): void { 
+    const filteredBusinesses = this.businesses
+        .filter(business => action === FeatureStatus.Enabled ? business.status === FeatureStatus.Disabled : business.status === FeatureStatus.Enabled)
+        .map(business => ({ name: business.name, businessId: business.businessId, status: business.status }));
+
+    let dialogRef = this.dialog.open(DialogComponent, { 
+        width: '20%', 
+        data: { 
+          // name: this.name, id: this.business, 
+          businesses: filteredBusinesses } 
+    }); 
+
+    dialogRef.afterClosed().subscribe((result: Business | null) => { 
+        if (result) {
+            this.business = result.businessId; 
+            console.log('Selected Business:', result);
+        }
+    }); 
+}
 
 }

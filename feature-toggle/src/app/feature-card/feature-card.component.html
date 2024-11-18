@@ -16,10 +16,10 @@
 
                     <div class="d-flex">
                     @if(feature.type === 'feature'){
-                    <button type="button" class="btn btn-primary" (click)="openDialog()">Enable</button>
+                    <button type="button" class="btn btn-primary" (click)="openDialog(featureStatusEnum.Enabled)">Enable</button>
 
                         @if(isAdmin){
-                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog()">Disable</button>
+                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog(featureStatusEnum.Disabled)">Disable</button>
                         }
 
                         @if (!isAdmin) {
