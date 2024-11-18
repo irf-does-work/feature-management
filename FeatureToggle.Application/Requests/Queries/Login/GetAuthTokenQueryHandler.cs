@@ -17,16 +17,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FeatureToggle.Application.Requests.Queries.Login
 {
-    public class GetAuthTokenQueryHandler : IRequestHandler<GetAuthTokenQuery, LoginResponseDTO>
+    public class GetAuthTokenQueryHandler(UserManager<User> userManager, IOptionsMonitor<Authentication> optionsMonitor) : IRequestHandler<GetAuthTokenQuery, LoginResponseDTO>
     {
-        private readonly UserManager<User> _userManager;  
-        private readonly IOptionsMonitor<Authentication> _optionsMonitor;
+        private readonly UserManager<User> _userManager = userManager;  
+        private readonly IOptionsMonitor<Authentication> _optionsMonitor = optionsMonitor;
 
-        public GetAuthTokenQueryHandler(UserManager<User> userManager, IOptionsMonitor<Authentication> optionsMonitor)
-        {
-            _userManager = userManager;
-            _optionsMonitor = optionsMonitor;
-        }
         public async Task<LoginResponseDTO> Handle(GetAuthTokenQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);

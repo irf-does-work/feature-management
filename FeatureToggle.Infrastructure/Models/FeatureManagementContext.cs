@@ -7,10 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Infrastructure.Models
 {
-    public class FeatureManagementContext : IdentityDbContext<User>
+    public class FeatureManagementContext(DbContextOptions<FeatureManagementContext> options) : IdentityDbContext<User>(options)
     {
-        public DbSet<Log> Logs { get; set; }  
-        public FeatureManagementContext(DbContextOptions<FeatureManagementContext> options) : base(options) { }
+        public DbSet<Log> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

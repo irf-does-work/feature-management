@@ -9,14 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Infrastructure.Models
 {
-    public class BusinessContext : DbContext
+    public class BusinessContext(DbContextOptions<BusinessContext> options) : DbContext(options)
     { 
         public DbSet<Business> Business { get; set; }
         public DbSet<Feature> Feature { get; set; }
         public DbSet<BusinessFeatureFlag> BusinessFeatureFlag { get; set; }
         public DbSet<FeatureType> FeatureType { get; set; }
-
-        public BusinessContext(DbContextOptions<BusinessContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
