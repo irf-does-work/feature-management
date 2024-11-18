@@ -1,24 +1,17 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FeatureService } from '../feature.service';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IFeature } from '../interface/feature.interface';
+import { IFeature , IBusiness} from '../interface/feature.interface';
 
-
-interface Business {
-  name: string;
-  businessId: string;
-  status: FeatureStatus;
-}
 
 
 @Component({
   selector: 'app-feature-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [NgClass ,RouterModule],
   templateUrl: './feature-card.component.html',
   styleUrls: ['./feature-card.component.scss']
 })
@@ -91,7 +84,7 @@ export class FeatureCardComponent {
     { name: 'Password Reset', type: FeatureType.Feature, status: FeatureStatus.Disabled }
   ];
 
-  businesses: Business[] = [
+  businesses: IBusiness[] = [
     {name: 'Business 1', businessId: '1',status: FeatureStatus.Enabled},
     {name: 'Business 2', businessId: '2', status: FeatureStatus.Disabled},
     {name: 'Business 3', businessId: '3', status: FeatureStatus.Disabled},
@@ -155,7 +148,7 @@ export class FeatureCardComponent {
           businesses: filteredBusinesses } 
     }); 
 
-    dialogRef.afterClosed().subscribe((result: Business | null) => { 
+    dialogRef.afterClosed().subscribe((result: IBusiness | null) => { 
         if (result) {
             this.business = result.businessId; 
             console.log('Selected Business:', result);
