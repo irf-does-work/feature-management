@@ -6,18 +6,18 @@
         <mat-label>Business</mat-label>
         <mat-select [formControl]="businessControl" required>
             <mat-option>--</mat-option>
-            @for (business of businesses; track business) {
+            @for (business of data.businesses; track business) {
             <mat-option [value]="business">{{business.name}}</mat-option>
             }
         </mat-select>
         @if (businessControl.hasError('required')) {
         <mat-error>Please choose an business</mat-error>
         }
-        <mat-hint>{{businessControl.value?.sound}}</mat-hint>
     </mat-form-field>
 
 </div>
 <div mat-dialog-actions class="dialog-actions">
     <button mat-button (click)="onCancel()">No Thanks</button>
-    <button mat-button [mat-dialog-close]="businessControl.value" cdkFocusInitial>Ok</button>
+    <button mat-button (click)="onConfirm()" [disabled]="!businessControl.valid">Confirm</button>
+
 </div>

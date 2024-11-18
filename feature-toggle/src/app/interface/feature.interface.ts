@@ -29,3 +29,11 @@ export interface IFeature {
     type: FeatureType;
     status: FeatureStatus;
 }
+
+
+
+export interface IBusiness {
+    name: string;
+    businessId: string;
+    status: FeatureStatus;
+  }

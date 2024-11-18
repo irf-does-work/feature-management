@@ -4,6 +4,7 @@ import { FeatureService } from '../../feature.service';
 import { Router, RouterLink } from '@angular/router';
 import { ValidatorFn, ValidationErrors,ReactiveFormsModule} from '@angular/forms';
 import { ISignUpAccept, ISignUpForm } from '../../interface/feature.interface';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -15,13 +16,6 @@ import { ISignUpAccept, ISignUpForm } from '../../interface/feature.interface';
 })
 export class SignupComponent {
   userForm : FormGroup<ISignUpForm>;
-  // userForm: FormGroup<{
-  //   fullName: FormControl<string | null>;
-  //   email: FormControl<string | null>;
-  //   password: FormControl<string | null>;
-  //   confirmPassword: FormControl<string | null>;
-  // }>;
-
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl) : null => {
     const password = control.get('password')
@@ -35,26 +29,22 @@ export class SignupComponent {
     return null;
   }
 
-  constructor(private fb: FormBuilder, private userService: FeatureService, private router: Router) {
+  constructor(private fb: FormBuilder, 
+    private userService: FeatureService, 
+    private router: Router,
+    private toastr: ToastrService
+  ) {
 
     this.userForm = this.fb.group({
       fullName: new FormControl('', Validators.required),
       email: new FormControl('', [
         Validators.required,Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@geekywolf\.com$/)
-        //Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
       ]),
       password: new FormControl('', [
         Validators.required, 
         Validators.minLength(6),
         Validators.pattern(/(?=.*[^a-zA-Z0-9])/)
-        //Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
       ]),
-      // confirmPassword: new FormControl('', [
-      //   Validators.required,
-      //   Validators.minLength(8),
-      //   // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-      // ])
-
       confirmPassword: new FormControl('')
       ,
     },{validators:this.passwordMatchValidator})
@@ -67,41 +57,34 @@ export class SignupComponent {
   onSubmit() {
     this.isSubmitted = true;
     if (this.userForm.valid) {
-      // const { fullName, email, password } = this.userForm.value;
       const userData : ISignUpAccept = {
         fullName: this.userForm.value.fullName ?? '',
         email : this.userForm.value.email ?? '',
         password : this.userForm.value.email ?? '',
       }
-      // Create user object for API
-      // const userData = {
-      //   name: fullName,
-      //   email: email,
-      //   password: password
-      // };
 
-      // Call addUser method from the UserService
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {
-          console.log('User registered successfully:', response);
-          alert("User registered successfully");
+          this.toastr.success('New user created!','Registration Successful')
 
 
           this.router.navigate(['user/login']);
         },
         error: (error: any) => {
-          console.error('Error during registration:', error);
+
+          this.toastr.error('User was not created','Registration Unsuccessful')
 
         }
       });
     } else {
-      console.log('Form is invalid');
+
+      this.toastr.error('Enter valid details','Registration Unsuccessful')
     }
   }
 
   hasDisplayableError(controlName: string ):Boolean {
       const control = this.userForm.get(controlName);
-      return Boolean(control?.invalid) && (this.isSubmitted || Boolean(control?.touched) || Boolean(control?.dirty))
+      return Boolean(control?.invalid) && (this.isSubmitted || Boolean(control?.touched))
 
   }
 }

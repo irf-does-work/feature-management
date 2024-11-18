@@ -6,14 +6,10 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 
-
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FeatureStatus } from '../enum/feature.enum';
+import { IBusiness } from '../interface/feature.interface';
 
-
-interface IBusiness {
-  name: string;
-  sound: string;
-}
 
 @Component({
   selector: 'app-dialog',
@@ -35,34 +31,20 @@ interface IBusiness {
 
 
 export class DialogComponent {
+  businessControl = new FormControl<IBusiness | null>(null, Validators.required);
+
   constructor( 
     public dialogRef: MatDialogRef<DialogComponent>, 
-    @Inject(MAT_DIALOG_DATA) public data: any
-    // private cd : ChangeDetectorRef
+    @Inject(MAT_DIALOG_DATA) public data: { businesses: IBusiness[]}
   ) { } 
-
-
-  businessControl = new FormControl<IBusiness | null>(null, Validators.required);
-  selectFormControl = new FormControl('', Validators.required);
-  businesses: IBusiness[] = [
-    {name: 'Business 1', sound: 'this is business 1'},
-    {name: 'Business 2', sound: 'this is business 2'},
-    {name: 'Business 3', sound: 'this is business 3'},
-    {name: 'Business 4', sound: 'this is business 4'},
-    {name: 'Business 5', sound: 'this is business 5'},
-    {name: 'Business 6', sound: 'this is business 6'},
-    {name: 'Business 7', sound: 'this is business 7'},
-    {name: 'Business 8', sound: 'this is business 8'},
-    {name: 'Business 9', sound: 'this is business 9'},
-    {name: 'Business 10', sound: 'this is business 10'},
-
-  ];
-
-
-
   
   onCancel(): void { 
     this.dialogRef.close(); 
   } 
 
+  onConfirm(): void {
+    if (this.businessControl.valid) {
+      this.dialogRef.close(this.businessControl.value); 
+    }
+  }
 }
