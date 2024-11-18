@@ -10,7 +10,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 
-interface Business {
+interface IBusiness {
   name: string;
   sound: string;
 }
@@ -42,9 +42,9 @@ export class DialogComponent {
   ) { } 
 
 
-  businessControl = new FormControl<Business | null>(null, Validators.required);
+  businessControl = new FormControl<IBusiness | null>(null, Validators.required);
   selectFormControl = new FormControl('', Validators.required);
-  businesses: Business[] = [
+  businesses: IBusiness[] = [
     {name: 'Business 1', sound: 'this is business 1'},
     {name: 'Business 2', sound: 'this is business 2'},
     {name: 'Business 3', sound: 'this is business 3'},

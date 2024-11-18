@@ -5,7 +5,7 @@ import { FeatureService } from '../feature.service';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { Feature } from '../interface/feature.interface';
+import { IFeature } from '../interface/feature.interface';
 
 
 // enum FeatureType {
@@ -38,7 +38,7 @@ export class FeatureCardComponent {
 
   featureTypeEnum = FeatureType;  
   featureStatusEnum = FeatureStatus; 
-  features: Feature[] = [
+  features: IFeature[] = [
     { name: 'Invoice Generation', type: FeatureType.Release, status: FeatureStatus.Enabled },
     { name: 'Tax Calculation', type: FeatureType.Feature, status: FeatureStatus.Disabled },
     { name: 'Fraud Detection', type: FeatureType.Release, status: FeatureStatus.Disabled },
@@ -78,7 +78,7 @@ export class FeatureCardComponent {
   itemsPerPage: number = 12;
   currentPage: number = 1;
 
-  get paginatedFeatures(): Feature[] {
+  get paginatedFeatures(): IFeature[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.features.slice(startIndex, startIndex + this.itemsPerPage);
   }

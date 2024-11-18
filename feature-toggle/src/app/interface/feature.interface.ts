@@ -1,30 +1,30 @@
 import { FormControl } from "@angular/forms";
 import { FeatureStatus , FeatureType} from "../enum/feature.enum";
 
-export interface LoginForm {
+export interface ILoginForm {
     email: FormControl<string | null>;
     password: FormControl<string | null>;
 }
 
-export interface LoginAccept {
+export interface ILoginAccept {
     email: string | null;
     password: string | null;
 }
 
-export interface SignUpForm {
+export interface ISignUpForm {
     fullName: FormControl<string | null>;
     email: FormControl<string | null>;
     password : FormControl<string | null>;
     confirmPassword : FormControl<string | null>;
 }
 
-export interface SignUpAccept {
+export interface ISignUpAccept {
     fullName : string | null;
     email: string | null;
     password: string | null;
 }
 
-export interface Feature {
+export interface IFeature {
     name: string;
     type: FeatureType;
     status: FeatureStatus;

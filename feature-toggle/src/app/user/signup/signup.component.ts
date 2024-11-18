@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from
 import { FeatureService } from '../../feature.service';
 import { Router, RouterLink } from '@angular/router';
 import { ValidatorFn, ValidationErrors,ReactiveFormsModule} from '@angular/forms';
-import { SignUpAccept, SignUpForm } from '../../interface/feature.interface';
+import { ISignUpAccept, ISignUpForm } from '../../interface/feature.interface';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { SignUpAccept, SignUpForm } from '../../interface/feature.interface';
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
-  userForm : FormGroup<SignUpForm>;
+  userForm : FormGroup<ISignUpForm>;
   // userForm: FormGroup<{
   //   fullName: FormControl<string | null>;
   //   email: FormControl<string | null>;
@@ -68,7 +68,7 @@ export class SignupComponent {
     this.isSubmitted = true;
     if (this.userForm.valid) {
       // const { fullName, email, password } = this.userForm.value;
-      const userData : SignUpAccept = {
+      const userData : ISignUpAccept = {
         fullName: this.userForm.value.fullName ?? '',
         email : this.userForm.value.email ?? '',
         password : this.userForm.value.email ?? '',

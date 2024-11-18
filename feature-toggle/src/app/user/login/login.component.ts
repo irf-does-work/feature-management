@@ -1,21 +1,20 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FeatureService } from '../../feature.service';
-import { LoginAccept, LoginForm } from '../../interface/feature.interface';
+import { ILoginAccept, ILoginForm } from '../../interface/feature.interface';
 
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  userForm: FormGroup<LoginForm>;
+  userForm: FormGroup<ILoginForm>;
   isSubmitted: boolean = false;
 
   constructor(private fb: FormBuilder, private router: Router,
@@ -33,14 +32,14 @@ export class LoginComponent {
   onSubmit() {
     if (this.userForm.valid) {
       //const { email, password } = this.userForm.value;
-      const userDetails : LoginAccept = {
+      const userDetails : ILoginAccept = {
         email: this.userForm.value.email ?? '',
         password: this.userForm.value.password ?? ''
       }
 
       this.userService.login(userDetails).subscribe({
         next: (response) => {
-          const userId = response.userId;
+          // const userId = response.userId;
           // console.log('User logged in successfully:', userId);
 
           this.router.navigate(['/home-page']);
