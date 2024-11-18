@@ -8,15 +8,10 @@ namespace FeatureToggle.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class LoginController(IMediator mediator) : ControllerBase
     {
 
-        private readonly IMediator _mediator;
-
-        public LoginController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly IMediator _mediator = mediator;
 
         [HttpPost]
         public async Task<LoginResponseDTO> SignIn(GetAuthTokenQuery command)
