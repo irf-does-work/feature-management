@@ -14,10 +14,29 @@
 
                     <!-- Feature Toggle Buttons -->
 
+                    <div class="d-flex">
                     @if(feature.type === 'feature'){
                     <button type="button" class="btn btn-primary" (click)="openDialog()">Enable</button>
-                    <button type="button" class="btn btn-primary ms-2" (click)="openDialog()">Disable</button>
+
+                        @if(isAdmin){
+                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog()">Disable</button>
+                        }
+
+                        @if (!isAdmin) {
+                            <div class="text-center">
+                                <div class="badge bg-danger text-dark text-wrap w-100 ms-2 my-1">
+                                    <p class="m-1">To disable contact Admin</p>
+                                </div>
+                            </div>
+                        }
+                    
                     }
+                    </div>
+                    
+
+
+
+
 
                     <!-- Release Toggle Button -->
                     @if(feature.type === 'release'){

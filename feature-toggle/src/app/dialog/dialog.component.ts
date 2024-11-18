@@ -12,7 +12,7 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 
 interface Business {
   name: string;
-  sound: string;
+  businessId: string;
 }
 
 @Component({
@@ -45,16 +45,16 @@ export class DialogComponent {
   businessControl = new FormControl<Business | null>(null, Validators.required);
   selectFormControl = new FormControl('', Validators.required);
   businesses: Business[] = [
-    {name: 'Business 1', sound: 'this is business 1'},
-    {name: 'Business 2', sound: 'this is business 2'},
-    {name: 'Business 3', sound: 'this is business 3'},
-    {name: 'Business 4', sound: 'this is business 4'},
-    {name: 'Business 5', sound: 'this is business 5'},
-    {name: 'Business 6', sound: 'this is business 6'},
-    {name: 'Business 7', sound: 'this is business 7'},
-    {name: 'Business 8', sound: 'this is business 8'},
-    {name: 'Business 9', sound: 'this is business 9'},
-    {name: 'Business 10', sound: 'this is business 10'},
+    {name: 'Business 1', businessId: '1'},
+    {name: 'Business 2', businessId: '2'},
+    {name: 'Business 3', businessId: '3'},
+    {name: 'Business 4', businessId: '4'},
+    {name: 'Business 5', businessId: '5'},
+    {name: 'Business 6', businessId: '6'},
+    {name: 'Business 7', businessId: '7'},
+    {name: 'Business 8', businessId: '8'},
+    {name: 'Business 9', businessId: '9'},
+    {name: 'Business 10', businessId: '10'},
 
   ];
 
