@@ -3,6 +3,7 @@ import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
 import { ILoginAccept, ISignUpAccept} from './interface/feature.interface';
+import { TOKEN_KEY } from './shared/constants';
 
 
 @Injectable({
@@ -22,24 +23,55 @@ export class FeatureService {
   }
 
 
-
   
-  login(data: ILoginAccept): Observable<object> {
-    return this.http.post(`${this.baseUrl}/api/AddUser/ValidateUser`, data)
-    // .pipe(
-    //   tap((response: any) => {
-    //     if (response) {
-    //       this.userId = response;
-    //       // sessionStorage.setItem('userId', this.userId.toString()); // Store userId in sessionStorage
-    //       console.log('UserId stored in sessionStorage:', this.userId);
-    //     } else {
-    //       console.error('Invalid login response or missing userId');
-    //     }
-    //   })
-    // );
+  login(data: ILoginAccept): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/Login`, data);
   }
 
-  addUser(data: ISignUpAccept): Observable<object> {
-    return this.http.post(`${this.baseUrl}/api/AddUser`, data);
+  addUser(data: ISignUpAccept): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/User`, data);
   }
+
+  isLoggedIn(){
+    return localStorage.getItem(TOKEN_KEY)!= null? true : false;
+  }
+
+  saveToken(token: string){
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+  
+  deleteToken(){
+    localStorage.removeItem(TOKEN_KEY);
+  }
+
+  // decode(){
+  //   const aa = JSON.parse(window.atob(TOKEN_KEY));
+  //   console.log("hi" + aa);
+  //   return aa;
+  // }
+
+  decodeToken() {
+    try {
+      const token = localStorage.getItem(TOKEN_KEY); 
+      if (!token) {
+        console.error("Token is undefined or empty.");
+        return null;
+      }
+  
+      const tokenParts = token.split('.');
+      if (tokenParts.length !== 3) {
+        console.error("Invalid JWT format.");
+        return null;
+      }
+  
+      const payloadBase64 = tokenParts[1];
+      const payloadJson = JSON.parse(window.atob(payloadBase64));
+      console.log("Decoded payload:", payloadJson);
+      return payloadJson;
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      return null;
+    }
+  }
+  
 }

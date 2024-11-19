@@ -1,4 +1,4 @@
-import { booleanAttribute, Component } from '@angular/core';
+import { booleanAttribute, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FeatureService } from '../../feature.service';
 import { Router, RouterLink } from '@angular/router';
@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit{
   userForm : FormGroup<ISignUpForm>;
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl) : null => {
@@ -50,6 +50,11 @@ export class SignupComponent {
     },{validators:this.passwordMatchValidator})
   }
 
+  ngOnInit(): void {
+    if(this.userService.isLoggedIn()){
+      this.router.navigate(['/home']);
+    }
+  }
 
   isSubmitted: boolean = false;
 
@@ -58,16 +63,15 @@ export class SignupComponent {
     this.isSubmitted = true;
     if (this.userForm.valid) {
       const userData : ISignUpAccept = {
-        fullName: this.userForm.value.fullName ?? '',
+        name: this.userForm.value.fullName ?? '',
         email : this.userForm.value.email ?? '',
         password : this.userForm.value.email ?? '',
       }
 
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {
+
           this.toastr.success('New user created!','Registration Successful')
-
-
           this.router.navigate(['user/login']);
         },
         error: (error: any) => {

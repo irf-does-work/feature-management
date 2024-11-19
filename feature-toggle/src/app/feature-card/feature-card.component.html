@@ -36,7 +36,7 @@
 
 
                     <!-- Release Toggle Button -->
-                    @if(feature.type === 'release'){
+                    @if(feature.type === featureTypeEnum.Release){
 
                         @if(feature.status === featureStatusEnum.Disabled){
                         <button type="button" class="btn btn-success" (click)="feature.status = featureStatusEnum.Enabled">
@@ -46,8 +46,8 @@
                         }
 
                         @if(feature.status === featureStatusEnum.Enabled && isAdmin){
-                        <button type="button" class="btn btn-danger" (click)="feature.status = featureStatusEnum.Disabled">
-                            Disable
+                            <button type="button" class="btn btn-danger" (click)="feature.status = featureStatusEnum.Disabled">
+                            Disable   
                         </button>
 
                         }
@@ -85,7 +85,7 @@
 
         <!-- Page Numbers -->
 
-        @for( page of [].constructor(totalPages());track page; let i = $index){
+        @for( page of [].constructor(totalPages());track i; let i = $index){
             
             <li class="page-item"
             [class.active]="currentPage === i + 1">

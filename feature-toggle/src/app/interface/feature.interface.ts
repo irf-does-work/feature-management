@@ -19,7 +19,7 @@ export interface ISignUpForm {
 }
 
 export interface ISignUpAccept {
-    fullName : string | null;
+    name : string | null;
     email: string | null;
     password: string | null;
 }

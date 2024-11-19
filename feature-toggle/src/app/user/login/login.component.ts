@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FeatureService } from '../../feature.service';
@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   userForm: FormGroup<ILoginForm>;
   isSubmitted: boolean = false;
 
@@ -32,6 +32,12 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit(): void {
+    if(this.userService.isLoggedIn()){
+      this.router.navigate(['/home']);
+    }
+  }
+
   onSubmit() {
     if (this.userForm.valid) {
       const userDetails : ILoginAccept = {
@@ -40,28 +46,29 @@ export class LoginComponent {
       }
 
       this.userService.login(userDetails).subscribe({
-        next: (response) => {
+        next: (response:any) => {
+          console.log(response);
+          // localStorage.setItem('token',response.token);
+          this.userService.saveToken(response.token);
 
-
-          //Logic after merging backend
-
-
-          // const userId = response.userId;
-          // console.log('User logged in successfully:', userId);
-
-          this.router.navigate(['/homepage']);
+          this.router.navigate(['/home']);
           this.toastr.success('Welcome back!', 'Login Successful')
 
 
         },
         error: (error) => {
-
-          this.toastr.error('Invalid login credentials', 'Login Unsuccessful')
+          if(error.status === 400){
+          this.toastr.error('Invalid login credentials', 'Login failed')
+          }
+          else{
+            // console.log(error);
+            this.toastr.error('Something went wrong','Login failed')
+          }
         }
       });
     }
     else {
-      this.toastr.error('Invalid login credentials', 'Login Unsuccessful')
+      this.toastr.error('Something went wrong','Login failed')
     }
   }
 

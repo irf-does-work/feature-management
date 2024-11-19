@@ -5,6 +5,8 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
 import { IFeature , IBusiness} from '../interface/feature.interface';
+import { FeatureService } from '../feature.service';
+
 
 
 
@@ -16,12 +18,19 @@ import { IFeature , IBusiness} from '../interface/feature.interface';
   styleUrls: ['./feature-card.component.scss']
 })
 
-
 export class FeatureCardComponent {
+  isAdmin : number = 0;
+
+  constructor(public dialog: MatDialog,
+    private featureService: FeatureService 
+  ) {
+    const payload = this.featureService.decodeToken();
+
+    payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
   
-  constructor(public dialog: MatDialog, ) {}
-  
-  isAdmin = 1;
+    console.log(payload.IsAdmin)
+    console.log(this.isAdmin)
+  }
 
   featureTypeEnum = FeatureType;  
   featureStatusEnum = FeatureStatus; 

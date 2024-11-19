@@ -3,6 +3,7 @@ import { UserComponent } from './user/user.component';
 import { LoginComponent } from './user/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './user/signup/signup.component';
+import { authGuard } from './auth.guard';
 
 
 
@@ -16,6 +17,6 @@ export const routes: Routes = [
         ]
         
     },
-    {path: 'home', component: HomeComponent},
+    {path: 'home', component: HomeComponent, canActivate: [authGuard]},
     {path: '',component: HomeComponent},
 ];
