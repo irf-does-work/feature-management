@@ -1,0 +1,51 @@
+<div class="mb-4 h2 text-sucess text-start">
+    Login
+</div>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+    <div class="mb-3">
+        <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
+
+        @if (hasDisplayableError('email')) {
+        <div class="error-feedback">
+
+            @if (userForm.controls['email'].hasError('required')) {
+            <div>
+                Please enter your email address
+            </div>
+            }
+
+            @if (userForm.controls['email'].hasError('email') || userForm.controls['email'].hasError('pattern')) {
+            <div>
+                Please enter your valid email address
+            </div>
+            }
+
+        </div>
+        }
+
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control bg-body-secondary" placeholder="Password" formControlName="password">
+
+        @if (hasDisplayableError('password') && userForm.controls['password'].hasError('required')) {
+        <div class="error-feedback">
+
+            Please enter your password.
+
+        </div>
+        }
+
+    </div>
+
+    <button type="submit" class="btn w-100 rounded-3">
+        Login
+    </button>
+</form>
+<div class="d-flex mt-3 align-items-center">
+    <hr class="flex-grow-1">
+    <span class="px-2">or</span>
+    <hr class="flex-grow-1">
+</div>
+
+<button class="btn mt-3 w-100 rounded-3" routerLink="/user/signup">Sign Up</button>

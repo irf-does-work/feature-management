@@ -1,0 +1,104 @@
+<div class="mx-5 mt-5 mb-4 ">
+    <div class="row">
+
+        @for (feature of paginatedFeatures; track feature) {
+        <div class="col-md-3 mb-3">
+            <div class="card" [ngClass]="{
+                'status-border-feature': feature.type === featureTypeEnum.Feature,
+                'status-border-active': feature.type === featureTypeEnum.Release && feature.status === featureStatusEnum.Enabled,
+                'status-border-inactive': feature.type === featureTypeEnum.Release && feature.status === featureStatusEnum.Disabled
+              }">
+                <div class="card-body">
+                    <h4 class="card-title">{{ feature.name }}</h4>
+                    <p class="card-text">{{ feature.type === featureTypeEnum.Feature ? 'Feature Toggle' : 'Release Toggle' }}</p>
+
+                    <!-- Feature Toggle Buttons -->
+
+                    <div class="d-flex">
+                    @if(feature.type === 'feature'){
+                    <button type="button" class="btn btn-primary" (click)="openDialog(featureStatusEnum.Enabled)">Enable</button>
+
+                        @if(isAdmin){
+                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog(featureStatusEnum.Disabled)">Disable</button>
+                        }
+
+                        @if (!isAdmin) {
+                            <div class="text-center">
+                                <div class="badge bg-danger text-dark text-wrap w-100 ms-2 my-1">
+                                    <p class="m-1">To disable contact Admin</p>
+                                </div>
+                            </div>
+                        }
+                    
+                    }
+                    </div>
+                    
+
+
+                    <!-- Release Toggle Button -->
+                    @if(feature.type === 'release'){
+
+                        @if(feature.status === featureStatusEnum.Disabled){
+                        <button type="button" class="btn btn-success" (click)="feature.status = featureStatusEnum.Enabled">
+                            Enable
+                        </button>
+
+                        }
+
+                        @if(feature.status === featureStatusEnum.Enabled && isAdmin){
+                        <button type="button" class="btn btn-danger" (click)="feature.status = featureStatusEnum.Disabled">
+                            Disable
+                        </button>
+
+                        }
+
+                        @if (feature.status === featureStatusEnum.Enabled && !isAdmin) {
+                        <div class="text-center">
+                            <div class="badge bg-danger text-dark text-wrap w-75 my-1">
+                                <p class="m-1">To disable contact Admin</p>
+                            </div>
+                        </div>
+                        }
+
+
+                    }
+
+                </div>
+            </div>
+
+        </div>
+        }
+
+    </div>
+
+</div>
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center pb-2">
+        <!-- Previous Button -->
+        <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" href="#" (click)="previousPage();$event.preventDefault()" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <!-- Page Numbers -->
+
+        @for( page of [].constructor(totalPages());track page; let i = $index){
+            
+            <li class="page-item"
+            [class.active]="currentPage === i + 1">
+            <a class="page-link" href="#" (click)="goToPage(i + 1);$event.preventDefault()">{{ i + 1 }}</a>
+            </li>
+
+        }
+
+        <!-- Next Button -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages()">
+            <a class="page-link" href="#" (click)="nextPage();$event.preventDefault()" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
