@@ -18,7 +18,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
 
         public async Task<List<FilteredFeatureDTO>> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
         {
-            var query = _businessContext.Set<BusinessFeatureFlag>()
+            var query = _businessContext.BusinessFeatureFlag
                 .Include(bf => bf.Feature)  // Include Feature details
                 .ThenInclude(f => f.FeatureType)  // Include the FeatureType navigation for the feature
                 .AsQueryable();
@@ -31,7 +31,8 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
 
             if (request.IsDisabled.HasValue)
             {
-                query = query.Where(bf => bf.IsEnabled == !request.IsDisabled.Value);
+                query = query.Where(bf => bf.IsEnabled == !request.IsDisabled.Value || bf.IsEnabled==null);
+                
             }
 
             // Filter by feature/release toggle type
