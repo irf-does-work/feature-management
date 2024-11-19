@@ -7,13 +7,14 @@ namespace FeatureToggle.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IMediator mediator, CancellationToken cancellationToken) : ControllerBase
+    public class UserController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
 
         [HttpPost]
         public async Task<AddUserResponseDTO> AddUser(AddUserCommand command)
         {
+            var cancellationToken = HttpContext.RequestAborted;
             return await _mediator.Send(command,cancellationToken);
         }
         
