@@ -7,7 +7,7 @@ namespace FeatureToggle.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController(IMediator mediator, CancellationToken cancellationToken) : ControllerBase
+    public class LoginController(IMediator mediator) : ControllerBase
     {
 
         private readonly IMediator _mediator = mediator;
@@ -15,6 +15,7 @@ namespace FeatureToggle.API.Controllers
         [HttpPost]
         public async Task<LoginResponseDTO> SignIn(GetAuthTokenQuery command)
         {
+            var cancellationToken = HttpContext.RequestAborted;
             return await _mediator.Send(command,cancellationToken);
         }
     }
