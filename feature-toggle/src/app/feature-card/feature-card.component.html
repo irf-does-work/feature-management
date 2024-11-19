@@ -85,7 +85,7 @@
 
         <!-- Page Numbers -->
 
-        @for( page of [].constructor(totalPages());track page; let i = $index){
+        @for( page of [].constructor(totalPages());track i; let i = $index){
             
             <li class="page-item"
             [class.active]="currentPage === i + 1">

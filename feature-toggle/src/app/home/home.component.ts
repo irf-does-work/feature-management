@@ -19,7 +19,6 @@ export class HomeComponent {
 
   applyFilters(): void {
     this.selectedFilters = [];
-
     const checkboxes = document.querySelectorAll('.form-check-input');
 
     checkboxes.forEach((checkbox) => {
@@ -28,8 +27,8 @@ export class HomeComponent {
         this.selectedFilters.push(inputElement.value);
       }
     });
-
-    // console.log('Selected Filters:', this.selectedFilters);
+    
+     console.log('Selected Filters:', this.selectedFilters);
     //logic
   }
 }
