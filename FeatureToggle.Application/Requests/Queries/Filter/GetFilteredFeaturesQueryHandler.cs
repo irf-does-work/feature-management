@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FeatureToggle.Application.DTOs;
-using FeatureToggle.Domain.Entity.BusinessSchema;
+﻿using FeatureToggle.Application.DTOs;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace FeatureToggle.Application.Requests.Queries.Filter
 {
@@ -37,7 +30,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
 
                 if (request.IsDisabledFilter.HasValue)
                 {
-                    query = query.Where(bf => bf.IsEnabled == !request.IsDisabledFilter.Value /*|| bf.IsEnabled==null*/);
+                    query = query.Where(bf => bf.IsEnabled == !request.IsDisabledFilter.Value);
 
                 }
             }
@@ -59,7 +52,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                 }
             }
 
-            // Query for features with existing BusinessFeatureFlag
+            // Features in BusinessFeatureFlag
             var featuresWithFlags = query.Select(bf => new FilteredFeatureDTO
             {
                 FeatureFlagId = bf.FeatureFlagId,
@@ -85,23 +78,24 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                         BusinessFeatureFlag = businessFeatureFlag
                     }
                 )
-                .Where(result => result.BusinessFeatureFlag == null) // Only features without flags
+                .Where(result => result.BusinessFeatureFlag == null) 
                 .Select(result => new FilteredFeatureDTO
                 {
-                    FeatureFlagId = 0, // No FeatureFlagId since it doesn't exist
+                    FeatureFlagId = 0, 
                     FeatureId = result.Feature.FeatureId,
                     FeatureName = result.Feature.FeatureName
                 });
-                // Combine both queries
-                var combinedQuery = featuresWithFlags.Concat(featuresWithoutFlags);
+
+                var combinedQuery = featuresWithFlags.Concat(featuresWithoutFlags)
+                                    .GroupBy(f =>f.FeatureId)  //
+                                    .Select(x => x.First());  //
                 return await combinedQuery.ToListAsync(cancellationToken);
             }
-            
-
-            
-
-            // Execute and return the result
-            var result = await featuresWithFlags.ToListAsync(cancellationToken);
+                
+            var result = await featuresWithFlags
+                                    .GroupBy(f => f.FeatureId)  //
+                                    .Select(x => x.First())  //
+                                    .ToListAsync(cancellationToken);
             return result;
             
         }
