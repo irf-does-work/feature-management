@@ -19,31 +19,44 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
         public async Task<List<FilteredFeatureDTO>> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
         {
             var query = _businessContext.BusinessFeatureFlag
-                .Include(bf => bf.Feature)  // Include Feature details
-                .ThenInclude(f => f.FeatureType)  // Include the FeatureType navigation for the feature
+                .Include(bf => bf.Feature)  
+                .ThenInclude(f => f.FeatureType)  
                 .AsQueryable();
 
             // Filter by enabled/disabled state
-            if (request.IsEnabled.HasValue)
+            if (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue)
             {
-                query = query.Where(bf => bf.IsEnabled == request.IsEnabled.Value);
+                // Both Enabled and Disabled
             }
-
-            if (request.IsDisabled.HasValue)
+            else
             {
-                query = query.Where(bf => bf.IsEnabled == !request.IsDisabled.Value || bf.IsEnabled==null);
-                
-            }
+                if (request.IsEnabledFilter.HasValue)
+                {
+                    query = query.Where(bf => bf.IsEnabled == request.IsEnabledFilter.Value);
+                }
 
+                 if (request.IsDisabledFilter.HasValue)
+                {
+                    query = query.Where(bf => bf.IsEnabled == !request.IsDisabledFilter.Value /*|| bf.IsEnabled==null*/);
+
+                }
+            }
             // Filter by feature/release toggle type
-            if (request.FeatureToggleType.HasValue)
+            if (request.ReleaseToggleFilter.HasValue && request.FeatureToggleFilter.HasValue)
             {
-                query = query.Where(bf => bf.Feature.FeatureTypeId == request.FeatureToggleType.Value);
+                // Both Release and Feature
             }
-
-            if (request.ReleaseToggleType.HasValue)
+            else
             {
-                query = query.Where(bf => bf.Feature.FeatureTypeId == request.ReleaseToggleType.Value);
+                if (request.ReleaseToggleFilter.HasValue)
+                {
+                    query = query.Where(bf => bf.Feature.FeatureTypeId == 1);
+                }
+
+                if (request.FeatureToggleFilter.HasValue)
+                {
+                    query = query.Where(bf => bf.Feature.FeatureTypeId == 2);
+                }
             }
 
             // Project the result into a list of FilteredFeatureDTO
