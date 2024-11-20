@@ -35,7 +35,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                     query = query.Where(bf => bf.IsEnabled == request.IsEnabledFilter.Value);
                 }
 
-                 if (request.IsDisabledFilter.HasValue)
+                if (request.IsDisabledFilter.HasValue)
                 {
                     query = query.Where(bf => bf.IsEnabled == !request.IsDisabledFilter.Value /*|| bf.IsEnabled==null*/);
 
@@ -59,17 +59,51 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                 }
             }
 
-            // Project the result into a list of FilteredFeatureDTO
-            var result = await query
-                .Select(bf => new FilteredFeatureDTO
-                {
-                    FeatureFlagId = bf.FeatureFlagId,
-                    FeatureId = bf.FeatureId,
-                    FeatureName = bf.Feature.FeatureName
-                })
-                .ToListAsync(cancellationToken);
+            // Query for features with existing BusinessFeatureFlag
+            var featuresWithFlags = query.Select(bf => new FilteredFeatureDTO
+            {
+                FeatureFlagId = bf.FeatureFlagId,
+                FeatureId = bf.FeatureId,
+                FeatureName = bf.Feature.FeatureName
+            });
 
+            if (request.IsDisabledFilter.HasValue || (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue))
+            {
+
+                var featuresWithoutFlags = _businessContext.Feature
+                .GroupJoin(
+                    _businessContext.BusinessFeatureFlag,
+                    feature => feature.FeatureId,
+                    businessFeatureFlag => businessFeatureFlag.FeatureId,
+                    (feature, businessFeatureFlags) => new { Feature = feature, BusinessFeatureFlags = businessFeatureFlags }
+                )
+                .SelectMany(
+                    result => result.BusinessFeatureFlags.DefaultIfEmpty(),
+                    (result, businessFeatureFlag) => new
+                    {
+                        Feature = result.Feature,
+                        BusinessFeatureFlag = businessFeatureFlag
+                    }
+                )
+                .Where(result => result.BusinessFeatureFlag == null) // Only features without flags
+                .Select(result => new FilteredFeatureDTO
+                {
+                    FeatureFlagId = 0, // No FeatureFlagId since it doesn't exist
+                    FeatureId = result.Feature.FeatureId,
+                    FeatureName = result.Feature.FeatureName
+                });
+                // Combine both queries
+                var combinedQuery = featuresWithFlags.Concat(featuresWithoutFlags);
+                return await combinedQuery.ToListAsync(cancellationToken);
+            }
+            
+
+            
+
+            // Execute and return the result
+            var result = await featuresWithFlags.ToListAsync(cancellationToken);
             return result;
+            
         }
 
     }
