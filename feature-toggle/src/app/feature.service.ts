@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { ILoginAccept, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
+import { IBusiness, ILoginAccept, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -32,9 +32,16 @@ export class FeatureService {
     return this.http.post(`${this.baseUrl}/api/User`, data);
   }
 
-  updateToggle(data : IUpdateToggle) : Observable<any> {
+  updateToggle(data: IUpdateToggle) : Observable<any> {
     return this.http.post(`${this.baseUrl}/api/BusinessFeatureFlag/feature/update`,data);
   }
+
+  getBusinesses(apiEndpoint: string, featureId: number): Observable<IBusiness[]> {
+    return this.http.get<IBusiness[]>(`${this.baseUrl}${apiEndpoint}?featureId=${featureId}`);
+  }
+  
+
+
 
 
 

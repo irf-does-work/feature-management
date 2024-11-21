@@ -1,4 +1,6 @@
-﻿namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
+﻿using Microsoft.AspNetCore.SignalR;
+
+namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
 {
     public class Log
     {
@@ -8,6 +10,16 @@
         public int? BusinessId { get; private set; }
         public DateTime Time { get; private set; }
         public Actions Action { get; private set; }
-        
+
+        public Log(string userId, int featureId, int? businessId, Actions action)
+        {
+            UserId = userId;
+            FeatureId = featureId;
+            BusinessId = businessId;
+            Action = action;
+            Time = DateTime.Now;
+
+        }
+
     }
 }

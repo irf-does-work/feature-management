@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FeatureToggle.Application.Requests.Commands.LogCommands;
 using FeatureToggle.Domain.Entity.BusinessSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 {
-    public class UpdateToggleCommandHandler(BusinessContext businessContext) : IRequestHandler<UpdateToggleCommand, int>
+    public class UpdateToggleCommandHandler(BusinessContext businessContext, IMediator mediator) : IRequestHandler<UpdateToggleCommand, int>
     {
         public async Task<int> Handle(UpdateToggleCommand request, CancellationToken cancellationToken)
         {
@@ -30,6 +31,15 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             selectBusiness.UpdateIsenabled(true);
                             businessContext.BusinessFeatureFlag.Update(selectBusiness);
 
+                            AddLogCommand addLog = new AddLogCommand()
+                            {
+                                FeatureId = request.FeatureId,
+                                BusinessId = null,
+                                UserId = request.UserId,
+                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                            };
+
+                            mediator.Send(addLog);
                         }
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -41,6 +51,17 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature);
 
                         businessContext.AddAsync(newBusinessFlag, cancellationToken);
+
+
+                        AddLogCommand addLog = new AddLogCommand()
+                        {
+                            FeatureId = request.FeatureId,
+                            BusinessId = null,
+                            UserId = request.UserId,
+                            action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                        };
+
+                        mediator.Send(addLog);
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
                     }
@@ -57,6 +78,18 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         selectBusiness.UpdateIsenabled(false);
 
                         businessContext.BusinessFeatureFlag.Update(selectBusiness);
+
+
+                        AddLogCommand addLog = new AddLogCommand()
+                        {
+                            FeatureId = request.FeatureId,
+                            BusinessId = null,
+                            UserId = request.UserId,
+                            action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
+                        };
+
+                        mediator.Send(addLog);
+
                         return await businessContext.SaveChangesAsync(cancellationToken);
                     }
 
@@ -82,9 +115,23 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         {
                             selectedBusiness.UpdateIsenabled(true);
                             businessContext.BusinessFeatureFlag.Update(selectedBusiness);
+
+                            AddLogCommand addLog = new AddLogCommand()
+                            {
+                                FeatureId = request.FeatureId,
+                                BusinessId = request.BusinessId,
+                                UserId = request.UserId,
+                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                            };
+
+                            mediator.Send(addLog);
+
+                            return await businessContext.SaveChangesAsync(cancellationToken);
                         }
 
-                        return await businessContext.SaveChangesAsync(cancellationToken);
+                        return -1;
+
+                        
                     }
                     else
                     {
@@ -99,7 +146,18 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                             businessContext.AddAsync(newBusinessFlag, cancellationToken);
 
+                            AddLogCommand addLog = new AddLogCommand()
+                            {
+                                FeatureId = request.FeatureId,
+                                BusinessId = request.BusinessId,
+                                UserId = request.UserId,
+                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                            };
+
+                            mediator.Send(addLog);
+
                             return await businessContext.SaveChangesAsync(cancellationToken);
+
                         }
 
                         return -1;
@@ -123,6 +181,17 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             selectedBusiness.UpdateIsenabled(false);
 
                             businessContext.BusinessFeatureFlag.Update(selectedBusiness);
+
+                            AddLogCommand addLog = new AddLogCommand()
+                            {
+                                FeatureId = request.FeatureId,
+                                BusinessId = request.BusinessId,
+                                UserId = request.UserId,
+                                action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
+                            };
+
+                            mediator.Send(addLog);
+
 
                             return await businessContext.SaveChangesAsync(cancellationToken);
 

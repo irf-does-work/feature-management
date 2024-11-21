@@ -1,5 +1,6 @@
 import { FormControl } from "@angular/forms";
 import { FeatureStatus , FeatureType} from "../enum/feature.enum";
+import { UrlMatchResult } from "@angular/router";
 
 export interface ILoginForm {
     email: FormControl<string | null>;
@@ -25,6 +26,7 @@ export interface ISignUpAccept {
 }
 
 export interface IFeature {
+    FeatureId: number;
     name: string;
     type: FeatureType;
     status: FeatureStatus;
@@ -35,10 +37,10 @@ export interface IFeature {
 export interface IBusiness {
     name: string;
     businessId: string;
-    status: FeatureStatus;
 }
 
 export interface IUpdateToggle{
+    UserId : string | undefined;
     featureId: number;
     businessId : number | null;
     enableOrDisable: boolean;

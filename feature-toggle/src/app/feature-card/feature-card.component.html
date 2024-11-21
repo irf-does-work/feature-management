@@ -16,10 +16,10 @@
 
                     <div class="d-flex">
                     @if(feature.type === 'feature'){
-                    <button type="button" class="btn btn-primary" (click)="openDialog(featureStatusEnum.Enabled)">Enable</button>
+                    <button type="button" class="btn btn-primary" (click)="openDialog(featureStatusEnum.Enabled,feature.FeatureId)">Enable</button>
 
                         @if(isAdmin){
-                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog(featureStatusEnum.Disabled)">Disable</button>
+                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog(featureStatusEnum.Disabled,feature.FeatureId)">Disable</button>
                         }
 
                         @if (!isAdmin) {
@@ -39,14 +39,14 @@
                     @if(feature.type === featureTypeEnum.Release){
 
                         @if(feature.status === featureStatusEnum.Disabled){
-                        <button type="button" class="btn btn-success" (click)="feature.status = featureStatusEnum.Enabled">
+                        <button type="button" class="btn btn-success" (click)="feature.status = featureStatusEnum.Enabled; update_Toggle(feature.FeatureId,null,featureStatusEnum.Enabled)">
                             Enable
                         </button>
 
                         }
 
                         @if(feature.status === featureStatusEnum.Enabled && isAdmin){
-                            <button type="button" class="btn btn-danger" (click)="feature.status = featureStatusEnum.Disabled">
+                            <button type="button" class="btn btn-danger" (click)="feature.status = featureStatusEnum.Disabled; update_Toggle(feature.FeatureId,null,featureStatusEnum.Disabled)">
                             Disable   
                         </button>
 
