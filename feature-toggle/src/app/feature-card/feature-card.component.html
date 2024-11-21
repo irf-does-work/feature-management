@@ -4,18 +4,18 @@
         @for (feature of paginatedFeatures; track feature) {
         <div class="col-md-3 mb-3">
             <div class="card" [ngClass]="{
-                'status-border-feature': feature.type === featureTypeEnum.Feature,
-                'status-border-active': feature.type === featureTypeEnum.Release && feature.status === featureStatusEnum.Enabled,
-                'status-border-inactive': feature.type === featureTypeEnum.Release && feature.status === featureStatusEnum.Disabled
+                'status-border-feature': feature.featureType === 2,
+                'status-border-active': feature.featureType === 1 && feature.isEnabled === true,
+                'status-border-inactive': feature.featureType === 1 && feature.isEnabled === false
               }">
                 <div class="card-body">
-                    <h4 class="card-title">{{ feature.name }}</h4>
-                    <p class="card-text">{{ feature.type === featureTypeEnum.Feature ? 'Feature Toggle' : 'Release Toggle' }}</p>
+                    <h4 class="card-title">{{ feature.featureName }}</h4>
+                    <p class="card-text">{{ feature.featureType === 2 ? 'Feature Toggle' : 'Release Toggle' }}</p>
 
                     <!-- Feature Toggle Buttons -->
 
                     <div class="d-flex">
-                    @if(feature.type === 'feature'){
+                    @if(feature.featureType === 2){
                     <button type="button" class="btn btn-primary" (click)="openDialog(featureStatusEnum.Enabled,feature.FeatureId)">Enable</button>
 
                         @if(isAdmin){
@@ -36,23 +36,23 @@
 
 
                     <!-- Release Toggle Button -->
-                    @if(feature.type === featureTypeEnum.Release){
+                    @if(feature.featureType === 1){
 
-                        @if(feature.status === featureStatusEnum.Disabled){
-                        <button type="button" class="btn btn-success" (click)="feature.status = featureStatusEnum.Enabled; update_Toggle(feature.FeatureId,null,featureStatusEnum.Enabled)">
+                        @if(feature.isEnabled === false){
+                        <button type="button" class="btn btn-success" (click)="feature.isEnabled = true; update_Toggle(feature.FeatureId,null,featureStatusEnum.Enabled)">
                             Enable
                         </button>
 
                         }
 
-                        @if(feature.status === featureStatusEnum.Enabled && isAdmin){
-                            <button type="button" class="btn btn-danger" (click)="feature.status = featureStatusEnum.Disabled; update_Toggle(feature.FeatureId,null,featureStatusEnum.Disabled)">
+                        @if(feature.isEnabled === true  && isAdmin){
+                            <button type="button" class="btn btn-danger" (click)="feature.isEnabled = false; update_Toggle(feature.FeatureId,null,featureStatusEnum.Disabled)">
                             Disable   
                         </button>
 
                         }
 
-                        @if (feature.status === featureStatusEnum.Enabled && !isAdmin) {
+                        @if (feature.isEnabled === true && !isAdmin) {
                         <div class="text-center">
                             <div class="badge bg-danger text-dark text-wrap w-75 my-1">
                                 <p class="m-1">To disable contact Admin</p>

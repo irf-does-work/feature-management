@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { IBusiness, ILoginAccept, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
+import { IBusiness, ILoginAccept, IselectedFilters, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -14,12 +14,7 @@ export class FeatureService {
   public userId: number = 0;
 
   constructor(private http: HttpClient) {
-    // Retrieve userId from sessionStorage on service initialization
-    // const storedUserId = sessionStorage.getItem('userId');
-    // const storedUserId = 0; 
-    // if (storedUserId) {
-    //   this.userId = parseInt(storedUserId, 10); // Parse the stored string value to a number
-    // }
+    
   }
 
 
@@ -89,4 +84,14 @@ export class FeatureService {
     }
   }
   
+  getFeatures(selectedFilters2: IselectedFilters): Observable<any> {
+    const params = new HttpParams()
+      .set('featureToggleType', selectedFilters2.featureFilter !== null ? selectedFilters2.featureFilter.toString() : '')
+      .set('releaseToggleType', selectedFilters2.releaseFilter !== null ? selectedFilters2.releaseFilter.toString() : '')
+      .set('isEnabled', selectedFilters2.enabledFilter !== null ? selectedFilters2.enabledFilter.toString() : '')
+      .set('isDisabled', selectedFilters2.disabledFilter !== null ? selectedFilters2.disabledFilter.toString() : '');
+
+    return this.http.get(`${this.baseUrl}/api/Filter`,{params});
+  }
+
 }
