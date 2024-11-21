@@ -1,10 +1,11 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IFeature , IBusiness, IRetrievedFeatures} from '../interface/feature.interface';
+import { IFeature , IBusiness, IRetrievedFeatures, IselectedFilters} from '../interface/feature.interface';
+import { FeatureService } from '../feature.service';
 
 
 
@@ -19,70 +20,94 @@ import { IFeature , IBusiness, IRetrievedFeatures} from '../interface/feature.in
 
 export class FeatureCardComponent {
   
-  constructor(public dialog: MatDialog) {}
+  
+  @Input() selectedFilters: IselectedFilters | null = null; //n
+  features: IRetrievedFeatures[] = []; //n
+
+  constructor(public dialog: MatDialog, private featureService: FeatureService) {}
+ 
+  ngOnChanges() { //nfn
+    if (this.selectedFilters) {
+      this.fetchFeatures();
+    }
+  }
+
+  fetchFeatures() { //nfn
+    this.featureService.getFeatures(this.selectedFilters!).subscribe({
+      next: (response) => {
+        this.features = response;
+        console.log('Retrieved Features:', this.features);
+      },
+      error: (err) => {
+        console.error('Error fetching features:', err);
+      },
+    });
+  }
   
   isAdmin = 1;
 
+
   featureTypeEnum = FeatureType;  
   featureStatusEnum = FeatureStatus; 
-  features: IFeature[] = [
-    { name: 'Invoice Generation', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Tax Calculation', type: FeatureType.Feature, status: FeatureStatus.Disabled },
-    { name: 'Fraud Detection', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Transaction History', type: FeatureType.Release, status: FeatureStatus.Enabled},
-    { name: 'Mobile Payment', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Currency Exchange', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Batch Processing', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'Verify Bank', type: FeatureType.Feature, status: FeatureStatus.Disabled },
-    { name: 'Invoice Template', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Automated Payment', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Audit Logs', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'Report Generator', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'User Analytics', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Data Sync', type:FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Payment Gateway', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Currency Conversion', type: FeatureType.Feature, status: FeatureStatus.Disabled },
-    { name: 'Fraud Detection V2', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Billing Cycle', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Account Management', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Dynamic Pricing', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Credit Score Check', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'Customer Feedback', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Live Chat Support', type: FeatureType.Feature, status: FeatureStatus.Disabled},
-    { name: 'Data Encryption', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'API Throttling', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Mobile Notifications', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Transaction Security', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Password Reset', type: FeatureType.Feature, status: FeatureStatus.Disabled },
-    { name: 'Invoice Generation', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Tax Calculation', type: FeatureType.Feature, status: FeatureStatus.Disabled },
-    { name: 'Fraud Detection', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Transaction History', type: FeatureType.Release, status: FeatureStatus.Enabled},
-    { name: 'Mobile Payment', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Currency Exchange', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Batch Processing', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'Verify Bank', type: FeatureType.Feature, status: FeatureStatus.Disabled },
-    { name: 'Invoice Template', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Automated Payment', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Audit Logs', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'Report Generator', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'User Analytics', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Data Sync', type:FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Payment Gateway', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Currency Conversion', type: FeatureType.Feature, status: FeatureStatus.Disabled },
-    { name: 'Fraud Detection V2', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Billing Cycle', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Account Management', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Dynamic Pricing', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Credit Score Check', type: FeatureType.Release, status: FeatureStatus.Disabled},
-    { name: 'Customer Feedback', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Live Chat Support', type: FeatureType.Feature, status: FeatureStatus.Disabled},
-    { name: 'Data Encryption', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'API Throttling', type: FeatureType.Release, status: FeatureStatus.Disabled },
-    { name: 'Mobile Notifications', type: FeatureType.Feature, status: FeatureStatus.Enabled },
-    { name: 'Transaction Security', type: FeatureType.Release, status: FeatureStatus.Enabled },
-    { name: 'Password Reset', type: FeatureType.Feature, status: FeatureStatus.Disabled }
-  ];
+
+  // features: IFeature[] = [
+  //   { name: 'Invoice Generation', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Tax Calculation', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+  //   { name: 'Fraud Detection', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Transaction History', type: FeatureType.Release, status: FeatureStatus.Enabled},
+  //   { name: 'Mobile Payment', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Currency Exchange', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Batch Processing', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'Verify Bank', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+  //   { name: 'Invoice Template', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Automated Payment', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Audit Logs', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'Report Generator', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'User Analytics', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Data Sync', type:FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Payment Gateway', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Currency Conversion', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+  //   { name: 'Fraud Detection V2', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Billing Cycle', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Account Management', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Dynamic Pricing', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Credit Score Check', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'Customer Feedback', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Live Chat Support', type: FeatureType.Feature, status: FeatureStatus.Disabled},
+  //   { name: 'Data Encryption', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'API Throttling', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Mobile Notifications', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Transaction Security', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Password Reset', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+  //   { name: 'Invoice Generation', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Tax Calculation', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+  //   { name: 'Fraud Detection', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Transaction History', type: FeatureType.Release, status: FeatureStatus.Enabled},
+  //   { name: 'Mobile Payment', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Currency Exchange', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Batch Processing', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'Verify Bank', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+  //   { name: 'Invoice Template', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Automated Payment', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Audit Logs', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'Report Generator', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'User Analytics', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Data Sync', type:FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Payment Gateway', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Currency Conversion', type: FeatureType.Feature, status: FeatureStatus.Disabled },
+  //   { name: 'Fraud Detection V2', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Billing Cycle', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Account Management', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Dynamic Pricing', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Credit Score Check', type: FeatureType.Release, status: FeatureStatus.Disabled},
+  //   { name: 'Customer Feedback', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Live Chat Support', type: FeatureType.Feature, status: FeatureStatus.Disabled},
+  //   { name: 'Data Encryption', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'API Throttling', type: FeatureType.Release, status: FeatureStatus.Disabled },
+  //   { name: 'Mobile Notifications', type: FeatureType.Feature, status: FeatureStatus.Enabled },
+  //   { name: 'Transaction Security', type: FeatureType.Release, status: FeatureStatus.Enabled },
+  //   { name: 'Password Reset', type: FeatureType.Feature, status: FeatureStatus.Disabled }
+  // ];
 
   businesses: IBusiness[] = [
     {name: 'Business 1', businessId: '1',status: FeatureStatus.Enabled},
@@ -98,14 +123,14 @@ export class FeatureCardComponent {
 
   ];
   
-  retrievedFeatures: IRetrievedFeatures[] = []
+  //retrievedFeatures: IRetrievedFeatures[] = []
 
   business: string | undefined; 
   name: string | undefined; 
   itemsPerPage: number = 12;
   currentPage: number = 1;
 
-  get paginatedFeatures(): IFeature[] {
+  get paginatedFeatures(): IRetrievedFeatures[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.features.slice(startIndex, startIndex + this.itemsPerPage);
   }

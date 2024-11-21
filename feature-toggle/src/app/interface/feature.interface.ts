@@ -33,8 +33,8 @@ export interface IFeature {
 export interface IRetrievedFeatures{
     featureFlagId: number;
     FeatureId: number;
-    FeatureName: string;
-    FeatureType: number;
+    featureName: string;
+    featureType: number;
     isEnabled: boolean | null;
 }
 

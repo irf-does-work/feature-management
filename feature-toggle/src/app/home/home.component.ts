@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FeatureCardComponent } from '../feature-card/feature-card.component';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
@@ -27,7 +27,7 @@ export class HomeComponent {
     enabledFilter: null,
     disabledFilter: null
   };
-
+  @Output() applyFiltersEvent = new EventEmitter<IselectedFilters>(); //
   constructor(private featureService:FeatureService){ }
   
   applyFilters(): void {
@@ -92,18 +92,8 @@ export class HomeComponent {
 
     console.log('Selected Filters:', this.selectedFilters2);
     //logic
-    this.featureService.getFeatures(this.selectedFilters2).subscribe(
-      {
-        next:(response)=>
-        {
-          console.log(response);
-         },
-         error:(err)=>
-         {
-          console.log('error message:',err);
-         }
-      }
-    )
+    this.applyFiltersEvent.emit(this.selectedFilters2);
+
   }
 
   toggleReleaseCheckbox() {
