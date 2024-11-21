@@ -30,12 +30,6 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
 
-                   //bool result =  await businessContext.SaveChangesAsync(cancellationToken) > 0;
-
-                    //if (result)
-                    //{
-                    //    await mediator.Send(new , cancellationToken);
-                    //} 
                 }
                 
 

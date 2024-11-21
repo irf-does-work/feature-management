@@ -36,4 +36,11 @@ export interface IBusiness {
     name: string;
     businessId: string;
     status: FeatureStatus;
-  }
+}
+
+export interface IUpdateToggle{
+    featureId: number;
+    businessId : number | null;
+    enableOrDisable: boolean;
+}
+

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { ILoginAccept, ISignUpAccept} from './interface/feature.interface';
+import { ILoginAccept, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -31,6 +31,14 @@ export class FeatureService {
   addUser(data: ISignUpAccept): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/User`, data);
   }
+
+  updateToggle(data : IUpdateToggle) : Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/BusinessFeatureFlag/feature/update`,data);
+  }
+
+
+
+  //auth
 
   isLoggedIn(){
     return localStorage.getItem(TOKEN_KEY)!= null? true : false;

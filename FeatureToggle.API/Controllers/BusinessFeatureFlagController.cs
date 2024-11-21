@@ -32,6 +32,12 @@ namespace FeatureToggle.API.Controllers
         {
             return await mediator.Send(command);
         }
+
+        [HttpPost("feature/update")]
+        public async Task<int> UpdateFeature(UpdateToggleCommand command) 
+        {
+            return await mediator.Send(command);
+        }
     }
 
 }
