@@ -15,7 +15,7 @@
                             <div class="mx-3">
                                 <li>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" [value]=featureTypeEnum.Feature id="filterAction1">
+                                        <input class="form-check-input" type="checkbox" id="filterAction1">
                                         <label class="form-check-label" for="filterAction1">
                                             Feature Toggle
                                         </label>
@@ -24,7 +24,7 @@
                 
                                 <li>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" [value]=featureTypeEnum.Release id="filterAction2" name="rtCheckbox" [(ngModel)]="rtCheckboxSate">
+                                        <input class="form-check-input" type="checkbox" id="filterAction2" name="rtCheckbox" [(ngModel)]="rtCheckboxSate" (change)="toggleReleaseCheckbox()">
                                         <label class="form-check-label" for="filterAction2">
                                             Release Toggle
                                         </label>
@@ -33,7 +33,7 @@
                 
                                 <li>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Enabled id="filterAction3" [disabled]="!rtCheckboxSate">
+                                        <input class="form-check-input" type="checkbox" id="filterAction3" [disabled]="!rtCheckboxSate">
                                         <label class="form-check-label" for="filterAction3">
                                             Enabled
                                         </label>
@@ -42,7 +42,7 @@
                 
                                 <li>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Disabled id="filterAction4" [disabled]="!rtCheckboxSate">
+                                        <input class="form-check-input" type="checkbox" id="filterAction4" [disabled]="!rtCheckboxSate">
                                         <label class="form-check-label" for="filterAction4">
                                             Disabled
                                         </label>

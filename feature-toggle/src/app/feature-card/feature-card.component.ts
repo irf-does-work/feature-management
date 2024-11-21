@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IFeature , IBusiness} from '../interface/feature.interface';
+import { IFeature , IBusiness, IRetrievedFeatures} from '../interface/feature.interface';
 
 
 
@@ -19,7 +19,7 @@ import { IFeature , IBusiness} from '../interface/feature.interface';
 
 export class FeatureCardComponent {
   
-  constructor(public dialog: MatDialog, ) {}
+  constructor(public dialog: MatDialog) {}
   
   isAdmin = 1;
 
@@ -97,14 +97,11 @@ export class FeatureCardComponent {
     {name: 'Business 10', businessId: '10',status: FeatureStatus.Disabled},
 
   ];
-
+  
+  retrievedFeatures: IRetrievedFeatures[] = []
 
   business: string | undefined; 
   name: string | undefined; 
-
-
-
-
   itemsPerPage: number = 12;
   currentPage: number = 1;
 

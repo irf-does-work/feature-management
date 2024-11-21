@@ -30,7 +30,20 @@ export interface IFeature {
     status: FeatureStatus;
 }
 
+export interface IRetrievedFeatures{
+    featureFlagId: number;
+    FeatureId: number;
+    FeatureName: string;
+    FeatureType: number;
+    isEnabled: boolean | null;
+}
 
+export interface IselectedFilters{
+    featureFilter: boolean | null;
+    releaseFilter: boolean | null;
+    enabledFilter: boolean | null;
+    disabledFilter: boolean | null;
+}
 
 export interface IBusiness {
     name: string;

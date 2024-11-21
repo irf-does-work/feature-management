@@ -18,7 +18,6 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] bool? featureToggleType
            )
         {
-            // Create the request object with query parameters
             var query = new GetFilteredFeaturesQuery
             {
                 IsEnabledFilter = isEnabled,
@@ -27,11 +26,7 @@ namespace FeatureToggle.API.Controllers
                 FeatureToggleFilter = featureToggleType
             };
 
-            // Execute the query handler and get the filtered result
             return await mediator.Send(query);
-
-            // Return the result (OK status with data)
-           // return Ok(filteredFeatures);
         }
 
     }

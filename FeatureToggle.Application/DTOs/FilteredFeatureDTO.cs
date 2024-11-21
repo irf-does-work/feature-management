@@ -14,6 +14,7 @@ namespace FeatureToggle.Application.DTOs
         public string FeatureName { get; set; }
         //public int? BusinessId { get; set; }
         //public string? BusinessName { get; set; }
+        public int FeatureType { get; set; }
         public bool? isEnabled { get; set; }
 
         

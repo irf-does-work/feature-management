@@ -57,7 +57,9 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             {
                 FeatureFlagId = bf.FeatureFlagId,
                 FeatureId = bf.FeatureId,
-                FeatureName = bf.Feature.FeatureName
+                FeatureName = bf.Feature.FeatureName,
+                FeatureType = bf.Feature.FeatureTypeId,
+                isEnabled = bf.IsEnabled
             });
 
             // If 'ReleaseToggleFilter' is set or no filters are set, include release toggles that are in the Feature table but not in BusinessFeatureFlag
@@ -84,7 +86,9 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                     {
                         FeatureFlagId = 0,  // No flag assigned
                         FeatureId = result.Feature.FeatureId,
-                        FeatureName = result.Feature.FeatureName
+                        FeatureName = result.Feature.FeatureName,
+                        FeatureType = result.Feature.FeatureTypeId,
+                        isEnabled = null
                     });
 
                 featuresWithFlags = featuresWithFlags.Concat(releaseTogglesWithoutFlags);
@@ -114,7 +118,9 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                     {
                         FeatureFlagId = 0,  // No flag assigned
                         FeatureId = result.Feature.FeatureId,
-                        FeatureName = result.Feature.FeatureName
+                        FeatureName = result.Feature.FeatureName,
+                        FeatureType = result.Feature.FeatureTypeId,
+                        isEnabled = null
                     });
 
                 featuresWithFlags = featuresWithFlags.Concat(featureTogglesWithoutFlags);
