@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 {
-    public class DisableFeatureCommandHandler(BusinessContext businessContext) : IRequestHandler<DisableFeatureCommand, int>
+    public class DisableFeatureCommandHandler(BusinessContext businessContext, IMediator mediator) : IRequestHandler<DisableFeatureCommand, int>
     {
         public async Task<int> Handle(DisableFeatureCommand request, CancellationToken cancellationToken)
         {
@@ -30,6 +30,12 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
 
+                   //bool result =  await businessContext.SaveChangesAsync(cancellationToken) > 0;
+
+                    //if (result)
+                    //{
+                    //    await mediator.Send(new , cancellationToken);
+                    //} 
                 }
                 
 
