@@ -24,7 +24,7 @@
                 
                                 <li>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" [value]=featureTypeEnum.Release id="filterAction2">
+                                        <input class="form-check-input" type="checkbox" [value]=featureTypeEnum.Release id="filterAction2" name="rtCheckbox" [(ngModel)]="rtCheckboxSate">
                                         <label class="form-check-label" for="filterAction2">
                                             Release Toggle
                                         </label>
@@ -33,7 +33,7 @@
                 
                                 <li>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Enabled id="filterAction3">
+                                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Enabled id="filterAction3" [disabled]="!rtCheckboxSate">
                                         <label class="form-check-label" for="filterAction3">
                                             Enabled
                                         </label>
@@ -42,7 +42,7 @@
                 
                                 <li>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Disabled id="filterAction4">
+                                        <input class="form-check-input" type="checkbox" [value]=featureStatusEnum.Disabled id="filterAction4" [disabled]="!rtCheckboxSate">
                                         <label class="form-check-label" for="filterAction4">
                                             Disabled
                                         </label>
