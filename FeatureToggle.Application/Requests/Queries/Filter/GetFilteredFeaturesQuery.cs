@@ -14,6 +14,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
         public bool? ReleaseToggleFilter { get; set; }
         public bool? IsEnabledFilter { get; set; } 
         public bool? IsDisabledFilter { get; set; } 
+        public string? SearchQuery { get; set; }
                 
     }
 }

@@ -135,7 +135,13 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             // Combine results for both release toggles (with flags) and feature toggles (with or without flags)
             var combinedQuery = featuresWithFlags
                 .GroupBy(f => f.FeatureId)
-                .Select(x => x.First());  // Select the first feature for each unique FeatureId
+                .Select(x => x.First())     // Select the first feature for each unique FeatureId
+                .AsQueryable();  
+
+            if (request.SearchQuery is not null)
+            {
+                combinedQuery = combinedQuery.Where(x => EF.Functions.Like(x.FeatureName, $"%{request.SearchQuery}%"));
+            }
 
             return await combinedQuery.ToListAsync(cancellationToken);
         }

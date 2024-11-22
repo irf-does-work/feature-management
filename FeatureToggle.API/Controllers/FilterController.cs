@@ -15,7 +15,8 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] bool? isEnabled,
             [FromQuery] bool? isDisabled,
             [FromQuery] bool? releaseToggleType,
-            [FromQuery] bool? featureToggleType
+            [FromQuery] bool? featureToggleType,
+            [FromQuery] string? searchQuery
            )
         {
             var query = new GetFilteredFeaturesQuery
@@ -23,7 +24,8 @@ namespace FeatureToggle.API.Controllers
                 IsEnabledFilter = isEnabled,
                 IsDisabledFilter = isDisabled,
                 ReleaseToggleFilter = releaseToggleType,
-                FeatureToggleFilter = featureToggleType
+                FeatureToggleFilter = featureToggleType,
+                SearchQuery = searchQuery
             };
 
             return await mediator.Send(query);

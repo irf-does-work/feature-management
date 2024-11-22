@@ -4,9 +4,17 @@ namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
 {
     public class User : IdentityUser
     {
-        public string Id {  get; private set; }
+        public new string Id
+        {
+            get => base.Id;
+            private set => base.Id = value;
+        }
+        public new string UserName
+        {
+            get => base.UserName;
+            private set => base.UserName = value;
+        }
         public string Name { get; private set; }
-        public string? UserName {  get; private set; }
         public bool IsAdmin { get; private set; }
 
         public User() { }
