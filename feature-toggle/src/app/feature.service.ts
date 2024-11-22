@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { IBusiness, ILoginAccept, IselectedFilters, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
+import { IBusiness, Ilog, ILoginAccept, IselectedFilters, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -33,6 +33,10 @@ export class FeatureService {
 
   getBusinesses(apiEndpoint: string, featureId: number): Observable<IBusiness[]> {
     return this.http.get<IBusiness[]>(`${this.baseUrl}${apiEndpoint}?featureId=${featureId}`);
+  }
+
+  getLog() : Observable<Ilog[]> {
+    return this.http.get<Ilog[]>(`${this.baseUrl}/api/Log`)
   }
   
 

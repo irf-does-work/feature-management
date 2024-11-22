@@ -59,3 +59,15 @@ export interface IUpdateToggle{
     enableOrDisable: boolean;
 }
 
+export interface Ilog{
+    logId: number,
+    userId: string,
+    userName: string,
+    featureId : number,
+    featureName: string,
+    businessId: number | null,
+    businessName: string | null,
+    time: Date,
+    action: number
+}
+
