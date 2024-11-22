@@ -30,7 +30,6 @@ namespace FeatureToggle.Application.Requests.Queries.Business
 
             return result;
 
-
         }
     }
 }

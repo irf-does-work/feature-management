@@ -34,7 +34,7 @@ export interface IFeature {
 
 export interface IRetrievedFeatures{
     featureFlagId: number;
-    FeatureId: number;
+    featureId: number;
     featureName: string;
     featureType: number;
     isEnabled: boolean | null;

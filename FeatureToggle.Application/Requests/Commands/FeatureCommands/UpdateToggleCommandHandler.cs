@@ -71,9 +71,9 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                 {
 
 
-                    BusinessFeatureFlag selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+                    BusinessFeatureFlag? selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
-                    if (selectBusiness != null)
+                    if (selectBusiness is null)
                     {
                         selectBusiness.UpdateIsenabled(false);
 
@@ -88,7 +88,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
                         };
 
-                        mediator.Send(addLog);
+                        await mediator.Send(addLog, cancellationToken);
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
                     }

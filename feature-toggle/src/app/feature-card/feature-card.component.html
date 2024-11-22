@@ -6,20 +6,20 @@
             <div class="card" [ngClass]="{
                 'status-border-feature': feature.featureType === 2,
                 'status-border-active': feature.featureType === 1 && feature.isEnabled === true,
-                'status-border-inactive': feature.featureType === 1 && feature.isEnabled === false
+                'status-border-inactive': feature.featureType === 1 && (feature.isEnabled === false || feature.isEnabled === null)
               }">
                 <div class="card-body">
-                    <h4 class="card-title">{{ feature.featureName }}</h4>
+                    <h5 class="card-title">{{ feature.featureName }}</h5>
                     <p class="card-text">{{ feature.featureType === 2 ? 'Feature Toggle' : 'Release Toggle' }}</p>
 
                     <!-- Feature Toggle Buttons -->
 
                     <div class="d-flex">
                     @if(feature.featureType === 2){
-                    <button type="button" class="btn btn-primary" (click)="openDialog(featureStatusEnum.Enabled,feature.FeatureId)">Enable</button>
+                    <button type="button" class="btn btn-primary" (click)="openDialog(true,feature.featureId)">Enable</button>
 
                         @if(isAdmin){
-                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog(featureStatusEnum.Disabled,feature.FeatureId)">Disable</button>
+                            <button type="button" class="btn btn-primary ms-2" (click)="openDialog(false,feature.featureId)">Disable</button>
                         }
 
                         @if (!isAdmin) {
@@ -38,15 +38,15 @@
                     <!-- Release Toggle Button -->
                     @if(feature.featureType === 1){
 
-                        @if(feature.isEnabled === false){
-                        <button type="button" class="btn btn-success" (click)="feature.isEnabled = true; update_Toggle(feature.FeatureId,null,featureStatusEnum.Enabled)">
+                        @if(feature.isEnabled === false || feature.isEnabled === null){
+                        <button type="button" class="btn btn-success" (click)="feature.isEnabled = true; update_Toggle(feature.featureId,null,true)">
                             Enable
                         </button>
 
                         }
 
                         @if(feature.isEnabled === true  && isAdmin){
-                            <button type="button" class="btn btn-danger" (click)="feature.isEnabled = false; update_Toggle(feature.FeatureId,null,featureStatusEnum.Disabled)">
+                            <button type="button" class="btn btn-danger" (click)="feature.isEnabled = false; update_Toggle(feature.featureId,null,false)">
                             Disable   
                         </button>
 

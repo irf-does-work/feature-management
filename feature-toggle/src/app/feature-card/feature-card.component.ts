@@ -46,18 +46,18 @@ export class FeatureCardComponent {
   
 
   
-  @Input() selectedFilters: IselectedFilters | null = null; //n
-  features: IRetrievedFeatures[] = []; //n
+  @Input() selectedFilters: IselectedFilters | null = null; 
+  features: IRetrievedFeatures[] = []; 
 
   
  
-  ngOnChanges() { //nfn
+  ngOnChanges() { 
     if (this.selectedFilters) {
       this.fetchFeatures();
     }
   }
 
-  fetchFeatures() { //nfn
+  fetchFeatures() { 
     this.featureService.getFeatures(this.selectedFilters!).subscribe({
       next: (response) => {
         this.features = response;
@@ -105,9 +105,9 @@ export class FeatureCardComponent {
   }
 
 
-  openDialog(action: FeatureStatus.Enabled | FeatureStatus.Disabled, featureId: number): void {
+  openDialog(action: true | false, featureId: number): void {
 
-    const apiEndpoint = action === FeatureStatus.Enabled
+    const apiEndpoint = action === true
       ? `/api/Business/Enable`
       : `/api/Business/Disable`;
 
@@ -141,19 +141,16 @@ export class FeatureCardComponent {
   }
 
 
-  
 
-  update_Toggle(featureId: number, businessId: number | null, featureStatus: string) {
+
+  update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {
     console.log(`Updating FeatureId: ${featureId}, BusinessId: ${businessId}, Status: ${featureStatus}, UserId: ${this.currentUser}`);
 
-    if (featureStatus == this.featureStatusEnum.Enabled) {
-
-    }
     const data: IUpdateToggle = {
       UserId: this.currentUser,
       featureId: featureId,
       businessId: businessId,
-      enableOrDisable: featureStatus == this.featureStatusEnum.Enabled ? true : false
+      enableOrDisable: featureStatus == true ? true : false
 
     }
 
