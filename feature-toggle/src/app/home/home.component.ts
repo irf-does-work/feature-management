@@ -16,8 +16,7 @@ import { FeatureService } from '../feature.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  // featureTypeEnum = FeatureType;
-  // featureStatusEnum = FeatureStatus;
+  
   rtCheckboxSate: boolean = false
 
   selectedFilters: string[] = [];
@@ -38,7 +37,7 @@ export class HomeComponent {
       disabledFilter: null
     };
 
-    // Get all checkboxes
+   
     const checkboxes = document.querySelectorAll('.form-check-input');
 
     checkboxes.forEach((checkbox) => {
@@ -79,19 +78,7 @@ export class HomeComponent {
       
     });
 
-
-    // this.selectedFilters = [];
-    // const checkboxes = document.querySelectorAll('.form-check-input');
-
-    // checkboxes.forEach((checkbox) => {
-    //   const inputElement = checkbox as HTMLInputElement;
-    //   if (inputElement.checked) {
-    //     this.selectedFilters.push(inputElement.value);
-    //   }
-    // });
-
     console.log('Selected Filters:', this.selectedFilters2);
-    //logic
     this.applyFiltersEvent.emit(this.selectedFilters2);
 
   }

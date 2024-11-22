@@ -4,6 +4,7 @@ import { LoginComponent } from './user/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './user/signup/signup.component';
 import { authGuard } from './auth.guard';
+import { LogComponent } from './log/log.component';
 
 
 
@@ -19,5 +20,6 @@ export const routes: Routes = [
         
     },
     {path: 'home', component: HomeComponent, canActivate: [authGuard]},
+    {path: 'log', component: LogComponent}
     
 ];

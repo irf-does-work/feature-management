@@ -12,7 +12,7 @@ namespace FeatureToggle.Application.Requests.Commands.LogCommands
     public class AddLogCommandHandler(FeatureManagementContext featureContext) : IRequestHandler<AddLogCommand, int>
     {
         public async Task<int> Handle(AddLogCommand request, CancellationToken cancellationToken)
-        {
+        {   
             Log log = new Log(request.UserId,request.FeatureId,request.BusinessId,request.action);
 
             await featureContext.Logs.AddAsync(log,cancellationToken);
