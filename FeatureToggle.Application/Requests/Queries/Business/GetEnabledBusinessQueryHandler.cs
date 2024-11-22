@@ -13,32 +13,14 @@ namespace FeatureToggle.Application.Requests.Queries.Business
 {
     public class GetEnabledBusinessQueryHandler(BusinessContext businessContext) : IRequestHandler<GetEnabledBusinessQuery, List<GetBusinessDTO>>
     {
-        private readonly BusinessContext _businessContext = businessContext;
+        //private readonly BusinessContext _businessContext = businessContext;
 
         public async Task<List<GetBusinessDTO>> Handle(GetEnabledBusinessQuery request, CancellationToken cancellationToken)
         {
-            //var result = _businessContext.Business
-            //.GroupJoin(
-            //    _businessContext.BusinessFeatureFlag.Where(bff => bff.FeatureId == request.FeatureId),
-            //    b => b.BusinessId,
-            //    bff => bff.BusinessId,
-            //    (business, featureFlags) => new { Business = business, FeatureFlags = featureFlags })
-            //.SelectMany(
-            //    bf => bf.FeatureFlags.DefaultIfEmpty(), // Perform LEFT JOIN
-            //    (bf, featureFlag) => new
-            //    {
-            //        bf.Business.BusinessId,
-            //        bf.Business.BusinessName,
-            //        IsEnabled = featureFlag.IsEnabled
-            //    })
-            // .Where(x => x.IsEnabled == false || x.IsEnabled == null)
-            // .ToList();
 
-
-
-            var result = _businessContext.Business
+            var result = await businessContext.Business
             .GroupJoin(
-                _businessContext.BusinessFeatureFlag.Where(bff => bff.FeatureId == request.FeatureId),
+                businessContext.BusinessFeatureFlag.Where(bff => bff.FeatureId == request.FeatureId),
                 b => b.BusinessId,
                 bff => bff.BusinessId,
                 (business, featureFlags) => new { Business = business, FeatureFlags = featureFlags })
@@ -56,7 +38,7 @@ namespace FeatureToggle.Application.Requests.Queries.Business
                 BusinessId = x.BusinessId,
                 BusinessName = x.BusinessName
             })
-            .ToList();
+            .ToListAsync(cancellationToken);
 
 
             return result;

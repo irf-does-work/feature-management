@@ -4,10 +4,11 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IFeature, IBusiness, IUpdateToggle, IRetrievedFeatures, IselectedFilters} from '../interface/feature.interface';
+import { IFeature, IBusiness, IUpdateToggle, IRetrievedFeatures, IselectedFilters } from '../interface/feature.interface';
 import { response } from 'express';
 
 import { FeatureService } from '../feature.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -25,7 +26,8 @@ export class FeatureCardComponent {
 
   constructor(
     public dialog: MatDialog,
-    private featureService: FeatureService
+    private featureService: FeatureService,
+    private toastr: ToastrService
   ) {
 
 
@@ -43,21 +45,21 @@ export class FeatureCardComponent {
 
   featureTypeEnum = FeatureType;
   featureStatusEnum = FeatureStatus;
-  
 
-  
-  @Input() selectedFilters: IselectedFilters | null = null; 
-  features: IRetrievedFeatures[] = []; 
 
-  
- 
-  ngOnChanges() { 
+
+  @Input() selectedFilters: IselectedFilters | null = null;
+  features: IRetrievedFeatures[] = [];
+
+
+
+  ngOnChanges() {
     if (this.selectedFilters) {
       this.fetchFeatures();
     }
   }
 
-  fetchFeatures() { 
+  fetchFeatures() {
     this.featureService.getFeatures(this.selectedFilters!).subscribe({
       next: (response) => {
         this.features = response;
@@ -158,11 +160,74 @@ export class FeatureCardComponent {
     this.featureService.updateToggle(data).subscribe({
       next: (response: any) => {
         console.log(response)
+        if (response === 1) {
+          if (data.enableOrDisable == true) {
+
+            this.toastr.success('Update Successful', 'Feature Enabled')
+          }
+          else {
+            this.toastr.warning('Update Successful', 'Feature Disabled')
+          }
+
+        }   
+        else{
+          this.toastr.error('Update Unsuccessful', 'Something went wrong!')
+        }   
       },
       error: (error) => {
         console.error('Error updating feature:', error);
+        this.toastr.error('Update Unsuccessful', 'Something went wrong!')
       }
     });
   }
+
+
+
+
+
+
+
+  // update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {
+  //   console.log(`Updating FeatureId: ${featureId}, BusinessId: ${businessId}, Status: ${featureStatus}, UserId: ${this.currentUser}`);
+
+  //   const data: IUpdateToggle = {
+  //     UserId: this.currentUser,
+  //     featureId: featureId,
+  //     businessId: businessId,
+  //     enableOrDisable: featureStatus
+  //   };
+
+  //   this.featureService.updateToggle(data).subscribe({
+  //     next: (response: number) => {
+  //       console.log('API Response:', response);
+
+  //       if (response === 1) {
+  //         // Update the feature status locally on success
+  //         const updatedFeature = this.features.find(feature => feature.featureId === featureId);
+  //         if (updatedFeature) {
+  //           updatedFeature.isEnabled = featureStatus;
+  //         }
+  //       } else {
+  //         console.error('Failed to update feature: API returned 0 or -1');
+  //         alert('Failed to update the feature. Please try again.');
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error updating feature:', error);
+  //       alert('An error occurred. Please try again.');
+  //     }
+  //   });
+  // }
+
+
+
+
+
+
+
+
+
+
+
 
 }

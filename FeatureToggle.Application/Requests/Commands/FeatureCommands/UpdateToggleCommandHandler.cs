@@ -5,16 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using FeatureToggle.Application.Requests.Commands.LogCommands;
 using FeatureToggle.Domain.Entity.BusinessSchema;
+using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 {
-    public class UpdateToggleCommandHandler(BusinessContext businessContext, IMediator mediator) : IRequestHandler<UpdateToggleCommand, int>
+    public class UpdateToggleCommandHandler(BusinessContext businessContext, FeatureManagementContext featureManagementContext ,IMediator mediator) : IRequestHandler<UpdateToggleCommand, int>
     {
         public async Task<int> Handle(UpdateToggleCommand request, CancellationToken cancellationToken)
         {
+            Feature feature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+            User user = await featureManagementContext.Users.FirstOrDefaultAsync(x => x.Id == request.UserId,cancellationToken);
+
             if (request.BusinessId == null) //checking if release toggle
             {
                 if (request.EnableOrDisable)
@@ -31,11 +35,15 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             selectBusiness.UpdateIsenabled(true);
                             businessContext.BusinessFeatureFlag.Update(selectBusiness);
 
+                            
                             AddLogCommand addLog = new AddLogCommand()
                             {
                                 FeatureId = request.FeatureId,
+                                FeatureName = feature.FeatureName,
                                 BusinessId = null,
+                                BusinessName = null,
                                 UserId = request.UserId,
+                                UserName = user.UserName,
                                 action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                             };
 
@@ -56,8 +64,11 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         AddLogCommand addLog = new AddLogCommand()
                         {
                             FeatureId = request.FeatureId,
+                            FeatureName = feature.FeatureName,
                             BusinessId = null,
+                            BusinessName = null,
                             UserId = request.UserId,
+                            UserName = user.UserName,
                             action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                         };
 
@@ -75,6 +86,8 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                     if (selectBusiness is not null)
                     {
+                        //Business business = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
+
                         selectBusiness.UpdateIsenabled(false);
 
                         businessContext.BusinessFeatureFlag.Update(selectBusiness);
@@ -83,8 +96,11 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         AddLogCommand addLog = new AddLogCommand()
                         {
                             FeatureId = request.FeatureId,
+                            FeatureName = feature.FeatureName,
                             BusinessId = null,
+                            BusinessName = null,
                             UserId = request.UserId,
+                            UserName = user.UserName,
                             action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
                         };
 
@@ -105,6 +121,9 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
             else // if feature toggle
             {
+                //To get business Name for feature toggle
+                Business? business = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
+
                 if (request.EnableOrDisable) //Enable feature toggle
                 {
                     BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
@@ -119,8 +138,11 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             AddLogCommand addLog = new AddLogCommand()
                             {
                                 FeatureId = request.FeatureId,
+                                FeatureName = feature.FeatureName,
                                 BusinessId = request.BusinessId,
+                                BusinessName = business.BusinessName,
                                 UserId = request.UserId,
+                                UserName = user.UserName,
                                 action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                             };
 
@@ -149,8 +171,11 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             AddLogCommand addLog = new AddLogCommand()
                             {
                                 FeatureId = request.FeatureId,
+                                FeatureName = feature.FeatureName,
                                 BusinessId = request.BusinessId,
+                                BusinessName = business.BusinessName,
                                 UserId = request.UserId,
+                                UserName = user.UserName,
                                 action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                             };
 
@@ -185,8 +210,11 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             AddLogCommand addLog = new AddLogCommand()
                             {
                                 FeatureId = request.FeatureId,
+                                FeatureName = feature.FeatureName,
                                 BusinessId = request.BusinessId,
+                                BusinessName = business.BusinessName,
                                 UserId = request.UserId,
+                                UserName = user.UserName,
                                 action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
                             };
 

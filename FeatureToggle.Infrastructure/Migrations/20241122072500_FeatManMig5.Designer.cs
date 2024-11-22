@@ -4,6 +4,7 @@ using FeatureToggle.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeatureToggle.Infrastructure.Migrations
 {
     [DbContext(typeof(FeatureManagementContext))]
-    partial class FeatureManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20241122072500_FeatManMig5")]
+    partial class FeatManMig5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,24 +39,13 @@ namespace FeatureToggle.Infrastructure.Migrations
                     b.Property<int?>("BusinessId")
                         .HasColumnType("int");
 
-                    b.Property<string>("BusinessName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("FeatureId")
                         .HasColumnType("int");
-
-                    b.Property<string>("FeatureName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

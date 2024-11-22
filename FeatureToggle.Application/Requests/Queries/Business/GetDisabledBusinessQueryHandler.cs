@@ -13,12 +13,12 @@ namespace FeatureToggle.Application.Requests.Queries.Business
 {
     public class GetDisabledBusinessQueryHandler(BusinessContext businessContext) : IRequestHandler<GetDisabledBusinessQuery, List<GetBusinessDTO>>
     {
-        private readonly BusinessContext _businessContext = businessContext;
+        //private readonly BusinessContext _businessContext = businessContext;
         public async Task<List<GetBusinessDTO>> Handle(GetDisabledBusinessQuery request, CancellationToken cancellationToken)
         {
-            var result = await _businessContext.Business
+            var result = await businessContext.Business
             .Join(
-                _businessContext.BusinessFeatureFlag.Where(ff => ff.FeatureId == request.FeatureId && ff.IsEnabled == true),
+                businessContext.BusinessFeatureFlag.Where(ff => ff.FeatureId == request.FeatureId && ff.IsEnabled == true),
                 business => business.BusinessId,
                 featureFlag => featureFlag.BusinessId,
                 (business, featureFlag) => new GetBusinessDTO
@@ -26,7 +26,7 @@ namespace FeatureToggle.Application.Requests.Queries.Business
                     BusinessId = business.BusinessId,
                     BusinessName = business.BusinessName
                 })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
             return result;
 
