@@ -21,9 +21,9 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                 {
                     //Enable release toggle
 
-                    BusinessFeatureFlag selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+                    BusinessFeatureFlag? selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
-                    if (selectBusiness != null)
+                    if (selectBusiness is not null)
                     {
 
                         if (selectBusiness.IsEnabled == false)
@@ -73,7 +73,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                     BusinessFeatureFlag? selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
-                    if (selectBusiness is null)
+                    if (selectBusiness is not null)
                     {
                         selectBusiness.UpdateIsenabled(false);
 
@@ -107,9 +107,9 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
             {
                 if (request.EnableOrDisable) //Enable feature toggle
                 {
-                    BusinessFeatureFlag selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
+                    BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
 
-                    if (selectedBusiness != null)
+                    if (selectedBusiness is not null)
                     {
                         if (selectedBusiness.IsEnabled == false)
                         {
@@ -173,9 +173,9 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                     if (requiredFeature.FeatureTypeId == 2)
                     {
-                        BusinessFeatureFlag selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
+                        BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
 
-                        if (selectedBusiness != null)
+                        if (selectedBusiness is not null)
                         {
 
                             selectedBusiness.UpdateIsenabled(false);
