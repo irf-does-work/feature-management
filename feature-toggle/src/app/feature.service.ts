@@ -12,10 +12,8 @@ import { TOKEN_KEY } from './shared/constants';
 export class FeatureService {
   private baseUrl = environment.apiUrl;
   public userId: number = 0;
-
-  constructor(private http: HttpClient) {
-    
-  }
+  
+  constructor(private http: HttpClient) { }
 
 
   
@@ -35,16 +33,14 @@ export class FeatureService {
     return this.http.get<IBusiness[]>(`${this.baseUrl}${apiEndpoint}?featureId=${featureId}`);
   }
 
-  getLog(pageNumber: number) : Observable<IPaginationLog> {
-    const params = new HttpParams().set('page',pageNumber).set('pageSize',12)
+  getLog(pageNumber: number, searchQuery:string) : Observable<IPaginationLog> {
+    const params = new HttpParams()
+    .set('page',pageNumber)
+    .set('pageSize',12)
+    .set('searchQuery',searchQuery !== null ? searchQuery : '')
     return this.http.get<IPaginationLog>(`${this.baseUrl}/api/Log`,{params})
   }
   
-
-
-
-
-
   //auth
 
   isLoggedIn(){
