@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Queries.Log
 {
-    public class GetLogQueryHandler(FeatureManagementContext featureManagementContext, BusinessContext businessContext, UserManager<User> userManager) : IRequestHandler<GetLogQuery, List<LogDTO>>
+    public class GetLogQueryHandler(FeatureManagementContext featureManagementContext, BusinessContext businessContext, UserManager<User> userManager) : IRequestHandler<GetLogQuery, PaginatedLogListDTO>
     {
 
 
-        public async Task<List<LogDTO>> Handle(GetLogQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedLogListDTO> Handle(GetLogQuery request, CancellationToken cancellationToken)
         {
 
-            var query = await featureManagementContext.Logs
+            var query =  featureManagementContext.Logs
                 .Select(x => new LogDTO
                 {
                     LogId = x.Id,
@@ -33,10 +33,30 @@ namespace FeatureToggle.Application.Requests.Queries.Log
                     Action = x.Action,
 
                 })
-                .OrderByDescending(x => x.Time)
-            .ToListAsync(cancellationToken);
+                .OrderByDescending(x => x.Time);
 
-            return query;
+            //return query;
+
+
+            var totalCount = query.Count();
+            var page = request.Page;
+            var pageSize = request.PageSize;
+            var totalPages = (totalCount / pageSize) +1;
+           
+
+            var queryList = await query.Skip((page) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+
+
+            var result = new PaginatedLogListDTO
+            {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                CurrentPage = request.Page,
+                PageSize = request.PageSize,
+                Logs = queryList
+            };
+
+            return result;
 
         }
 }

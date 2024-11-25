@@ -12,9 +12,16 @@ namespace FeatureToggle.API.Controllers
     {
         [HttpGet]
 
-        public async Task<List<LogDTO>> GetLogs()
+        public async Task<PaginatedLogListDTO> GetLogs(
+            [FromQuery] int page, 
+            [FromQuery] int pageSize
+            )
         {
-            GetLogQuery query = new GetLogQuery();
+            GetLogQuery query = new GetLogQuery()
+            {
+                Page = page,
+                PageSize = pageSize
+            };
             return await mediator.Send(query);
         }
     }
