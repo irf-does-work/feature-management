@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FeatureService } from '../../feature.service';
-import { ILoginAccept, ILoginForm } from '../../interface/feature.interface';
+import { ILoginAccept, ILoginForm, ILoginReturn } from '../../interface/feature.interface';
 import { ToastrService } from 'ngx-toastr';
+import { error } from 'console';
+import { throwError } from 'rxjs';
 
 
 
@@ -46,14 +48,18 @@ export class LoginComponent implements OnInit {
       }
 
       this.userService.login(userDetails).subscribe({
-        next: (response: any) => {
+        next: (response: ILoginReturn) => {
           console.log(response);
-          this.userService.saveToken(response.token);
 
-          this.router.navigate(['/home']);
-          this.toastr.success('Welcome back!', 'Login Successful')
-
-
+          if (response.token !== null) {
+            this.userService.saveToken(response.token);
+            this.router.navigate(['/home']);
+            this.toastr.success('Welcome back!', 'Login Successful')
+          }
+          else {
+            this.toastr.error('Something went wrong', 'Login failed')
+            throw new Error('Login failed');
+          }
         },
         error: (error) => {
           if (error.status === 400) {

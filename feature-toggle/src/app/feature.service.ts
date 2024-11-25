@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { IBusiness, Ilog, ILoginAccept, IPaginationLog, IselectedFilters, ISignUpAccept, IUpdateToggle } from './interface/feature.interface';
+import { IBusiness, Ilog, ILoginAccept, ILoginReturn, IPaginationLog, IselectedFilters, ISignUpAccept, IUpdateToggle } from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -18,8 +18,8 @@ export class FeatureService {
   }
 
   //for login
-  login(data: ILoginAccept): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/Login`, data);
+  login(data: ILoginAccept): Observable<ILoginReturn> {
+    return this.http.post<ILoginReturn>(`${this.baseUrl}/api/Login`, data);
   }
 
   //for signup

@@ -86,3 +86,9 @@ export interface IPaginationLog {
     logs: Ilog[]
 }
 
+
+export interface ILoginReturn {
+    token: string | null,
+    errorMessage: string | null;
+
+}
