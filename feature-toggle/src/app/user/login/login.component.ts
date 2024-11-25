@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
   userForm: FormGroup<ILoginForm>;
   isSubmitted: boolean = false;
 
@@ -33,22 +33,21 @@ export class LoginComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if(this.userService.isLoggedIn()){
+    if (this.userService.isLoggedIn()) {
       this.router.navigate(['/home']);
     }
   }
 
   onSubmit() {
     if (this.userForm.valid) {
-      const userDetails : ILoginAccept = {
+      const userDetails: ILoginAccept = {
         email: this.userForm.value.email ?? '',
         password: this.userForm.value.password ?? ''
       }
 
       this.userService.login(userDetails).subscribe({
-        next: (response:any) => {
+        next: (response: any) => {
           console.log(response);
-          // localStorage.setItem('token',response.token);
           this.userService.saveToken(response.token);
 
           this.router.navigate(['/home']);
@@ -57,18 +56,17 @@ export class LoginComponent implements OnInit{
 
         },
         error: (error) => {
-          if(error.status === 400){
-          this.toastr.error('Invalid login credentials', 'Login failed')
+          if (error.status === 400) {
+            this.toastr.error('Invalid login credentials', 'Login failed')
           }
-          else{
-            // console.log(error);
-            this.toastr.error('Something went wrong','Login failed')
+          else {
+            this.toastr.error('Something went wrong', 'Login failed')
           }
         }
       });
     }
     else {
-      this.toastr.error('Something went wrong','Login failed')
+      this.toastr.error('Something went wrong', 'Login failed')
     }
   }
 

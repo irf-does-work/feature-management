@@ -24,6 +24,7 @@ export class FeatureCardComponent {
   isAdmin: number = 0;
   currentUser: string | undefined;
   pageNumber: number = 0;
+  business: string | undefined;  // for displaying bussiness id in dialog
 
   constructor(
     public dialog: MatDialog,
@@ -31,8 +32,7 @@ export class FeatureCardComponent {
     private toastr: ToastrService
   ) {
 
-
-    //take payload from jwt token
+    //payload from jwt token
     const payload = this.featureService.decodeToken();
 
     payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
@@ -77,10 +77,6 @@ export class FeatureCardComponent {
   }
 
 
-  business: string | undefined;
-  name: string | undefined;
-
-
   goToPage(page: number) {
     if (page >= 0 && page <= this.paginatedfeatures.totalPages) {
       this.pageNumber = page;
@@ -102,6 +98,8 @@ export class FeatureCardComponent {
     }
   }
 
+
+  
 
   openDialog(action: true | false, featureId: number): void {
 
@@ -127,7 +125,7 @@ export class FeatureCardComponent {
           if (result) {
             this.business = result.businessId;
             console.log('Selected Business:', result);
-            this.update_Toggle(featureId, Number(result.businessId), action); // Pass the businessId and action to update_Toggle
+            this.update_Toggle(featureId, Number(result.businessId), action); 
           }
         });
       },

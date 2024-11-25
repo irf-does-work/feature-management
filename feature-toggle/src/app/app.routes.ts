@@ -9,17 +9,17 @@ import { LogComponent } from './log/log.component';
 
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: '', redirectTo: 'home', pathMatch: 'full'},
     {
-        path:'user',
+        path: 'user',
         component: UserComponent,
-        children:[
-            {path: 'login', component: LoginComponent},
-            {path: 'signup', component: SignupComponent}
+        children: [
+            { path: 'login', component: LoginComponent },
+            { path: 'signup', component: SignupComponent }
         ]
-        
+
     },
-    {path: 'home', component: HomeComponent, canActivate: [authGuard]},
-    {path: 'log', component: LogComponent}
-    
+    { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+    { path: 'log', component: LogComponent, canActivate: [authGuard] }
+
 ];
