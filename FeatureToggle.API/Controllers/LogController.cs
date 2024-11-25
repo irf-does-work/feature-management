@@ -14,13 +14,15 @@ namespace FeatureToggle.API.Controllers
 
         public async Task<PaginatedLogListDTO> GetLogs(
             [FromQuery] int page, 
-            [FromQuery] int pageSize
+            [FromQuery] int pageSize,
+            [FromQuery] string? searchQuery
             )
         {
             GetLogQuery query = new GetLogQuery()
             {
                 Page = page,
-                PageSize = pageSize
+                PageSize = pageSize,
+                SearchQuery = searchQuery
             };
             return await mediator.Send(query);
         }

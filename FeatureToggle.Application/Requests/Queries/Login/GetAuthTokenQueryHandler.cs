@@ -19,8 +19,10 @@ namespace FeatureToggle.Application.Requests.Queries.Login
         public async Task<LoginResponseDTO> Handle(GetAuthTokenQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
             if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
             {
+                //return new LoginResponseDTO { ErrorMessage = " Password correct" };
                 var secretKey = _optionsMonitor.CurrentValue.JWTSecret;
                 var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
                 var tokenDescriptor = new SecurityTokenDescriptor

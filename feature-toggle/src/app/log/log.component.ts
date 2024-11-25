@@ -6,16 +6,19 @@ import { Ilog, IPaginationLog } from '../interface/feature.interface';
 import { FeatureService } from '../feature.service';
 import { response } from 'express';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-log',
   standalone: true,
-  imports: [NavbarComponent,MatTableModule,DatePipe],
+  imports: [NavbarComponent,MatTableModule,DatePipe,FormsModule],
   templateUrl: './log.component.html',
   styleUrl: './log.component.scss'
 })
 export class LogComponent implements OnInit {
   pageNumber : number = 0;
+  searchBarInput: string = '';
 
   dataSource: IPaginationLog= {
     pageSize: 0,
@@ -25,22 +28,20 @@ export class LogComponent implements OnInit {
     logs: []
   };
   
-  constructor(private featureService: FeatureService) { }
+  constructor(private featureService: FeatureService, private toastr: ToastrService) { }
   ngOnInit(): void {
       this.fetchPaginatedLog();
   }
   
   displayedColumns: string[] = ['serialNo', 'UserId', 'Username', 'FeatureId', 'FeatureName', 'BusinessId','BusinessName','Date','Time', 'Action'];
 
-
-
-
-  
-
   fetchPaginatedLog(){
-    this.featureService.getLog(this.pageNumber).subscribe({
+    this.featureService.getLog(this.pageNumber,this.searchBarInput).subscribe({
       next:(response:IPaginationLog) =>{
         this.dataSource = response;
+        if(this.dataSource.logs.length===0){
+          this.toastr.warning('No Logs');
+        }
         console.log(this.dataSource);
       },
       error:(err) =>{
@@ -48,11 +49,6 @@ export class LogComponent implements OnInit {
       }
     });
   }
-
-  // get paginatedFeatures(): IPaginationLog {
-  //   const startIndex = (this.pageNumber - 1) * this.dataSource.pageSizeitemsPerPage;
-  //   return this.dataSource.slice(startIndex, startIndex + this.itemsPerPage);
-  // }
 
 
   goToPage(page: number) {
@@ -76,10 +72,8 @@ export class LogComponent implements OnInit {
     }
   }
 
-
-
-  onSearch(){
-    
+  resetPageNo(){
+    this.pageNumber = 0
   }
 
 }
