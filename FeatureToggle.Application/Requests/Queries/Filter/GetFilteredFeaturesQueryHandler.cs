@@ -52,8 +52,8 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                 }
             }
 
-            // Features with flags in BusinessFeatureFlag
-            var featuresWithFlags = query.Select(bf => new FilteredFeatureDTO
+            // Features in BusinessFeatureFlag
+            IQueryable<FilteredFeatureDTO> featuresWithFlags = query.Select(bf => new FilteredFeatureDTO
             {
                 FeatureFlagId = bf.FeatureFlagId,
                 FeatureId = bf.FeatureId,
@@ -62,10 +62,10 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                 isEnabled = bf.IsEnabled
             });
 
-            // If 'ReleaseToggleFilter' is set or no filters are set, include release toggles that are in the Feature table but not in BusinessFeatureFlag
+            // release toggles in Feature but not in BusinessFeatureFlag
             if (request.ReleaseToggleFilter.HasValue || (!request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue && !request.FeatureToggleFilter.HasValue))
             {
-                var releaseTogglesWithoutFlags = _businessContext.Feature
+                IQueryable<FilteredFeatureDTO> releaseTogglesWithoutFlags = _businessContext.Feature
                     .Where(f => f.FeatureTypeId == 1)  // Only Release toggles
                     .GroupJoin(
                         _businessContext.BusinessFeatureFlag,
@@ -97,7 +97,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             // If 'FeatureToggleFilter' is set, include feature toggles that are in the Feature table but not in BusinessFeatureFlag
             if (request.FeatureToggleFilter.HasValue || (!request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue))
             {
-                var featureTogglesWithoutFlags = _businessContext.Feature
+                IQueryable<FilteredFeatureDTO> featureTogglesWithoutFlags = _businessContext.Feature
                     .Where(f => f.FeatureTypeId == 2)  // Only Feature toggles
                     .GroupJoin(
                         _businessContext.BusinessFeatureFlag,
@@ -133,15 +133,12 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             }
 
             // Combine results for both release toggles (with flags) and feature toggles (with or without flags)
-            var combinedQuery = featuresWithFlags
+            IQueryable<FilteredFeatureDTO> combinedQuery = featuresWithFlags
                 .GroupBy(f => f.FeatureId)
                 .Select(x => x.First())     // Select the first feature for each unique FeatureId
-                .AsQueryable();  
+                ;  
 
-            if (request.SearchQuery is not null)
-            {
-                combinedQuery = combinedQuery.Where(x => EF.Functions.Like(x.FeatureName, $"%{request.SearchQuery}%"));
-            }
+            
 
             return await combinedQuery.ToListAsync(cancellationToken);
         }

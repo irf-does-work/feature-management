@@ -38,7 +38,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                     BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature, requiredBusiness);
 
-                    businessContext.AddAsync(newBusinessFlag, cancellationToken);
+                    await businessContext.AddAsync(newBusinessFlag, cancellationToken);
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
                 }

@@ -1,7 +1,7 @@
 <div class="mx-5 mt-5 mb-4 ">
     <div class="row">
 
-        @for (feature of paginatedFeatures; track feature) {
+        @for (feature of paginatedFeatures; track feature.featureName) {
         <div class="col-md-3 mb-3">
             <div class="card" [ngClass]="{
                 'status-border-feature': feature.featureType === 2,
