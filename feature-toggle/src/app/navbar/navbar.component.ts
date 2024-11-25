@@ -11,15 +11,22 @@ import { FeatureService } from '../feature.service';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
+  isAdmin: number |undefined;
+
 
   constructor(private router : Router,
     private toastr: ToastrService,
-    private authService : FeatureService
-  ) {}
+    private featureService : FeatureService
+  ) {
+
+    const payload = this.featureService.decodeToken();
+
+    payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
+  }
 
   onLogout(){
     // localStorage.removeItem('token');
-    this.authService.deleteToken();
+    this.featureService.deleteToken();
     this.router.navigate(['/user/login']);
     this.toastr.success('See you later!', 'Logout Successful');
   }
