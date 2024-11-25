@@ -1,4 +1,5 @@
 ﻿using FeatureToggle.Application.DTOs;
+using FeatureToggle.Domain.Entity.BusinessSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
         private int pageSize = 12;
         public async Task<PaginatedFeatureListDTO> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
         {
-            var query = _businessContext.BusinessFeatureFlag
+            IQueryable<BusinessFeatureFlag> query = _businessContext.BusinessFeatureFlag
                 .Include(bf => bf.Feature)
                 .ThenInclude(f => f.FeatureType)
                 .AsQueryable();
@@ -133,7 +134,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             }
 
             // Combine results for both release toggles (with flags) and feature toggles (with or without flags)
-            var combinedQuery = await featuresWithFlags
+            List<FilteredFeatureDTO> combinedQuery = await featuresWithFlags
                 .GroupBy(f => f.FeatureId)
                 .Select(x => x.First())     // Select the first feature for each unique FeatureId
                 .ToListAsync(cancellationToken);
