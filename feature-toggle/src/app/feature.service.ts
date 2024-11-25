@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { IBusiness, Ilog, ILoginAccept, IselectedFilters, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
+import { IBusiness, Ilog, ILoginAccept, IPaginationLog, IselectedFilters, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -35,8 +35,9 @@ export class FeatureService {
     return this.http.get<IBusiness[]>(`${this.baseUrl}${apiEndpoint}?featureId=${featureId}`);
   }
 
-  getLog() : Observable<Ilog[]> {
-    return this.http.get<Ilog[]>(`${this.baseUrl}/api/Log`)
+  getLog(pageNumber: number) : Observable<IPaginationLog> {
+    const params = new HttpParams().set('page',pageNumber).set('pageSize',12)
+    return this.http.get<IPaginationLog>(`${this.baseUrl}/api/Log`,{params})
   }
   
 

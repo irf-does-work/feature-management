@@ -7,8 +7,7 @@ using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 
 namespace FeatureToggle.Application.DTOs
 {
-    public class LogDTO
-    {
+    public class LogDTO { 
         public int LogId { get; set; }
 
         public string UserId { get; set; }

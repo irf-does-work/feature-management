@@ -71,3 +71,11 @@ export interface Ilog{
     action: number
 }
 
+export interface IPaginationLog{
+    pageSize: number,
+    currentPage: number,
+    totalCount: number,
+    totalPages: number,
+    logs: Ilog[]
+}
+
