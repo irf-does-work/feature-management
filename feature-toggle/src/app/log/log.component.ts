@@ -76,4 +76,10 @@ export class LogComponent implements OnInit {
     }
   }
 
+
+
+  onSearch(){
+    
+  }
+
 }

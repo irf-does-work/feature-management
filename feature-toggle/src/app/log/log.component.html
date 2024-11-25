@@ -1,5 +1,20 @@
 <app-navbar></app-navbar>
 
+<div class="container-fluid d-flex justify-content-center">
+  <div class="w-50 mx-5 my-3">
+      <form class="navbar-form navbar-left ">
+          <div class="d-flex">
+              <input type="text" class="form-control" placeholder="Enter Feature Name" name="searchQuery" />
+              <button type="submit" (click)="onSearch()" class="btn btn-primary ms-3 w-25">Search Feature</button>
+          </div>
+      </form>
+  </div>
+</div>
+
+
+
+
+
 <div class="table-container m-4">
   <table mat-table [dataSource]="dataSource.logs" class="mat-elevation-z8 ">
 
