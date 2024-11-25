@@ -144,7 +144,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                 combinedQuery = combinedQuery.Where(cq => cq.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            PaginatedFeatureListDTO paginatedFeatureList = new PaginatedFeatureListDTO()
+            PaginatedFeatureListDTO paginatedFeatureList = new()
             {
                 FeatureCount = combinedQuery.Count(),
                 TotalPages = ((combinedQuery.Count()) / pageSize) + 1,
