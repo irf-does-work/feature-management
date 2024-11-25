@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Queries.Filter
 {
-    public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : IRequestHandler<GetFilteredFeaturesQuery, List<FilteredFeatureDTO>>
+    public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : IRequestHandler<GetFilteredFeaturesQuery,PaginatedFeatureListDTO>
     {
         private readonly BusinessContext _businessContext = businessContext;
-
-        public async Task<List<FilteredFeatureDTO>> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
+        private int pageSize = 12;
+        public async Task<PaginatedFeatureListDTO> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
         {
             var query = _businessContext.BusinessFeatureFlag
                 .Include(bf => bf.Feature)
@@ -136,11 +136,17 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             IQueryable<FilteredFeatureDTO> combinedQuery = featuresWithFlags
                 .GroupBy(f => f.FeatureId)
                 .Select(x => x.First())     // Select the first feature for each unique FeatureId
-                ;  
+                ;
 
-            
+            PaginatedFeatureListDTO paginatedFeatureList = new PaginatedFeatureListDTO()
+            {
+                FeatureCount = combinedQuery.Count(),
+                TotalPages = ((combinedQuery.Count()) / pageSize) + 1,
+                PageSize = pageSize,
+                FeatureList =  await combinedQuery.Skip(pageSize*request.PageNumber).Take(pageSize).ToListAsync(cancellationToken),
+            };
 
-            return await combinedQuery.ToListAsync(cancellationToken);
+            return paginatedFeatureList;
         }
 
     }

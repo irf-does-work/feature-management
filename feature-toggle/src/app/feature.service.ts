@@ -88,12 +88,13 @@ export class FeatureService {
     }
   }
   
-  getFeatures(selectedFilters2: IselectedFilters): Observable<any> {
+  getFeatures(selectedFilters2: IselectedFilters,pageNumber : number): Observable<any> {
     const params = new HttpParams()
       .set('featureToggleType', selectedFilters2.featureFilter !== null ? selectedFilters2.featureFilter.toString() : '')
       .set('releaseToggleType', selectedFilters2.releaseFilter !== null ? selectedFilters2.releaseFilter.toString() : '')
       .set('isEnabled', selectedFilters2.enabledFilter !== null ? selectedFilters2.enabledFilter.toString() : '')
-      .set('isDisabled', selectedFilters2.disabledFilter !== null ? selectedFilters2.disabledFilter.toString() : '');
+      .set('isDisabled', selectedFilters2.disabledFilter !== null ? selectedFilters2.disabledFilter.toString() : '')
+      .set('pageNumber', pageNumber);
 
     return this.http.get(`${this.baseUrl}/api/Filter`,{params});
   }

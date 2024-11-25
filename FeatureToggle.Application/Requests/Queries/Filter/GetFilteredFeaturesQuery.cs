@@ -8,8 +8,9 @@ using MediatR;
 
 namespace FeatureToggle.Application.Requests.Queries.Filter
 {
-    public class GetFilteredFeaturesQuery : IRequest<List<FilteredFeatureDTO>>
+    public class GetFilteredFeaturesQuery : IRequest<PaginatedFeatureListDTO>
     {
+        public int PageNumber { get; set; }
         public bool? FeatureToggleFilter { get; set; }
         public bool? ReleaseToggleFilter { get; set; }
         public bool? IsEnabledFilter { get; set; } 

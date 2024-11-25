@@ -11,7 +11,8 @@ namespace FeatureToggle.API.Controllers
     public class FilterController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<FilteredFeatureDTO>>> GetFilteredFeatures(
+        public async Task<PaginatedFeatureListDTO> GetFilteredFeatures(
+            [FromQuery] int pageNumber,
             [FromQuery] bool? isEnabled,
             [FromQuery] bool? isDisabled,
             [FromQuery] bool? releaseToggleType,
@@ -21,6 +22,7 @@ namespace FeatureToggle.API.Controllers
         {
             var query = new GetFilteredFeaturesQuery
             {
+                PageNumber = pageNumber,
                 IsEnabledFilter = isEnabled,
                 IsDisabledFilter = isDisabled,
                 ReleaseToggleFilter = releaseToggleType,

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IFeature, IBusiness, IUpdateToggle, IRetrievedFeatures, IselectedFilters } from '../interface/feature.interface';
+import { IFeature, IBusiness, IUpdateToggle, IRetrievedFeatures, IselectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
 import { response } from 'express';
 
 import { FeatureService } from '../feature.service';
@@ -23,6 +23,7 @@ import { ToastrService } from 'ngx-toastr';
 export class FeatureCardComponent {
   isAdmin: number = 0;
   currentUser: string | undefined;
+  pageNumber: number = 0;
 
   constructor(
     public dialog: MatDialog,
@@ -49,21 +50,26 @@ export class FeatureCardComponent {
 
 
   @Input() selectedFilters: IselectedFilters | null = null;
-  features: IRetrievedFeatures[] = [];
-
+  paginatedfeatures: IPaginatedFeatures = {
+    pageSize: 0,
+    featureCount: 0,
+    totalPages: 0,
+    featureList: []
+  }; 
 
 
   ngOnChanges() {
     if (this.selectedFilters) {
+      this.pageNumber = 0
       this.fetchFeatures();
     }
   }
 
   fetchFeatures() {
-    this.featureService.getFeatures(this.selectedFilters!).subscribe({
+    this.featureService.getFeatures(this.selectedFilters!,this.pageNumber).subscribe({
       next: (response) => {
-        this.features = response;
-        console.log('Retrieved Features:', this.features);
+        this.paginatedfeatures = response;
+        console.log('Retrieved Features:', this.paginatedfeatures);
       },
       error: (err) => {
         console.error('Error fetching features:', err);
@@ -76,33 +82,24 @@ export class FeatureCardComponent {
   name: string | undefined;
 
 
-  itemsPerPage: number = 12;
-  currentPage: number = 1;
-
-  get paginatedFeatures(): IRetrievedFeatures[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.features.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
-  totalPages(): number {
-    return Math.ceil(this.features.length / this.itemsPerPage);
-  }
-
   goToPage(page: number) {
-    if (page >= 1 && page <= this.totalPages()) {
-      this.currentPage = page;
+    if (page >= 0 && page <= this.paginatedfeatures.totalPages) {
+      this.pageNumber = page;
+      this.fetchFeatures();
     }
   }
 
   nextPage() {
-    if (this.currentPage < this.totalPages()) {
-      this.currentPage++;
+    if (this.pageNumber < this.paginatedfeatures.totalPages - 1) {
+      this.pageNumber++;
+      this.fetchFeatures();
     }
   }
 
   previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
+    if (this.pageNumber > 0) {
+      this.pageNumber--;
+      this.fetchFeatures();
     }
   }
 
@@ -180,54 +177,6 @@ export class FeatureCardComponent {
       }
     });
   }
-
-
-
-
-
-
-
-  // update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {
-  //   console.log(`Updating FeatureId: ${featureId}, BusinessId: ${businessId}, Status: ${featureStatus}, UserId: ${this.currentUser}`);
-
-  //   const data: IUpdateToggle = {
-  //     UserId: this.currentUser,
-  //     featureId: featureId,
-  //     businessId: businessId,
-  //     enableOrDisable: featureStatus
-  //   };
-
-  //   this.featureService.updateToggle(data).subscribe({
-  //     next: (response: number) => {
-  //       console.log('API Response:', response);
-
-  //       if (response === 1) {
-  //         // Update the feature status locally on success
-  //         const updatedFeature = this.features.find(feature => feature.featureId === featureId);
-  //         if (updatedFeature) {
-  //           updatedFeature.isEnabled = featureStatus;
-  //         }
-  //       } else {
-  //         console.error('Failed to update feature: API returned 0 or -1');
-  //         alert('Failed to update the feature. Please try again.');
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Error updating feature:', error);
-  //       alert('An error occurred. Please try again.');
-  //     }
-  //   });
-  // }
-
-
-
-
-
-
-
-
-
-
 
 
 }

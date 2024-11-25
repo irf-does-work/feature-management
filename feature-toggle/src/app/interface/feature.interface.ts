@@ -40,6 +40,13 @@ export interface IRetrievedFeatures{
     isEnabled: boolean | null;
 }
 
+export interface IPaginatedFeatures{
+    pageSize: number;
+    featureCount: number;
+    totalPages:number;
+    featureList: IRetrievedFeatures[];
+}
+
 export interface IselectedFilters{
     featureFilter: boolean | null;
     releaseFilter: boolean | null;

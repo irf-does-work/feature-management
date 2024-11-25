@@ -1,7 +1,7 @@
 <div class="mx-5 mt-5 mb-4 ">
     <div class="row">
 
-        @for (feature of paginatedFeatures; track feature.featureName) {
+        @for (feature of paginatedfeatures.featureList; track feature.featureName) {
         <div class="col-md-3 mb-3">
             <div class="card" [ngClass]="{
                 'status-border-feature': feature.featureType === 2,
@@ -77,7 +77,7 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center pb-2">
         <!-- Previous Button -->
-        <li class="page-item" [class.disabled]="currentPage === 1">
+        <li class="page-item" [class.disabled]="pageNumber === 0">
             <a class="page-link" href="#" (click)="previousPage();$event.preventDefault()" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
@@ -85,17 +85,16 @@
 
         <!-- Page Numbers -->
 
-        @for( page of [].constructor(totalPages());track i; let i = $index){
+        @for( page of [].constructor(this.paginatedfeatures.totalPages);track i; let i = $index){
             
-            <li class="page-item"
-            [class.active]="currentPage === i + 1">
-            <a class="page-link" href="#" (click)="goToPage(i + 1);$event.preventDefault()">{{ i + 1 }}</a>
+            <li class="page-item" [class.active]="pageNumber === i">
+            <a class="page-link" href="#" (click)="goToPage(i);$event.preventDefault()">{{ i + 1 }}</a>
             </li>
 
         }
 
         <!-- Next Button -->
-        <li class="page-item" [class.disabled]="currentPage === totalPages()">
+        <li class="page-item" [class.disabled]="pageNumber === this.paginatedfeatures.totalPages">
             <a class="page-link" href="#" (click)="nextPage();$event.preventDefault()" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
             </a>
