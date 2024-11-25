@@ -52,6 +52,7 @@ export interface IselectedFilters{
     releaseFilter: boolean | null;
     enabledFilter: boolean | null;
     disabledFilter: boolean | null;
+    searchQuery : string | null;
 }
 
 export interface IBusiness {

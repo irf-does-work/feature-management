@@ -17,14 +17,15 @@ import { FeatureService } from '../feature.service';
 })
 export class HomeComponent {
   
-  rtCheckboxSate: boolean = false
-
-  selectedFilters: string[] = [];
+  rtCheckboxSate: boolean = false;
+  searchBarInput: string ='';
+  //selectedFilters: string[] = [];
   selectedFilters2: IselectedFilters = {
     featureFilter: null,
     releaseFilter: null,
     enabledFilter: null,
-    disabledFilter: null
+    disabledFilter: null,
+    searchQuery: null
   };
   @Output() applyFiltersEvent = new EventEmitter<IselectedFilters>(); //
   constructor(private featureService:FeatureService){ }
@@ -34,12 +35,13 @@ export class HomeComponent {
       featureFilter: null,
       releaseFilter: null,
       enabledFilter: null,
-      disabledFilter: null
+      disabledFilter: null,
+      searchQuery: null
     };
 
-   
+    this.selectedFilters2.searchQuery = this.searchBarInput;
     const checkboxes = document.querySelectorAll('.form-check-input');
-
+    
     checkboxes.forEach((checkbox) => {
       const inputElement = checkbox as HTMLInputElement;
       if (inputElement.checked) {
@@ -77,8 +79,6 @@ export class HomeComponent {
       }
       
     });
-
-    console.log('Selected Filters:', this.selectedFilters2);
     this.applyFiltersEvent.emit(this.selectedFilters2);
 
   }

@@ -94,7 +94,8 @@ export class FeatureService {
       .set('releaseToggleType', selectedFilters2.releaseFilter !== null ? selectedFilters2.releaseFilter.toString() : '')
       .set('isEnabled', selectedFilters2.enabledFilter !== null ? selectedFilters2.enabledFilter.toString() : '')
       .set('isDisabled', selectedFilters2.disabledFilter !== null ? selectedFilters2.disabledFilter.toString() : '')
-      .set('pageNumber', pageNumber);
+      .set('pageNumber', pageNumber)
+      .set('searchQuery',selectedFilters2.searchQuery !== null ? selectedFilters2.searchQuery : '');
 
     return this.http.get(`${this.baseUrl}/api/Filter`,{params});
   }

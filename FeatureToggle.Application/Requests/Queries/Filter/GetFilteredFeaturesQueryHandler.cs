@@ -133,17 +133,22 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             }
 
             // Combine results for both release toggles (with flags) and feature toggles (with or without flags)
-            IQueryable<FilteredFeatureDTO> combinedQuery = featuresWithFlags
+            var combinedQuery = await featuresWithFlags
                 .GroupBy(f => f.FeatureId)
                 .Select(x => x.First())     // Select the first feature for each unique FeatureId
-                ;
+                .ToListAsync(cancellationToken);
+
+            if (request.SearchQuery is not null)
+            {
+                combinedQuery = combinedQuery.Where(cq => cq.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             PaginatedFeatureListDTO paginatedFeatureList = new PaginatedFeatureListDTO()
             {
                 FeatureCount = combinedQuery.Count(),
                 TotalPages = ((combinedQuery.Count()) / pageSize) + 1,
                 PageSize = pageSize,
-                FeatureList =  await combinedQuery.Skip(pageSize*request.PageNumber).Take(pageSize).ToListAsync(cancellationToken),
+                FeatureList = combinedQuery.Skip(pageSize*request.PageNumber).Take(pageSize).ToList(),
             };
 
             return paginatedFeatureList;
