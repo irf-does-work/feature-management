@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FeatureToggle.Application.DTOs;
+﻿using FeatureToggle.Application.DTOs;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
@@ -14,12 +9,11 @@ namespace FeatureToggle.Application.Requests.Queries.Log
 {
     public class GetLogQueryHandler(FeatureManagementContext featureManagementContext, BusinessContext businessContext, UserManager<User> userManager) : IRequestHandler<GetLogQuery, PaginatedLogListDTO>
     {
-
-
         public async Task<PaginatedLogListDTO> Handle(GetLogQuery request, CancellationToken cancellationToken)
         {
-
-            var query = await featureManagementContext.Logs
+            List<LogDTO> query = await featureManagementContext.Logs
+                .Where(x => request.SearchQuery == null
+                || x.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase))
                 .Select(x => new LogDTO
                 {
                     LogId = x.Id,
@@ -37,16 +31,16 @@ namespace FeatureToggle.Application.Requests.Queries.Log
                 .ToListAsync(cancellationToken);
             //return query;
 
-            if(request.SearchQuery is not null)
-            {
-                query = query.Where(q => q.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList(); 
-            }
+            //if(request.SearchQuery is not null)
+            //{
+            //    query = query.Where(q => q.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList(); 
+            //}
 
-            var totalCount = query.Count();
-            var page = request.Page;
-            var pageSize = request.PageSize;
-            var totalPages = (totalCount / pageSize) +1;
-           
+            int totalCount = query.Count;
+            int page = request.Page;
+            int pageSize = request.PageSize;
+            int totalPages = (totalCount / pageSize) + 1;
+
 
             var queryList = query.Skip((page) * pageSize).Take(pageSize).ToList();
 
@@ -63,7 +57,7 @@ namespace FeatureToggle.Application.Requests.Queries.Log
             return result;
 
         }
-}
+    }
 }
 
 

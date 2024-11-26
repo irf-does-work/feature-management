@@ -44,7 +44,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = null,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                                Action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                             };
 
                             await mediator.Send(addLog);
@@ -69,7 +69,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             BusinessName = null,
                             UserId = request.UserId,
                             UserName = user.UserName,
-                            action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                            Action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                         };
 
                         await mediator.Send(addLog);
@@ -101,7 +101,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             BusinessName = null,
                             UserId = request.UserId,
                             UserName = user.UserName,
-                            action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
+                            Action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
                         };
 
                         await mediator.Send(addLog, cancellationToken);
@@ -143,7 +143,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = business.BusinessName,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                                Action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                             };
 
                             await mediator.Send(addLog);
@@ -176,7 +176,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = business.BusinessName,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                                Action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
                             };
 
                             await mediator.Send(addLog);
@@ -215,7 +215,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = business.BusinessName,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
+                                Action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
                             };
 
                             await mediator.Send(addLog);
