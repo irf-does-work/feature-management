@@ -20,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddIdentityApiEndpoints<User>()
                 .AddEntityFrameworkStores<FeatureManagementContext>();
+
 ///below used addidentity earlier
 builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<FeatureManagementContext>()
