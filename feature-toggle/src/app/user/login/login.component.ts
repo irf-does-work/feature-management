@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
 
       this.userService.login(userDetails).subscribe({
         next: (response: ILoginReturn) => {
-          console.log(response);
 
           if (response.token !== null) {
             this.userService.saveToken(response.token);

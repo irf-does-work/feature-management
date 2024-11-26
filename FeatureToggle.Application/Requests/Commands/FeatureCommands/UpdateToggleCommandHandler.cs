@@ -12,30 +12,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 {
-    public class UpdateToggleCommandHandler(BusinessContext businessContext, FeatureManagementContext featureManagementContext ,IMediator mediator) : IRequestHandler<UpdateToggleCommand, int>
+    public class UpdateToggleCommandHandler(BusinessContext businessContext, FeatureManagementContext featureManagementContext, IMediator mediator) : IRequestHandler<UpdateToggleCommand, int>
     {
         public async Task<int> Handle(UpdateToggleCommand request, CancellationToken cancellationToken)
         {
-            Feature feature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
-            User user = await featureManagementContext.Users.FirstOrDefaultAsync(x => x.Id == request.UserId,cancellationToken);
+            Feature? feature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+            User? user = await featureManagementContext.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
 
-            if (request.BusinessId == null) //checking if release toggle
+            if (request.BusinessId is null) //checking if release toggle
             {
+                BusinessFeatureFlag? selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+
                 if (request.EnableOrDisable)
                 {
                     //Enable release toggle
 
-                    BusinessFeatureFlag? selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
-
                     if (selectBusiness is not null)
                     {
 
-                        if (selectBusiness.IsEnabled == false)
+                        if (!selectBusiness.IsEnabled)
                         {
                             selectBusiness.UpdateIsenabled(true);
                             businessContext.BusinessFeatureFlag.Update(selectBusiness);
 
-                            
+
                             AddLogCommand addLog = new AddLogCommand()
                             {
                                 FeatureId = request.FeatureId,
@@ -44,22 +44,21 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = null,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                                action = Actions.Enabled
                             };
 
-                            await mediator.Send(addLog);
+                            await mediator.Send(addLog, cancellationToken);
                         }
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
                     }
                     else
                     {
-                        Feature requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken: cancellationToken);
+                        Feature? requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken: cancellationToken);
 
                         BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature);
 
                         await businessContext.AddAsync(newBusinessFlag, cancellationToken);
-
 
                         AddLogCommand addLog = new AddLogCommand()
                         {
@@ -81,12 +80,8 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                 else  //Disable release toggle
                 {
 
-
-                    BusinessFeatureFlag? selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
-
                     if (selectBusiness is not null)
                     {
-                        //Business business = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
 
                         selectBusiness.UpdateIsenabled(false);
 
@@ -101,7 +96,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             BusinessName = null,
                             UserId = request.UserId,
                             UserName = user.UserName,
-                            action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
+                            action = Actions.Disabled
                         };
 
                         await mediator.Send(addLog, cancellationToken);
@@ -112,9 +107,6 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     return -1;
 
                 }
-               
-
-                
 
             }
 
@@ -124,9 +116,10 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                 //To get business Name for feature toggle
                 Business? business = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
 
+                BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
+
                 if (request.EnableOrDisable) //Enable feature toggle
                 {
-                    BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
 
                     if (selectedBusiness is not null)
                     {
@@ -143,7 +136,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = business.BusinessName,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                                action = Actions.Enabled
                             };
 
                             await mediator.Send(addLog);
@@ -153,16 +146,16 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                         return -1;
 
-                        
+
                     }
                     else
                     {
 
-                        Feature requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId);
+                        Feature? requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId);
 
                         if (requiredFeature.FeatureTypeId == 2)
                         {
-                            Business requiredBusiness = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId);
+                            Business? requiredBusiness = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId);
 
                             BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature, requiredBusiness);
 
@@ -176,7 +169,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = business.BusinessName,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Enabled
+                                action = Actions.Enabled
                             };
 
                             await mediator.Send(addLog);
@@ -187,18 +180,15 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                         return -1;
 
-
-
                     }
                 }
                 else  //Disable feature toggle
                 {
 
-                    Feature requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId);
+                    Feature? requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId);
 
                     if (requiredFeature.FeatureTypeId == 2)
                     {
-                        BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
 
                         if (selectedBusiness is not null)
                         {
@@ -215,7 +205,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 BusinessName = business.BusinessName,
                                 UserId = request.UserId,
                                 UserName = user.UserName,
-                                action = Domain.Entity.FeatureManagementSchema.Actions.Disabled
+                                action = Actions.Disabled
                             };
 
                             await mediator.Send(addLog);
@@ -231,7 +221,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                 }
             }
-            
+
         }
     }
 }

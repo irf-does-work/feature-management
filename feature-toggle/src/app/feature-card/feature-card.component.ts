@@ -38,10 +38,6 @@ export class FeatureCardComponent {
     payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
 
     this.currentUser = payload.UserID
-
-    console.log("payload admin" + payload.IsAdmin)
-    console.log("feature-card admin" + this.isAdmin)
-    console.log("Current UserID: " + this.currentUser)
   }
 
   featureTypeEnum = FeatureType;
@@ -112,7 +108,6 @@ export class FeatureCardComponent {
     this.featureService.getBusinesses(apiEndpoint, featureId).subscribe({
       next: (response: IBusiness[]) => {
         // Open the dialog with the fetched businesses
-        console.log(response);
         const dialogRef = this.dialog.open(DialogComponent, {
           width: '20%',
           data: {
@@ -124,7 +119,6 @@ export class FeatureCardComponent {
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
           if (result) {
             this.business = result.businessId;
-            console.log('Selected Business:', result);
             this.update_Toggle(featureId, Number(result.businessId), action); 
           }
         });
@@ -140,7 +134,6 @@ export class FeatureCardComponent {
 
 
   update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {
-    console.log(`Updating FeatureId: ${featureId}, BusinessId: ${businessId}, Status: ${featureStatus}, UserId: ${this.currentUser}`);
 
     const data: IUpdateToggle = {
       UserId: this.currentUser,
@@ -153,7 +146,6 @@ export class FeatureCardComponent {
 
     this.featureService.updateToggle(data).subscribe({
       next: (response: any) => {
-        console.log(response)
         if (response === 1) {
           if (data.enableOrDisable == true) {
 

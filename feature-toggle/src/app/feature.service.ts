@@ -70,13 +70,11 @@ export class FeatureService {
 
       const tokenParts = token.split('.');
       if (tokenParts.length !== 3) {
-        console.error("Invalid JWT format.");
         return null;
       }
 
       const payloadBase64 = tokenParts[1];
       const payloadJson = JSON.parse(window.atob(payloadBase64));
-      console.log("Decoded payload:", payloadJson);
       return payloadJson;
     } catch (error) {
       console.error("Failed to decode token:", error);
