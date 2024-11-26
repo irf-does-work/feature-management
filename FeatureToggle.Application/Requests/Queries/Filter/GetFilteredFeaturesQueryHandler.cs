@@ -74,18 +74,10 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                         businessFeatureFlag => businessFeatureFlag.FeatureId,
                         (feature, businessFeatureFlags) => new { Feature = feature, BusinessFeatureFlags = businessFeatureFlags }
                     )
-                    .SelectMany(
-                        result => result.BusinessFeatureFlags.DefaultIfEmpty(),
-                        (result, businessFeatureFlag) => new
-                        {
-                            Feature = result.Feature,
-                            BusinessFeatureFlag = businessFeatureFlag
-                        }
-                    )
-                    .Where(result => result.BusinessFeatureFlag == null) // No flag in BusinessFeatureFlag
+                    .Where(result => !result.BusinessFeatureFlags.Any()) // No matching flags
                     .Select(result => new FilteredFeatureDTO
                     {
-                        FeatureFlagId = 0,  
+                        FeatureFlagId = 0,
                         FeatureId = result.Feature.FeatureId,
                         FeatureName = result.Feature.FeatureName,
                         FeatureType = result.Feature.FeatureTypeId,
@@ -106,18 +98,10 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
                         businessFeatureFlag => businessFeatureFlag.FeatureId,
                         (feature, businessFeatureFlags) => new { Feature = feature, BusinessFeatureFlags = businessFeatureFlags }
                     )
-                    .SelectMany(
-                        result => result.BusinessFeatureFlags.DefaultIfEmpty(),
-                        (result, businessFeatureFlag) => new
-                        {
-                            Feature = result.Feature,
-                            BusinessFeatureFlag = businessFeatureFlag
-                        }
-                    )
-                    .Where(result => result.BusinessFeatureFlag == null) // No flag in BusinessFeatureFlag
+                    .Where(result => !result.BusinessFeatureFlags.Any()) // No matching flags
                     .Select(result => new FilteredFeatureDTO
                     {
-                        FeatureFlagId = 0, 
+                        FeatureFlagId = 0,
                         FeatureId = result.Feature.FeatureId,
                         FeatureName = result.Feature.FeatureName,
                         FeatureType = result.Feature.FeatureTypeId,
