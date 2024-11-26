@@ -64,7 +64,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             });
 
             // release toggles in Feature but not in BusinessFeatureFlag
-            if (request.ReleaseToggleFilter.HasValue || (!request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue && !request.FeatureToggleFilter.HasValue))
+            if (request.ReleaseToggleFilter.HasValue || (!request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue && !request.FeatureToggleFilter.HasValue) || (!request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue && !request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue))
             {
                 IQueryable<FilteredFeatureDTO> releaseTogglesWithoutFlags = _businessContext.Feature
                     .Where(f => f.FeatureTypeId == 1)  
@@ -112,7 +112,7 @@ namespace FeatureToggle.Application.Requests.Queries.Filter
             }
 
             // exclude release toggles in Feature table but not in BusinessFeatureFlag
-            if (request.IsEnabledFilter.HasValue && request.IsEnabledFilter.Value)
+            if (request.IsEnabledFilter.HasValue /*&& request.IsEnabledFilter.Value*/)
             {
                 featuresWithFlags = featuresWithFlags.Where(f => f.FeatureId != 0);  
             }
