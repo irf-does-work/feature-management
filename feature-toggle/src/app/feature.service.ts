@@ -96,4 +96,10 @@ export class FeatureService {
     return this.http.get(`${this.baseUrl}/api/Filter`, { params });
   }
 
+  downloadLogs(){
+    return this.http.get(`${this.baseUrl}/api/Log/AllLogs`, {
+      responseType: 'blob', // Expect a binary response
+    });
+  }
+
 }
