@@ -18,6 +18,8 @@ import { FeatureService } from '../feature.service';
 export class HomeComponent {
   
   rtCheckboxSate: boolean = false;
+  ftCheckboxSate: boolean = false;
+
   searchBarInput: string ='';
   //selectedFilters: string[] = [];
   selectedFilters2: IselectedFilters = {
@@ -84,6 +86,7 @@ export class HomeComponent {
   }
 
   toggleReleaseCheckbox() {
+    const featureCheckbox = document.getElementById('filterAction1') as HTMLInputElement;
     const releaseCheckbox = document.getElementById('filterAction2') as HTMLInputElement;
     const enabledCheckbox = document.getElementById('filterAction3') as HTMLInputElement;
     const disabledCheckbox = document.getElementById('filterAction4') as HTMLInputElement;
@@ -91,13 +94,27 @@ export class HomeComponent {
     if (releaseCheckbox.checked) {
       enabledCheckbox.removeAttribute('disabled');
       disabledCheckbox.removeAttribute('disabled');
+      featureCheckbox.setAttribute('disabled', 'true');
+      featureCheckbox.checked = false;
     }
 
     else {
       enabledCheckbox.setAttribute('disabled', 'true');
       disabledCheckbox.setAttribute('disabled', 'true');
+      featureCheckbox.removeAttribute('disabled');
       enabledCheckbox.checked = false;
       disabledCheckbox.checked = false;
+    }
+  }
+
+  toggleFeatureCheckbox() {
+    const featureCheckbox = document.getElementById('filterAction1') as HTMLInputElement;
+    const releaseCheckbox = document.getElementById('filterAction2') as HTMLInputElement;
+    if(featureCheckbox.checked){
+      releaseCheckbox.setAttribute('disabled','true');
+    }
+    else{
+      releaseCheckbox.removeAttribute('disabled')
     }
   }
 }

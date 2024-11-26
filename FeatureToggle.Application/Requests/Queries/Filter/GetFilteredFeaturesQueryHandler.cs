@@ -18,18 +18,23 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
         if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue &&
             !request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue)
         {
-            var allFeatures = await baseQuery.Select(f => new FilteredFeatureDTO
+            List<FilteredFeatureDTO> allFeatures = await baseQuery.Select(f => new FilteredFeatureDTO
             {
                 FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
-                    ? f.BusinessFeatures.FirstOrDefault().FeatureFlagId
+                    ? f.BusinessFeatures.FirstOrDefault()!.FeatureFlagId
                     : 0,
                 FeatureId = f.FeatureId,
                 FeatureName = f.FeatureName,
                 FeatureType = f.FeatureTypeId,
                 isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
-                    ? f.BusinessFeatures.FirstOrDefault().IsEnabled
+                    ? f.BusinessFeatures.FirstOrDefault()!.IsEnabled
                     : null
             }).ToListAsync(cancellationToken);
+
+            if(request.SearchQuery is not null)
+            {
+                allFeatures = allFeatures.Where(af => af.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             return new PaginatedFeatureListDTO
             {
@@ -43,36 +48,36 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
         // Apply feature toggle filter
         if (request.FeatureToggleFilter.HasValue)
         {
-            baseQuery = baseQuery.Where(f => f.FeatureTypeId == 2); // Feature toggles
+            baseQuery = baseQuery.Where(f => f.FeatureTypeId == 2); 
         }
 
         // Apply release toggle filter
         if (request.ReleaseToggleFilter.HasValue)
         {
-            baseQuery = baseQuery.Where(f => f.FeatureTypeId == 1); // Release toggles
+            baseQuery = baseQuery.Where(f => f.FeatureTypeId == 1); 
 
             if (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.Any(bf => bf.IsEnabled) ||   // Enabled toggles
-                    f.BusinessFeatures.All(bf => !bf.IsEnabled) ||  // Disabled toggles
-                    !f.BusinessFeatures.Any()                      // Toggles without flags
+                    f.BusinessFeatures.Any(bf => bf.IsEnabled) ||   
+                    f.BusinessFeatures.All(bf => !bf.IsEnabled) ||  
+                    !f.BusinessFeatures.Any()                      
                 );
             }
             else if (request.IsEnabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.Any(bf => bf.IsEnabled == true)); // Enabled toggles
+                    f.BusinessFeatures.Any(bf => bf.IsEnabled == true)); 
             }
             else if (request.IsDisabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.All(bf => !bf.IsEnabled) ||      // Disabled toggles
-                    !f.BusinessFeatures.Any());                        // Toggles without flags
+                    f.BusinessFeatures.All(bf => !bf.IsEnabled) ||      
+                    !f.BusinessFeatures.Any());                        
             }
         }
 
-        var combinedQuery = baseQuery.Select(f => new FilteredFeatureDTO
+        List<FilteredFeatureDTO> combinedQuery = await baseQuery.Select(f => new FilteredFeatureDTO
         {
             FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
                 ? f.BusinessFeatures.FirstOrDefault().FeatureFlagId
@@ -83,19 +88,18 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
                 ? f.BusinessFeatures.FirstOrDefault().IsEnabled
                 : null
-        });
+        }).ToListAsync(cancellationToken);
 
-        if (!string.IsNullOrWhiteSpace(request.SearchQuery))
+        if (request.SearchQuery is not null)
         {
-            combinedQuery = combinedQuery.Where(cq => cq.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase));
+            combinedQuery = combinedQuery.Where(af => af.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
         }
-
-        var featureList = await combinedQuery
+        List<FilteredFeatureDTO> featureList = combinedQuery
             .Skip(request.PageNumber * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
+            .ToList();
 
-        int totalCount = await combinedQuery.CountAsync(cancellationToken);
+        int totalCount = combinedQuery.Count;
 
         return new PaginatedFeatureListDTO
         {

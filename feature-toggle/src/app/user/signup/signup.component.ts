@@ -65,12 +65,11 @@ export class SignupComponent implements OnInit{
       const userData : ISignUpAccept = {
         name: this.userForm.value.fullName ?? '',
         email : this.userForm.value.email ?? '',
-        password : this.userForm.value.email ?? '',
+        password : this.userForm.value.password ?? '',
       }
 
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {
-
           this.toastr.success('New user created!','Registration Successful')
           this.router.navigate(['user/login']);
         },
