@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ValidatorFn, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { ISignUpAccept, ISignUpForm } from '../../interface/feature.interface';
 import { ToastrService } from 'ngx-toastr';
+import { resolveAny } from 'dns';
 
 
 @Component({
@@ -65,13 +66,13 @@ export class SignupComponent implements OnInit {
       const userData: ISignUpAccept = {
         name: this.userForm.value.fullName ?? '',
         email: this.userForm.value.email ?? '',
-        password: this.userForm.value.email ?? '',
+        password: this.userForm.value.password ?? '',
       }
 
-      this.userService.addUser(userData).subscribe({
-        next: (response: any) => {
 
-          this.toastr.success('New user created!', 'Registration Successful')
+      this.userService.addUser(userData).subscribe({
+        next: (response: any) => {          
+          this.toastr.success('New user created!', 'Registration Successful');
           this.router.navigate(['user/login']);
         },
         error: (error: any) => {
