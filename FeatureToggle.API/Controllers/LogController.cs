@@ -32,7 +32,7 @@ namespace FeatureToggle.API.Controllers
         [HttpGet("AllLogs")]
         public async Task<FileContentResult> GetAllLogs()
         {
-            var logs = await mediator.Send(new GetAllLogsQuery());
+            List<LogDTO> logs = await mediator.Send(new GetAllLogsQuery());
 
             using (var memoryStream = new MemoryStream())
             {
