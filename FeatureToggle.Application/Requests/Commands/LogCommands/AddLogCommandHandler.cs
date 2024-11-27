@@ -14,9 +14,11 @@ namespace FeatureToggle.Application.Requests.Commands.LogCommands
                           request.FeatureName,
                           request.BusinessId,
                           request.BusinessName,
-                          request.Action);
+                          request.action
+                       );
 
             await featureContext.Logs.AddAsync(log,cancellationToken);   
+            await featureContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

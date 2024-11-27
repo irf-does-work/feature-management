@@ -65,15 +65,6 @@ export class SignupComponent implements OnInit {
     if (this.userForm.valid) {
       const userData: ISignUpAccept = {
         name: this.userForm.value.fullName ?? '',
-<<<<<<< HEAD
-        email : this.userForm.value.email ?? '',
-        password : this.userForm.value.password ?? '',
-      }
-
-      this.userService.addUser(userData).subscribe({
-        next: (response: any) => {
-          this.toastr.success('New user created!','Registration Successful')
-=======
         email: this.userForm.value.email ?? '',
         password: this.userForm.value.password ?? '',
       }
@@ -82,7 +73,6 @@ export class SignupComponent implements OnInit {
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {          
           this.toastr.success('New user created!', 'Registration Successful');
->>>>>>> cyril/jwt
           this.router.navigate(['user/login']);
         },
         error: (error: any) => {
