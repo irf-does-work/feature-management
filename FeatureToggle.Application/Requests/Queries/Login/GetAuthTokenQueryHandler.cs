@@ -33,7 +33,9 @@ namespace FeatureToggle.Application.Requests.Queries.Login
                         new Claim("IsAdmin",user.IsAdmin.ToString())
                     ]),
                     Expires = DateTime.UtcNow.AddDays(1),
-                    SigningCredentials = new SigningCredentials(signInKey,SecurityAlgorithms.HmacSha256Signature)
+                    SigningCredentials = new SigningCredentials(signInKey,SecurityAlgorithms.HmacSha256Signature),
+                    Issuer = _optionsMonitor.CurrentValue.Issuer,
+                    Audience = _optionsMonitor.CurrentValue.Audience,
                 };
                 JwtSecurityTokenHandler tokenHandler = new();
                 SecurityToken securityToken = tokenHandler.CreateToken(tokenDescriptor);

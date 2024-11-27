@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using FeatureToggle.API.Identity;
 using FeatureToggle.Application.Requests.Commands.UserCommands;
 using FeatureToggle.Domain.ConfigurationModels;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
@@ -33,27 +34,29 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddUserCommandValidator>();
 
 builder.Services.AddSwaggerGen(x =>
 {
-    x.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
+    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Description = "Enter the Bearer Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Scheme = "Bearer"
+        Description = "Enter 'Bearer' followed by the token."
     });
     x.AddSecurityRequirement(new OpenApiSecurityRequirement
-{
     {
-    new OpenApiSecurityScheme
-    {
-        Reference = new OpenApiReference
         {
-            Type = ReferenceType.SecurityScheme,
-            Id = JwtBearerDefaults.AuthenticationScheme,
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
         }
-    },
-    new string[] { }
-    }
-});
+    });
 });
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -79,10 +82,19 @@ builder.Services.AddAuthentication(x =>
                                         {
                                             ValidateIssuerSigningKey = true,
                                             IssuerSigningKey = new SymmetricSecurityKey(
-                                                Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JWTSecret"]!))
+                                                Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JWTSecret"]!)),
+                                            ValidateIssuer = true, 
+                                            ValidIssuer = builder.Configuration["Authentication:Issuer"], 
+                                            ValidateAudience = true, 
+                                            ValidAudience = builder.Configuration["Authentication:Audience"],
+                                            //ValidateLifetime = true
                                         };
                                     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(IdentityData.AdminUserPolicyName, p =>
+    p.RequireClaim(IdentityData.AdminUserClaimName, "True"));
+});
 
 builder.Services.AddDbContext<FeatureManagementContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureManagementDbContext")));
 builder.Services.AddDbContext<BusinessContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureManagementDbContext")));

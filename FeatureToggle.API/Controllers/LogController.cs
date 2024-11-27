@@ -1,4 +1,5 @@
-﻿using FeatureToggle.Application.DTOs;
+﻿using FeatureToggle.API.Identity;
+using FeatureToggle.Application.DTOs;
 using FeatureToggle.Application.Requests.Queries.Log;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class LogController(IMediator mediator) : ControllerBase
