@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { IBusiness, Ilog, ILoginAccept, ILoginReturn, IPaginationLog, IselectedFilters, ISignUpAccept, IUpdateToggle } from './interface/feature.interface';
+import { IBusiness, Ilog, ILoginAccept, ILoginReturn, IPaginatedFeatures, IPaginationLog, IselectedFilters, ISignUpAccept, ISignUpReturn, IUpdateToggle } from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -12,7 +12,7 @@ import { TOKEN_KEY } from './shared/constants';
 export class FeatureService {
   private baseUrl = environment.apiUrl;
   public userId: number = 0;
-  
+
   constructor(private http: HttpClient) { }
 
   //for login
@@ -21,14 +21,14 @@ export class FeatureService {
   }
 
   //for signup
-  addUser(data: ISignUpAccept): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/User`, data);
+  addUser(data: ISignUpAccept): Observable<ISignUpReturn> {
+    return this.http.post<ISignUpReturn>(`${this.baseUrl}/api/User`, data);
   }
 
 
   //for enabling or disabling feature
-  updateToggle(data: IUpdateToggle): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/BusinessFeatureFlag/feature/update`, data);
+  updateToggle(data: IUpdateToggle): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/api/BusinessFeatureFlag/feature/update`, data);
   }
 
   //for displaying business in dialog box 
@@ -36,14 +36,14 @@ export class FeatureService {
     return this.http.get<IBusiness[]>(`${this.baseUrl}${apiEndpoint}?featureId=${featureId}`);
   }
 
-  getLog(pageNumber: number, searchQuery:string) : Observable<IPaginationLog> {
+  getLog(pageNumber: number, searchQuery: string): Observable<IPaginationLog> {
     const params = new HttpParams()
-    .set('page',pageNumber)
-    .set('pageSize',12)
-    .set('searchQuery',searchQuery !== null ? searchQuery : '')
-    return this.http.get<IPaginationLog>(`${this.baseUrl}/api/Log`,{params})
+      .set('page', pageNumber)
+      .set('pageSize', 12)
+      .set('searchQuery', searchQuery !== null ? searchQuery : '')
+    return this.http.get<IPaginationLog>(`${this.baseUrl}/api/Log`, { params })
   }
-  
+
 
 
   //auth service
@@ -84,7 +84,7 @@ export class FeatureService {
 
 
   //for feature(home) page
-  getFeatures(selectedFilters2: IselectedFilters, pageNumber: number): Observable<any> {
+  getFeatures(selectedFilters2: IselectedFilters, pageNumber: number): Observable<IPaginatedFeatures> {
     const params = new HttpParams()
       .set('featureToggleType', selectedFilters2.featureFilter !== null ? selectedFilters2.featureFilter.toString() : '')
       .set('releaseToggleType', selectedFilters2.releaseFilter !== null ? selectedFilters2.releaseFilter.toString() : '')
@@ -93,10 +93,10 @@ export class FeatureService {
       .set('pageNumber', pageNumber)
       .set('searchQuery', selectedFilters2.searchQuery !== null ? selectedFilters2.searchQuery : '');
 
-    return this.http.get(`${this.baseUrl}/api/Filter`, { params });
+    return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Filter`, { params });
   }
 
-  downloadLogs(){
+  downloadLogs() {
     return this.http.get(`${this.baseUrl}/api/Log/AllLogs`, {
       responseType: 'blob', // Expect a binary response
     });
