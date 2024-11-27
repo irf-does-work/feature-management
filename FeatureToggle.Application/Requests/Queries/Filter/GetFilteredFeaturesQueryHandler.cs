@@ -45,13 +45,11 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             };
         }
 
-        // Apply feature toggle filter
         if (request.FeatureToggleFilter.HasValue)
         {
             baseQuery = baseQuery.Where(f => f.FeatureTypeId == 2); 
         }
 
-        // Apply release toggle filter
         if (request.ReleaseToggleFilter.HasValue)
         {
             baseQuery = baseQuery.Where(f => f.FeatureTypeId == 1); 
@@ -59,8 +57,8 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             if (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.Any(bf => bf.IsEnabled) ||   
-                    f.BusinessFeatures.All(bf => !bf.IsEnabled) ||  
+                    f.BusinessFeatures.Any(bf => bf.IsEnabled == true) ||   
+                    f.BusinessFeatures.Any(bf => !bf.IsEnabled) ||  
                     !f.BusinessFeatures.Any()                      
                 );
             }
@@ -72,7 +70,7 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             else if (request.IsDisabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.All(bf => !bf.IsEnabled) ||      
+                    f.BusinessFeatures.Any(bf => !bf.IsEnabled) ||      
                     !f.BusinessFeatures.Any());                        
             }
         }

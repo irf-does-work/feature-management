@@ -37,8 +37,7 @@ export class FeatureCardComponent {
 
     payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
 
-    this.currentUser = payload.UserID
-
+    this.currentUser = payload.UserID;
     console.log("payload admin" + payload.IsAdmin)
     console.log("feature-card admin" + this.isAdmin)
     console.log("Current UserID: " + this.currentUser)

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,30 @@ builder.Services.Configure<Authentication>(builder.Configuration.GetSection("Aut
 //builder.Services.AddTransient<UserValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<AddUserCommandValidator>();
 
-
+builder.Services.AddSwaggerGen(x =>
+{
+    x.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization",
+        In = ParameterLocation.Header,
+        Scheme = "Bearer"
+    });
+    x.AddSecurityRequirement(new OpenApiSecurityRequirement
+{
+    {
+    new OpenApiSecurityScheme
+    {
+        Reference = new OpenApiReference
+        {
+            Type = ReferenceType.SecurityScheme,
+            Id = JwtBearerDefaults.AuthenticationScheme,
+        }
+    },
+    new string[] { }
+    }
+});
+});
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -50,7 +74,7 @@ builder.Services.AddAuthentication(x =>
                                     })
                                     .AddJwtBearer(x =>
                                     {
-                                        x.SaveToken = false;
+                                        //x.SaveToken = false;
                                         x.TokenValidationParameters = new TokenValidationParameters
                                         {
                                             ValidateIssuerSigningKey = true,
@@ -58,6 +82,7 @@ builder.Services.AddAuthentication(x =>
                                                 Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JWTSecret"]!))
                                         };
                                     });
+builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<FeatureManagementContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureManagementDbContext")));
 builder.Services.AddDbContext<BusinessContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("FeatureManagementDbContext")));
