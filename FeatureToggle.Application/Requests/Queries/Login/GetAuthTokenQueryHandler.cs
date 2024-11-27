@@ -20,7 +20,6 @@ namespace FeatureToggle.Application.Requests.Queries.Login
         {
             User? user = await _userManager.FindByEmailAsync(request.Email);
             bool isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
-            Console.WriteLine($"CheckPasswordAsync result: {isPasswordValid}");
             if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
             {
                 string secretKey = _optionsMonitor.CurrentValue.JWTSecret;

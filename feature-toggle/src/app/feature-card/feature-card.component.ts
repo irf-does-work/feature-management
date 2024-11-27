@@ -24,6 +24,7 @@ export class FeatureCardComponent {
   isAdmin: number = 0;
   currentUser: string | undefined;
   pageNumber: number = 0;
+  business: string | undefined;  // for displaying bussiness id in dialog
 
   constructor(
     public dialog: MatDialog,
@@ -31,16 +32,12 @@ export class FeatureCardComponent {
     private toastr: ToastrService
   ) {
 
-
-    //take payload from jwt token
+    //payload from jwt token
     const payload = this.featureService.decodeToken();
 
     payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
 
-    this.currentUser = payload.UserID;
-    console.log("payload admin" + payload.IsAdmin)
-    console.log("feature-card admin" + this.isAdmin)
-    console.log("Current UserID: " + this.currentUser)
+    this.currentUser = payload.UserID
   }
 
   featureTypeEnum = FeatureType;
@@ -76,10 +73,6 @@ export class FeatureCardComponent {
   }
 
 
-  business: string | undefined;
-  name: string | undefined;
-
-
   goToPage(page: number) {
     if (page >= 0 && page <= this.paginatedfeatures.totalPages) {
       this.pageNumber = page;
@@ -102,6 +95,8 @@ export class FeatureCardComponent {
   }
 
 
+  
+
   openDialog(action: true | false, featureId: number): void {
 
     const apiEndpoint = action === true
@@ -113,7 +108,6 @@ export class FeatureCardComponent {
     this.featureService.getBusinesses(apiEndpoint, featureId).subscribe({
       next: (response: IBusiness[]) => {
         // Open the dialog with the fetched businesses
-        console.log(response);
         const dialogRef = this.dialog.open(DialogComponent, {
           width: '20%',
           data: {
@@ -125,8 +119,7 @@ export class FeatureCardComponent {
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
           if (result) {
             this.business = result.businessId;
-            console.log('Selected Business:', result);
-            this.update_Toggle(featureId, Number(result.businessId), action); // Pass the businessId and action to update_Toggle
+            this.update_Toggle(featureId, Number(result.businessId), action); 
           }
         });
       },
@@ -141,7 +134,6 @@ export class FeatureCardComponent {
 
 
   update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {
-    console.log(`Updating FeatureId: ${featureId}, BusinessId: ${businessId}, Status: ${featureStatus}, UserId: ${this.currentUser}`);
 
     const data: IUpdateToggle = {
       UserId: this.currentUser,
@@ -154,7 +146,6 @@ export class FeatureCardComponent {
 
     this.featureService.updateToggle(data).subscribe({
       next: (response: any) => {
-        console.log(response)
         if (response === 1) {
           if (data.enableOrDisable == true) {
 

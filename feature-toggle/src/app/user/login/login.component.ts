@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FeatureService } from '../../feature.service';
-import { ILoginAccept, ILoginForm } from '../../interface/feature.interface';
+import { ILoginAccept, ILoginForm, ILoginReturn } from '../../interface/feature.interface';
 import { ToastrService } from 'ngx-toastr';
+import { error } from 'console';
+import { throwError } from 'rxjs';
 
 
 
@@ -14,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
   userForm: FormGroup<ILoginForm>;
   isSubmitted: boolean = false;
 
@@ -33,42 +35,43 @@ export class LoginComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if(this.userService.isLoggedIn()){
+    if (this.userService.isLoggedIn()) {
       this.router.navigate(['/home']);
     }
   }
 
   onSubmit() {
     if (this.userForm.valid) {
-      const userDetails : ILoginAccept = {
+      const userDetails: ILoginAccept = {
         email: this.userForm.value.email ?? '',
         password: this.userForm.value.password ?? ''
       }
 
       this.userService.login(userDetails).subscribe({
-        next: (response:any) => {
-          console.log(response);
-          // localStorage.setItem('token',response.token);
-          this.userService.saveToken(response.token);
+        next: (response: ILoginReturn) => {
 
-          this.router.navigate(['/home']);
-          this.toastr.success('Welcome back!', 'Login Successful')
-
-
+          if (response.token !== null) {
+            this.userService.saveToken(response.token);
+            this.router.navigate(['/home']);
+            this.toastr.success('Welcome back!', 'Login Successful')
+          }
+          else {
+            this.toastr.error('Something went wrong', 'Login failed')
+            throw new Error('Login failed');
+          }
         },
         error: (error) => {
-          if(error.status === 400){
-          this.toastr.error('Invalid login credentials', 'Login failed')
+          if (error.status === 400) {
+            this.toastr.error('Invalid login credentials', 'Login failed')
           }
-          else{
-            // console.log(error);
-            this.toastr.error('Something went wrong','Login failed')
+          else {
+            this.toastr.error('Something went wrong', 'Login failed')
           }
         }
       });
     }
     else {
-      this.toastr.error('Something went wrong','Login failed')
+      this.toastr.error('Something went wrong', 'Login failed')
     }
   }
 

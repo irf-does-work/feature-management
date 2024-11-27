@@ -11,6 +11,6 @@ namespace FeatureToggle.Application.Requests.Commands.LogCommands
         public string? BusinessName { get; set; }
         public int FeatureId { get; set; }
         public string FeatureName { get; set; } = string.Empty;
-        public Actions Action { get; set; }
+        public Actions action { get; set; }
     }
 }

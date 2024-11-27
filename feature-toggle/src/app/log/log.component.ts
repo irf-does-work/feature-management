@@ -12,40 +12,39 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-log',
   standalone: true,
-  imports: [NavbarComponent,MatTableModule,DatePipe,FormsModule],
+  imports: [NavbarComponent, MatTableModule, DatePipe, FormsModule],
   templateUrl: './log.component.html',
   styleUrl: './log.component.scss'
 })
 export class LogComponent implements OnInit {
-  pageNumber : number = 0;
+  pageNumber: number = 0;
   searchBarInput: string = '';
 
-  dataSource: IPaginationLog= {
+  dataSource: IPaginationLog = {
     pageSize: 0,
     currentPage: 0,
     totalCount: 0,
     totalPages: 0,
     logs: []
   };
-  
+
   constructor(private featureService: FeatureService, private toastr: ToastrService) { }
   ngOnInit(): void {
-      this.fetchPaginatedLog();
+    this.fetchPaginatedLog();
   }
-  
-  displayedColumns: string[] = ['serialNo', 'UserId', 'Username', 'FeatureId', 'FeatureName', 'BusinessId','BusinessName','Date','Time', 'Action'];
 
-  fetchPaginatedLog(){
-    this.featureService.getLog(this.pageNumber,this.searchBarInput).subscribe({
-      next:(response:IPaginationLog) =>{
+  displayedColumns: string[] = ['serialNo', 'UserId', 'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
+
+  fetchPaginatedLog() {
+    this.featureService.getLog(this.pageNumber, this.searchBarInput).subscribe({
+      next: (response: IPaginationLog) => {
         this.dataSource = response;
-        if(this.dataSource.logs.length===0){
+        if (this.dataSource.logs.length === 0) {
           this.toastr.warning('No Logs');
         }
-        console.log(this.dataSource);
       },
-      error:(err) =>{
-        console.log("Error while fetching Logs: ", err)
+      error: (err) => {
+        this.toastr.error('"Error while fetching Logs', 'Error');
       }
     });
   }
@@ -72,8 +71,28 @@ export class LogComponent implements OnInit {
     }
   }
 
-  resetPageNo(){
+  resetPageNo() {
     this.pageNumber = 0
   }
 
+
+  downloadTrigger() {
+    this.featureService.downloadLogs().subscribe({
+      next: (response_blob) => {
+        const timestamp = Date.now();
+        const a = document.createElement('a');
+        const objectUrl = URL.createObjectURL(response_blob);
+        a.href = objectUrl;
+        a.download = `feature-logs_${timestamp}.csv`;
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+
+        this.toastr.success('Download successful!', 'Download');
+
+      },
+      error: (error) => {
+        this.toastr.error('Error downloading logs', 'Error');
+      }
+    });
+  }
 }

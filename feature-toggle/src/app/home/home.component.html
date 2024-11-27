@@ -51,14 +51,14 @@
                             </div>
                         </ul>
                     </div>
+                <button type="submit" class="btn btn-primary ms-3 w-25" (click)="applyFilters();">Search
+                    Feature</button>
+            </div>
 
-                    <button type="submit" class="btn btn-primary ms-3 w-25" (click)="applyFilters();">Search Feature</button>
-                </div>
-                
-            </form>
-        </div>
-    
-
+        </form>
     </div>
 
-    <app-feature-card [selectedFilters]="selectedFilters2" (applyFilters)="applyFilters()"></app-feature-card>
+
+</div>
+
+<app-feature-card [selectedFilters]="selectedFilters2" (applyFilters)="applyFilters()"></app-feature-card>

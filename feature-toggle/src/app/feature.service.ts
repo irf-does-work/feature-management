@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { IBusiness, Ilog, ILoginAccept, IPaginationLog, IselectedFilters, ISignUpAccept, IUpdateToggle} from './interface/feature.interface';
+import { IBusiness, Ilog, ILoginAccept, ILoginReturn, IPaginationLog, IselectedFilters, ISignUpAccept, IUpdateToggle } from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 
 
@@ -15,20 +15,23 @@ export class FeatureService {
   
   constructor(private http: HttpClient) { }
 
-
-  
-  login(data: ILoginAccept): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/Login`, data);
+  //for login
+  login(data: ILoginAccept): Observable<ILoginReturn> {
+    return this.http.post<ILoginReturn>(`${this.baseUrl}/api/Login`, data);
   }
 
+  //for signup
   addUser(data: ISignUpAccept): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/User`, data);
   }
 
-  updateToggle(data: IUpdateToggle) : Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/BusinessFeatureFlag/feature/update`,data);
+
+  //for enabling or disabling feature
+  updateToggle(data: IUpdateToggle): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/BusinessFeatureFlag/feature/update`, data);
   }
 
+  //for displaying business in dialog box 
   getBusinesses(apiEndpoint: string, featureId: number): Observable<IBusiness[]> {
     return this.http.get<IBusiness[]>(`${this.baseUrl}${apiEndpoint}?featureId=${featureId}`);
   }
@@ -41,60 +44,62 @@ export class FeatureService {
     return this.http.get<IPaginationLog>(`${this.baseUrl}/api/Log`,{params})
   }
   
-  //auth
 
-  isLoggedIn(){
-    return localStorage.getItem(TOKEN_KEY)!= null? true : false;
+
+  //auth service
+
+  isLoggedIn() {
+    return localStorage.getItem(TOKEN_KEY) != null ? true : false;
   }
 
-  saveToken(token: string){
+  saveToken(token: string) {
     localStorage.setItem(TOKEN_KEY, token);
   }
-  
-  deleteToken(){
+
+  deleteToken() {
     localStorage.removeItem(TOKEN_KEY);
   }
 
-  // decode(){
-  //   const aa = JSON.parse(window.atob(TOKEN_KEY));
-  //   console.log("hi" + aa);
-  //   return aa;
-  // }
-
   decodeToken() {
     try {
-      const token = localStorage.getItem(TOKEN_KEY); 
+      const token = localStorage.getItem(TOKEN_KEY);
       if (!token) {
         console.error("Token is undefined or empty.");
         return null;
       }
-  
+
       const tokenParts = token.split('.');
       if (tokenParts.length !== 3) {
-        console.error("Invalid JWT format.");
         return null;
       }
-  
+
       const payloadBase64 = tokenParts[1];
       const payloadJson = JSON.parse(window.atob(payloadBase64));
-      console.log("Decoded payload:", payloadJson);
       return payloadJson;
     } catch (error) {
       console.error("Failed to decode token:", error);
       return null;
     }
   }
-  
-  getFeatures(selectedFilters2: IselectedFilters,pageNumber : number): Observable<any> {
+
+
+  //for feature(home) page
+  getFeatures(selectedFilters2: IselectedFilters, pageNumber: number): Observable<any> {
     const params = new HttpParams()
       .set('featureToggleType', selectedFilters2.featureFilter !== null ? selectedFilters2.featureFilter.toString() : '')
       .set('releaseToggleType', selectedFilters2.releaseFilter !== null ? selectedFilters2.releaseFilter.toString() : '')
       .set('isEnabled', selectedFilters2.enabledFilter !== null ? selectedFilters2.enabledFilter.toString() : '')
       .set('isDisabled', selectedFilters2.disabledFilter !== null ? selectedFilters2.disabledFilter.toString() : '')
       .set('pageNumber', pageNumber)
-      .set('searchQuery',selectedFilters2.searchQuery !== null ? selectedFilters2.searchQuery : '');
+      .set('searchQuery', selectedFilters2.searchQuery !== null ? selectedFilters2.searchQuery : '');
 
-    return this.http.get(`${this.baseUrl}/api/Filter`,{params});
+    return this.http.get(`${this.baseUrl}/api/Filter`, { params });
+  }
+
+  downloadLogs(){
+    return this.http.get(`${this.baseUrl}/api/Log/AllLogs`, {
+      responseType: 'blob', // Expect a binary response
+    });
   }
 
 }

@@ -16,7 +16,7 @@ import { FeatureService } from '../feature.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  
+
   rtCheckboxSate: boolean = false;
   ftCheckboxSate: boolean = false;
 
@@ -30,8 +30,8 @@ export class HomeComponent {
     searchQuery: null
   };
   @Output() applyFiltersEvent = new EventEmitter<IselectedFilters>(); //
-  constructor(private featureService:FeatureService){ }
-  
+  constructor(private featureService: FeatureService) { }
+
   applyFilters(): void {
     this.selectedFilters2 = {
       featureFilter: null,
@@ -43,21 +43,21 @@ export class HomeComponent {
 
     this.selectedFilters2.searchQuery = this.searchBarInput;
     const checkboxes = document.querySelectorAll('.form-check-input');
-    
+
     checkboxes.forEach((checkbox) => {
       const inputElement = checkbox as HTMLInputElement;
       if (inputElement.checked) {
         switch (inputElement.id) {
-          case 'filterAction1':  
+          case 'filterAction1':
             this.selectedFilters2.featureFilter = true;
             break;
-          case 'filterAction2':  
+          case 'filterAction2':
             this.selectedFilters2.releaseFilter = true;
             break;
-          case 'filterAction3': 
+          case 'filterAction3':
             this.selectedFilters2.enabledFilter = true;
             break;
-          case 'filterAction4': 
+          case 'filterAction4':
             this.selectedFilters2.disabledFilter = true;
             break;
         }
@@ -65,21 +65,21 @@ export class HomeComponent {
 
       else {
         switch (inputElement.id) {
-          case 'filterAction1': 
+          case 'filterAction1':
             this.selectedFilters2.featureFilter = null;
             break;
-          case 'filterAction2':  
+          case 'filterAction2':
             this.selectedFilters2.releaseFilter = null;
             break;
-          case 'filterAction3':  
+          case 'filterAction3':
             this.selectedFilters2.enabledFilter = null;
             break;
-          case 'filterAction4': 
+          case 'filterAction4':
             this.selectedFilters2.disabledFilter = null;
             break;
         }
       }
-      
+
     });
     this.applyFiltersEvent.emit(this.selectedFilters2);
 
