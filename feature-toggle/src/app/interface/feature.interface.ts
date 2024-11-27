@@ -92,3 +92,9 @@ export interface ILoginReturn {
     errorMessage: string | null;
 
 }
+
+export interface ISignUpReturn {
+    success: boolean,
+    message : string,
+    errors: string[],
+}

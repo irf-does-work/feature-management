@@ -11,9 +11,9 @@ namespace FeatureToggle.Application.Requests.Queries.Log
     {
         public async Task<PaginatedLogListDTO> Handle(GetLogQuery request, CancellationToken cancellationToken)
         {
+
             List<LogDTO> query = await featureManagementContext.Logs
-                .Where(x => request.SearchQuery == null
-                || x.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase))
+                .Where(x => request.SearchQuery == null || x.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase))
                 .Select(x => new LogDTO
                 {
                     LogId = x.Id,
@@ -36,16 +36,16 @@ namespace FeatureToggle.Application.Requests.Queries.Log
             //    query = query.Where(q => q.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList(); 
             //}
 
-            int totalCount = query.Count;
+            int totalCount = query.Count();
             int page = request.Page;
             int pageSize = request.PageSize;
-            int totalPages = (totalCount / pageSize) + 1;
+            int totalPages = (totalCount / pageSize) +1;
+           
+
+            List<LogDTO> queryList = query.Skip((page) * pageSize).Take(pageSize).ToList();
 
 
-            var queryList = query.Skip((page) * pageSize).Take(pageSize).ToList();
-
-
-            var result = new PaginatedLogListDTO
+            PaginatedLogListDTO result = new PaginatedLogListDTO
             {
                 TotalCount = totalCount,
                 TotalPages = totalPages,
