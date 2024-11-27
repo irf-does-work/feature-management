@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers
 {
-    //[Authorize(Policy = IdentityData.AdminUserPolicyName)]
+    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class LogController(IMediator mediator) : ControllerBase
