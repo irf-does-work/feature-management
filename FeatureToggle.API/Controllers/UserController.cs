@@ -2,6 +2,7 @@
 using FeatureToggle.Application.DTOs;
 using FeatureToggle.Application.Requests.Commands.UserCommands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers
@@ -18,8 +19,6 @@ namespace FeatureToggle.API.Controllers
             var cancellationToken = HttpContext.RequestAborted;
             return await _mediator.Send(command,cancellationToken);
         }
-        
-        
-        
+     
     }
 }
