@@ -4,6 +4,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
 import { IBusiness, Ilog, ILoginAccept, ILoginReturn, IPaginatedFeatures, IPaginationLog, IselectedFilters, ISignUpAccept, ISignUpReturn, IUpdateToggle } from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+
+
 
 
 @Injectable({
@@ -13,7 +17,7 @@ export class FeatureService {
   private baseUrl = environment.apiUrl;
   public userId: number = 0;
 
-  constructor(private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient,private toastr: ToastrService) { }
 
   //for login
   login(data: ILoginAccept): Observable<ILoginReturn> {
@@ -49,6 +53,7 @@ export class FeatureService {
   //auth service
 
   isLoggedIn() {
+    this.checkExpiry();
     return localStorage.getItem(TOKEN_KEY) != null ? true : false;
   }
 
@@ -64,7 +69,6 @@ export class FeatureService {
     try {
       const token = localStorage.getItem(TOKEN_KEY);
       if (!token) {
-        console.error("Token is undefined or empty.");
         return null;
       }
 
@@ -77,7 +81,6 @@ export class FeatureService {
       const payloadJson = JSON.parse(window.atob(payloadBase64));
       return payloadJson;
     } catch (error) {
-      console.error("Failed to decode token:", error);
       return null;
     }
   }
@@ -100,6 +103,22 @@ export class FeatureService {
     return this.http.get(`${this.baseUrl}/api/Log/AllLogs`, {
       responseType: 'blob', // Expect a binary response
     });
+  }
+
+  checkExpiry() {
+    const payload = this.decodeToken();
+    if (payload) {
+      const expTime = payload.exp; // expiry in epoch seconds from payload
+      const now = Date.now() / 1000; // Unix timestamp in milliseconds
+      const diff = expTime - (Math.floor(now));
+
+      if (diff <= 0) {
+        this.deleteToken();
+        this.router.navigate(['/user/login']);
+        this.toastr.error('Please login again', 'Session Timeout')
+       
+      }
+    }
   }
 
 }

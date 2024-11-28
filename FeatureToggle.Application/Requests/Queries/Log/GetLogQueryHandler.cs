@@ -20,7 +20,7 @@ namespace FeatureToggle.Application.Requests.Queries.Log
         {
 
             List<LogDTO> query = await featureManagementContext.Logs
-                .Where(x => request.SearchQuery == null || x.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase))
+                //.Where(x => request.SearchQuery == null || x.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase))
                 .Select(x => new LogDTO
                 {
                     LogId = x.Id,
@@ -38,10 +38,10 @@ namespace FeatureToggle.Application.Requests.Queries.Log
                 .ToListAsync(cancellationToken);
             //return query;
 
-            //if(request.SearchQuery is not null)
-            //{
-            //    query = query.Where(q => q.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList(); 
-            //}
+            if (request.SearchQuery is not null)
+            {
+                query = query.Where(q => q.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             int totalCount = query.Count();
             int page = request.Page;

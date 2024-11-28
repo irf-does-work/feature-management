@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FeatureCardComponent } from '../feature-card/feature-card.component';
-import { FeatureStatus, FeatureType } from '../enum/feature.enum';
 import { FormsModule } from '@angular/forms';
 import { IselectedFilters } from '../interface/feature.interface';
-import { features } from 'process';
 import { FeatureService } from '../feature.service';
 
 
