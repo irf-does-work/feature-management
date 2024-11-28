@@ -25,6 +25,7 @@ export class FeatureCardComponent {
   currentUser: string | undefined;
   pageNumber: number = 0;
   business: string | undefined;  // for displaying bussiness id in dialog
+  isLoading: boolean = true;
 
   constructor(
     public dialog: MatDialog,
@@ -64,6 +65,7 @@ export class FeatureCardComponent {
   fetchFeatures() {
     this.featureService.getFeatures(this.selectedFilters!,this.pageNumber).subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.paginatedfeatures = response;
       },
       error: (err) => {

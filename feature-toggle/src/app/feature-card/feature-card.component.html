@@ -1,6 +1,10 @@
 <div class="mx-5 mt-5 mb-4 ">
     <div class="row">
-
+        @if (isLoading) {
+        <div class="loading-overlay">
+            <span class="loader"></span>
+        </div>
+        }
         @for (feature of paginatedfeatures.featureList; track feature.featureName) {
         <div class="col-md-3 mb-3">
             <div class="card card-min-height rounded-4" [ngClass]="{
@@ -11,29 +15,30 @@
                 <div class="card-body">
                     <div class="" style="min-height: 8em;">
                         <h5 class="card-title">{{ feature.featureName }}</h5>
-                    
-                    
-                        <p class="card-text fs-5">{{ feature.featureType === 2 ? 'Feature Toggle' : 'Release Toggle' }}</p>
+
+
+                        <p class="card-text fs-5">{{ feature.featureType === 2 ? 'Feature Toggle' : 'Release Toggle' }}
+                        </p>
                     </div>
-                        <!-- Feature Toggle Buttons -->
-                        <div class="">
+                    <!-- Feature Toggle Buttons -->
+                    <div class="">
                         <div class="d-flex">
                             @if(feature.featureType === 2){
-                                <button type="button" class="btn btn-primary"
+                            <button type="button" class="btn btn-primary"
                                 (click)="openDialog(true,feature.featureId)">Enable</button>
 
-                                @if(isAdmin){
-                                <button type="button" class="btn btn-primary ms-2"
-                                    (click)="openDialog(false,feature.featureId)">Disable</button>
-                                }
+                            @if(isAdmin){
+                            <button type="button" class="btn btn-primary ms-2"
+                                (click)="openDialog(false,feature.featureId)">Disable</button>
+                            }
 
-                                @if (!isAdmin) {
-                                <div class="text-center">
-                                    <div class="badge bg-danger text-dark text-wrap w-100 ms-2 my-1">
-                                        <p class="m-1">To disable contact Admin</p>
-                                    </div>
+                            @if (!isAdmin) {
+                            <div class="text-center">
+                                <div class="badge bg-danger text-dark text-wrap w-100 ms-2 my-1">
+                                    <p class="m-1">To disable contact Admin</p>
                                 </div>
-                                }
+                            </div>
+                            }
 
                             }
                         </div>
@@ -43,29 +48,29 @@
                         <!-- Release Toggle Button -->
                         @if(feature.featureType === 1){
 
-                            @if(feature.isEnabled === false || feature.isEnabled === null){
-                            <button type="button" class="btn btn-success"
-                                (click)="feature.isEnabled = true; update_Toggle(feature.featureId,null,true)">
-                                Enable
-                            </button>
+                        @if(feature.isEnabled === false || feature.isEnabled === null){
+                        <button type="button" class="btn btn-success"
+                            (click)="feature.isEnabled = true; update_Toggle(feature.featureId,null,true)">
+                            Enable
+                        </button>
 
-                            }
+                        }
 
-                            @if(feature.isEnabled === true && isAdmin){
-                            <button type="button" class="btn btn-danger"
-                                (click)="feature.isEnabled = false; update_Toggle(feature.featureId,null,false)">
-                                Disable
-                            </button>
+                        @if(feature.isEnabled === true && isAdmin){
+                        <button type="button" class="btn btn-danger"
+                            (click)="feature.isEnabled = false; update_Toggle(feature.featureId,null,false)">
+                            Disable
+                        </button>
 
-                            }
+                        }
 
-                            @if (feature.isEnabled === true && !isAdmin) {
-                            <div class="text-center">
-                                <div class="badge bg-danger text-dark text-wrap w-75 my-1">
-                                    <p class="m-1">To disable contact Admin</p>
-                                </div>
+                        @if (feature.isEnabled === true && !isAdmin) {
+                        <div class="text-center">
+                            <div class="badge bg-danger text-dark text-wrap w-75 my-1">
+                                <p class="m-1">To disable contact Admin</p>
                             </div>
-                            }
+                        </div>
+                        }
 
 
                         }
@@ -94,10 +99,10 @@
         <!-- Page Numbers -->
 
         @for( page of [].constructor(this.paginatedfeatures.totalPages);track i; let i = $index){
-            
-            <li class="page-item" [class.active]="pageNumber === i">
+
+        <li class="page-item" [class.active]="pageNumber === i">
             <a class="page-link" href="#" (click)="goToPage(i);$event.preventDefault()">{{ i + 1 }}</a>
-            </li>
+        </li>
 
         }
 
