@@ -20,7 +20,7 @@ namespace FeatureToggle.Application.Requests.Queries.Log
     {
         public async Task<List<LogDTO>> Handle(GetAllLogsQuery request, CancellationToken cancellationToken)
         {
-            var query = await featureManagementContext.Logs
+            List<LogDTO> query = await featureManagementContext.Logs
                .Select(x => new LogDTO
                {
                    LogId = x.Id,

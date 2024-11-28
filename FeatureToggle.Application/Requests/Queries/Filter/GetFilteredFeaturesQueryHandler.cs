@@ -1,158 +1,110 @@
 ﻿using FeatureToggle.Application.DTOs;
+using FeatureToggle.Application.Requests.Queries.Filter;
 using FeatureToggle.Domain.Entity.BusinessSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FeatureToggle.Application.Requests.Queries.Filter
+public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : IRequestHandler<GetFilteredFeaturesQuery, PaginatedFeatureListDTO>
 {
-    public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : IRequestHandler<GetFilteredFeaturesQuery,PaginatedFeatureListDTO>
+    private readonly BusinessContext _businessContext = businessContext;
+    private int pageSize = 12;
+
+    public async Task<PaginatedFeatureListDTO> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
     {
-        private readonly BusinessContext _businessContext = businessContext;
-        private int pageSize = 12;
-        public async Task<PaginatedFeatureListDTO> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
+        IQueryable<Feature> baseQuery = _businessContext.Feature.Include(f => f.BusinessFeatures);
+
+        
+        if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue &&
+            !request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue)
         {
-            IQueryable<BusinessFeatureFlag> query = _businessContext.BusinessFeatureFlag
-                .Include(bf => bf.Feature)
-                .ThenInclude(f => f.FeatureType)
-                .AsQueryable();
-
-            // Filter by enabled/disabled state
-            if (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue)
+            List<FilteredFeatureDTO> allFeatures = await baseQuery.Select(f => new FilteredFeatureDTO
             {
-                // Both Enabled and Disabled
-            }
-            else
-            {
-                if (request.IsEnabledFilter.HasValue)
-                {
-                    query = query.Where(bf => bf.IsEnabled == request.IsEnabledFilter.Value);
-                }
+                FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                    ? f.BusinessFeatures.FirstOrDefault()!.FeatureFlagId
+                    : 0,
+                FeatureId = f.FeatureId,
+                FeatureName = f.FeatureName,
+                FeatureType = f.FeatureTypeId,
+                isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                    ? f.BusinessFeatures.FirstOrDefault()!.IsEnabled
+                    : null
+            }).ToListAsync(cancellationToken);
 
-                if (request.IsDisabledFilter.HasValue)
-                {
-                    query = query.Where(bf => bf.IsEnabled == !request.IsDisabledFilter.Value);
-                }
+            if(request.SearchQuery is not null)
+            {
+                allFeatures = allFeatures.Where(af => af.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            // Filter by feature/release toggle type
-            if (request.ReleaseToggleFilter.HasValue && request.FeatureToggleFilter.HasValue)
+            return new PaginatedFeatureListDTO
             {
-                // Both Release and Feature
-            }
-            else
-            {
-                if (request.ReleaseToggleFilter.HasValue)
-                {
-                    query = query.Where(bf => bf.Feature.FeatureTypeId == 1);
-                }
-
-                if (request.FeatureToggleFilter.HasValue)
-                {
-                    query = query.Where(bf => bf.Feature.FeatureTypeId == 2);
-                }
-            }
-
-            // Features in BusinessFeatureFlag
-            IQueryable<FilteredFeatureDTO> featuresWithFlags = query.Select(bf => new FilteredFeatureDTO
-            {
-                FeatureFlagId = bf.FeatureFlagId,
-                FeatureId = bf.FeatureId,
-                FeatureName = bf.Feature.FeatureName,
-                FeatureType = bf.Feature.FeatureTypeId,
-                isEnabled = bf.IsEnabled
-            });
-
-            // release toggles in Feature but not in BusinessFeatureFlag
-            if (request.ReleaseToggleFilter.HasValue || (!request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue && !request.FeatureToggleFilter.HasValue))
-            {
-                IQueryable<FilteredFeatureDTO> releaseTogglesWithoutFlags = _businessContext.Feature
-                    .Where(f => f.FeatureTypeId == 1)  
-                    .GroupJoin(
-                        _businessContext.BusinessFeatureFlag,
-                        feature => feature.FeatureId,
-                        businessFeatureFlag => businessFeatureFlag.FeatureId,
-                        (feature, businessFeatureFlags) => new { Feature = feature, BusinessFeatureFlags = businessFeatureFlags }
-                    )
-                    .SelectMany(
-                        result => result.BusinessFeatureFlags.DefaultIfEmpty(),
-                        (result, businessFeatureFlag) => new
-                        {
-                            Feature = result.Feature,
-                            BusinessFeatureFlag = businessFeatureFlag
-                        }
-                    )
-                    .Where(result => result.BusinessFeatureFlag == null) // No flag in BusinessFeatureFlag
-                    .Select(result => new FilteredFeatureDTO
-                    {
-                        FeatureFlagId = 0,  
-                        FeatureId = result.Feature.FeatureId,
-                        FeatureName = result.Feature.FeatureName,
-                        FeatureType = result.Feature.FeatureTypeId,
-                        isEnabled = null
-                    });
-
-                featuresWithFlags = featuresWithFlags.Concat(releaseTogglesWithoutFlags);
-            }
-
-            // feature toggles in the Feature but not in BusinessFeatureFlag
-            if (request.FeatureToggleFilter.HasValue || (!request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue))
-            {
-                IQueryable<FilteredFeatureDTO> featureTogglesWithoutFlags = _businessContext.Feature
-                    .Where(f => f.FeatureTypeId == 2)  
-                    .GroupJoin(
-                        _businessContext.BusinessFeatureFlag,
-                        feature => feature.FeatureId,
-                        businessFeatureFlag => businessFeatureFlag.FeatureId,
-                        (feature, businessFeatureFlags) => new { Feature = feature, BusinessFeatureFlags = businessFeatureFlags }
-                    )
-                    .SelectMany(
-                        result => result.BusinessFeatureFlags.DefaultIfEmpty(),
-                        (result, businessFeatureFlag) => new
-                        {
-                            Feature = result.Feature,
-                            BusinessFeatureFlag = businessFeatureFlag
-                        }
-                    )
-                    .Where(result => result.BusinessFeatureFlag == null) // No flag in BusinessFeatureFlag
-                    .Select(result => new FilteredFeatureDTO
-                    {
-                        FeatureFlagId = 0, 
-                        FeatureId = result.Feature.FeatureId,
-                        FeatureName = result.Feature.FeatureName,
-                        FeatureType = result.Feature.FeatureTypeId,
-                        isEnabled = null
-                    });
-
-                featuresWithFlags = featuresWithFlags.Concat(featureTogglesWithoutFlags);
-            }
-
-            // exclude release toggles in Feature table but not in BusinessFeatureFlag
-            if (request.IsEnabledFilter.HasValue && request.IsEnabledFilter.Value)
-            {
-                featuresWithFlags = featuresWithFlags.Where(f => f.FeatureId != 0);  
-            }
-
-            List<FilteredFeatureDTO> combinedQuery = await featuresWithFlags
-                .GroupBy(f => f.FeatureId)
-                .Select(x => x.First())     
-                .ToListAsync(cancellationToken);
-
-            if (request.SearchQuery is not null)
-            {
-                combinedQuery = combinedQuery.Where(cq => cq.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-
-            PaginatedFeatureListDTO paginatedFeatureList = new()
-            {
-                FeatureCount = combinedQuery.Count(),
-                TotalPages = ((combinedQuery.Count()) / pageSize) + 1,
+                FeatureCount = allFeatures.Count,
+                TotalPages = (allFeatures.Count + pageSize - 1) / pageSize,
                 PageSize = pageSize,
-                FeatureList = combinedQuery.Skip(pageSize*request.PageNumber).Take(pageSize).ToList(),
+                FeatureList = allFeatures.Skip(request.PageNumber * pageSize).Take(pageSize).ToList()
             };
-
-            return paginatedFeatureList;
         }
 
+        if (request.FeatureToggleFilter.HasValue)
+        {
+            baseQuery = baseQuery.Where(f => f.FeatureTypeId == 2); 
+        }
+
+        if (request.ReleaseToggleFilter.HasValue)
+        {
+            baseQuery = baseQuery.Where(f => f.FeatureTypeId == 1); 
+
+            if (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue)
+            {
+                baseQuery = baseQuery.Where(f =>
+                    f.BusinessFeatures!.Any(bf => bf.IsEnabled == true) ||   
+                    f.BusinessFeatures!.Any(bf => !bf.IsEnabled) ||  
+                    !f.BusinessFeatures!.Any()                      
+                );
+            }
+            else if (request.IsEnabledFilter.HasValue)
+            {
+                baseQuery = baseQuery.Where(f =>
+                    f.BusinessFeatures!.Any(bf => bf.IsEnabled == true)); 
+            }
+            else if (request.IsDisabledFilter.HasValue)
+            {
+                baseQuery = baseQuery.Where(f =>
+                    f.BusinessFeatures!.Any(bf => !bf.IsEnabled) ||      
+                    !f.BusinessFeatures!.Any());                        
+            }
+        }
+
+        List<FilteredFeatureDTO> combinedQuery = await baseQuery.Select(f => new FilteredFeatureDTO
+        {
+            FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                ? f.BusinessFeatures.First().FeatureFlagId
+                : 0,
+            FeatureId = f.FeatureId,
+            FeatureName = f.FeatureName,
+            FeatureType = f.FeatureTypeId,
+            isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                ? f.BusinessFeatures.First().IsEnabled
+                : null
+        }).ToListAsync(cancellationToken);
+
+        if (request.SearchQuery is not null)
+        {
+            combinedQuery = combinedQuery.Where(af => af.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        List<FilteredFeatureDTO> featureList = combinedQuery
+            .Skip(request.PageNumber * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        int totalCount = combinedQuery.Count;
+
+        return new PaginatedFeatureListDTO
+        {
+            FeatureCount = totalCount,
+            TotalPages = (totalCount + pageSize - 1) / pageSize,
+            PageSize = pageSize,
+            FeatureList = featureList
+        };
     }
 }

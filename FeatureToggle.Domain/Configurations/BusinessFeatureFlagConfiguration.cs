@@ -13,14 +13,14 @@ namespace FeatureToggle.Domain.Configurations
             builder.HasKey(x => x.FeatureFlagId);
 
             builder
-            .HasOne(bf => bf.Business) // BusinessFeatureFlag has one Business
-            .WithMany() // Business can have many BusinessFeatureFlags (no navigation property)
-            .HasForeignKey(bf => bf.BusinessId); // BusinessId is the foreign key
+            .HasOne(bf => bf.Business) 
+            .WithMany() 
+            .HasForeignKey(bf => bf.BusinessId); 
 
-            // Configure BusinessFeatureFlag-Feature relationship
+           
             builder
-                .HasOne(bf => bf.Feature) // BusinessFeatureFlag has one Feature
-                .WithMany() // Feature can have many BusinessFeatureFlags (no navigation property)
+                .HasOne(bf => bf.Feature)
+                .WithMany(x => x.BusinessFeatures) 
                 .HasForeignKey(bf => bf.FeatureId);
         }
     }

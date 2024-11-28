@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FeatureToggle.Application.DTOs;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,9 +17,9 @@ namespace FeatureToggle.Application.Requests.Commands.UserCommands
         public async Task<AddUserResponseDTO> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
 
-            User newUser = new User(request.Email, request.Name);  //use '!' ??
+            User newUser = new User(request.Email, request.Name);  
 
-            var validationResult = await userValidator.ValidateAsync(request, cancellationToken);
+            ValidationResult validationResult = await userValidator.ValidateAsync(request, cancellationToken);
 
             if (!validationResult.IsValid)
             {

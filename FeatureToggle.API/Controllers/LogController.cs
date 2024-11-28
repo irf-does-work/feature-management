@@ -1,13 +1,16 @@
+﻿using FeatureToggle.API.Identity;
 ﻿using CsvHelper;
 using System.Globalization;
 using FeatureToggle.Application.DTOs;
 using FeatureToggle.Application.Requests.Queries.Log;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers
 {
+    [Authorize(Policy = IdentityData.AdminUserPolicyName)]
     [Route("api/[controller]")]
     [ApiController]
     public class LogController(IMediator mediator) : ControllerBase
@@ -19,7 +22,7 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] string? searchQuery
             )
         {
-            GetLogQuery query = new GetLogQuery()
+            GetLogQuery query = new()
             {
                 Page = page,
                 PageSize = pageSize,
@@ -34,10 +37,10 @@ namespace FeatureToggle.API.Controllers
         {
             List<LogDTO> logs = await mediator.Send(new GetAllLogsQuery());
 
-            using (var memoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new())
             {
-                using (var streamWriter = new StreamWriter(memoryStream))
-                using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
+                using (StreamWriter streamWriter = new(memoryStream))
+                using (CsvWriter csvWriter = new(streamWriter, CultureInfo.InvariantCulture))
                 {
                     csvWriter.WriteRecords(logs);
                     streamWriter.Flush();

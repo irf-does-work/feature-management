@@ -13,10 +13,9 @@ namespace FeatureToggle.Application.Requests.Queries.Business
 {
     public class GetDisabledBusinessQueryHandler(BusinessContext businessContext) : IRequestHandler<GetDisabledBusinessQuery, List<GetBusinessDTO>>
     {
-        //private readonly BusinessContext _businessContext = businessContext;
         public async Task<List<GetBusinessDTO>> Handle(GetDisabledBusinessQuery request, CancellationToken cancellationToken)
         {
-            var result = await businessContext.Business
+            List<GetBusinessDTO> result = await businessContext.Business
             .Join(
                 businessContext.BusinessFeatureFlag.Where(ff => ff.FeatureId == request.FeatureId && ff.IsEnabled == true),
                 business => business.BusinessId,

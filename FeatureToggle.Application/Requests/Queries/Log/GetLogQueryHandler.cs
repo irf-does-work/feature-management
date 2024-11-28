@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FeatureToggle.Application.DTOs;
+﻿using FeatureToggle.Application.DTOs;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
@@ -14,8 +9,6 @@ namespace FeatureToggle.Application.Requests.Queries.Log
 {
     public class GetLogQueryHandler(FeatureManagementContext featureManagementContext, BusinessContext businessContext, UserManager<User> userManager) : IRequestHandler<GetLogQuery, PaginatedLogListDTO>
     {
-
-
         public async Task<PaginatedLogListDTO> Handle(GetLogQuery request, CancellationToken cancellationToken)
         {
 
@@ -36,7 +29,7 @@ namespace FeatureToggle.Application.Requests.Queries.Log
                 })
                 .OrderByDescending(x => x.Time)
                 .ToListAsync(cancellationToken);
-            //return query;
+         
 
             if (request.SearchQuery is not null)
             {
@@ -64,7 +57,7 @@ namespace FeatureToggle.Application.Requests.Queries.Log
             return result;
 
         }
-}
+    }
 }
 
 

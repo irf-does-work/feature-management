@@ -13,9 +13,6 @@ namespace FeatureToggle.Domain.Configurations
             builder.Property(x => x.BusinessName).IsRequired()
                     .HasColumnType("nvarchar").HasMaxLength(20);
 
-            //builder.HasMany(x => x.BusinessFeatures)
-            //    .WithOne(x => x.Business)
-            //    .HasForeignKey(x => x.BusinessId);
         }
     }
 }

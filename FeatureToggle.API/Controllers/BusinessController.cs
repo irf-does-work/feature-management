@@ -1,11 +1,13 @@
 ﻿using FeatureToggle.Application.DTOs;
 using FeatureToggle.Application.Requests.Queries.Business;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BusinessController(IMediator mediator) : ControllerBase
@@ -16,7 +18,7 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] int featureId
             )
         {
-            var query = new GetEnabledBusinessQuery
+            GetEnabledBusinessQuery query = new()
             {
                 FeatureId = featureId
             };
@@ -30,7 +32,7 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] int featureId
             )
         {
-            var query = new GetDisabledBusinessQuery
+            GetDisabledBusinessQuery query = new ()
             {
                 FeatureId = featureId
             };

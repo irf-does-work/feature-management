@@ -34,13 +34,5 @@
 
 
 
-        //public void SetProperties(Feature feature)
-        //{
-        //    Business = null;
-        //    Feature = feature;
-        //    IsEnabled = true;
-        //}
-
-
     }
 }
