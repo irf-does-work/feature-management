@@ -29,7 +29,7 @@ namespace FeatureToggle.Application.Requests.Queries.Business
                     BusinessId = b.BusinessId,
                     BusinessName = b.BusinessName
                 });
-
+             
             var allBusinesses = await businessesWithoutFlags
                 .Union(
                     businessContext.Business
