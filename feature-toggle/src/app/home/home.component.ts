@@ -83,6 +83,16 @@ export class HomeComponent {
 
   }
 
+  removeFilters(){
+      this.selectedFilters2 = {
+      featureFilter: null,
+      releaseFilter: null,
+      enabledFilter: null,
+      disabledFilter: null,
+      searchQuery: null
+    };
+  }
+
   toggleReleaseCheckbox() {
     const featureCheckbox = document.getElementById('filterAction1') as HTMLInputElement;
     const releaseCheckbox = document.getElementById('filterAction2') as HTMLInputElement;
