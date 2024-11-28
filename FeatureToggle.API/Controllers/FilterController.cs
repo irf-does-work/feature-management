@@ -22,7 +22,7 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] string? searchQuery
            )
         {
-            var query = new GetFilteredFeaturesQuery
+            GetFilteredFeaturesQuery query = new()
             {
                 PageNumber = pageNumber,
                 IsEnabledFilter = isEnabled,

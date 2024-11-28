@@ -22,7 +22,7 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] string? searchQuery
             )
         {
-            GetLogQuery query = new GetLogQuery()
+            GetLogQuery query = new()
             {
                 Page = page,
                 PageSize = pageSize,
@@ -37,10 +37,10 @@ namespace FeatureToggle.API.Controllers
         {
             List<LogDTO> logs = await mediator.Send(new GetAllLogsQuery());
 
-            using (var memoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new())
             {
-                using (var streamWriter = new StreamWriter(memoryStream))
-                using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
+                using (StreamWriter streamWriter = new(memoryStream))
+                using (CsvWriter csvWriter = new(streamWriter, CultureInfo.InvariantCulture))
                 {
                     csvWriter.WriteRecords(logs);
                     streamWriter.Flush();

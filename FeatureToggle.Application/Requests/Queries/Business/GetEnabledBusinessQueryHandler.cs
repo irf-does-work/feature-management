@@ -13,12 +13,10 @@ namespace FeatureToggle.Application.Requests.Queries.Business
 {
     public class GetEnabledBusinessQueryHandler(BusinessContext businessContext) : IRequestHandler<GetEnabledBusinessQuery, List<GetBusinessDTO>>
     {
-        //private readonly BusinessContext _businessContext = businessContext;
-
         public async Task<List<GetBusinessDTO>> Handle(GetEnabledBusinessQuery request, CancellationToken cancellationToken)
         {
 
-            var result = await businessContext.Business
+            List<GetBusinessDTO> result = await businessContext.Business
             .GroupJoin(
                 businessContext.BusinessFeatureFlag.Where(bff => bff.FeatureId == request.FeatureId),
                 b => b.BusinessId,

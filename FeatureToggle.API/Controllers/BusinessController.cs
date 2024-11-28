@@ -18,7 +18,7 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] int featureId
             )
         {
-            var query = new GetEnabledBusinessQuery
+            GetEnabledBusinessQuery query = new()
             {
                 FeatureId = featureId
             };
@@ -32,7 +32,7 @@ namespace FeatureToggle.API.Controllers
             [FromQuery] int featureId
             )
         {
-            var query = new GetDisabledBusinessQuery
+            GetDisabledBusinessQuery query = new ()
             {
                 FeatureId = featureId
             };

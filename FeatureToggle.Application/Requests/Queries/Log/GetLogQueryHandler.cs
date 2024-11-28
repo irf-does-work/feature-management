@@ -29,7 +29,7 @@ namespace FeatureToggle.Application.Requests.Queries.Log
                 })
                 .OrderByDescending(x => x.Time)
                 .ToListAsync(cancellationToken);
-            //return query;
+         
 
             if (request.SearchQuery is not null)
             {

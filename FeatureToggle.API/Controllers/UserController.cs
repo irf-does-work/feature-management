@@ -16,7 +16,7 @@ namespace FeatureToggle.API.Controllers
         [HttpPost]
         public async Task<AddUserResponseDTO> AddUser(AddUserCommand command)
         {
-            var cancellationToken = HttpContext.RequestAborted;
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
             return await _mediator.Send(command,cancellationToken);
         }
      

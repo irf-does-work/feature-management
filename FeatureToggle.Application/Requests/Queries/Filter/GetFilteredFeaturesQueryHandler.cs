@@ -14,7 +14,7 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
     {
         IQueryable<Feature> baseQuery = _businessContext.Feature.Include(f => f.BusinessFeatures);
 
-        // no filters 
+        
         if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue &&
             !request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue)
         {
@@ -57,34 +57,34 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             if (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.Any(bf => bf.IsEnabled == true) ||   
-                    f.BusinessFeatures.Any(bf => !bf.IsEnabled) ||  
-                    !f.BusinessFeatures.Any()                      
+                    f.BusinessFeatures!.Any(bf => bf.IsEnabled == true) ||   
+                    f.BusinessFeatures!.Any(bf => !bf.IsEnabled) ||  
+                    !f.BusinessFeatures!.Any()                      
                 );
             }
             else if (request.IsEnabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.Any(bf => bf.IsEnabled == true)); 
+                    f.BusinessFeatures!.Any(bf => bf.IsEnabled == true)); 
             }
             else if (request.IsDisabledFilter.HasValue)
             {
                 baseQuery = baseQuery.Where(f =>
-                    f.BusinessFeatures.Any(bf => !bf.IsEnabled) ||      
-                    !f.BusinessFeatures.Any());                        
+                    f.BusinessFeatures!.Any(bf => !bf.IsEnabled) ||      
+                    !f.BusinessFeatures!.Any());                        
             }
         }
 
         List<FilteredFeatureDTO> combinedQuery = await baseQuery.Select(f => new FilteredFeatureDTO
         {
             FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
-                ? f.BusinessFeatures.FirstOrDefault().FeatureFlagId
+                ? f.BusinessFeatures.First().FeatureFlagId
                 : 0,
             FeatureId = f.FeatureId,
             FeatureName = f.FeatureName,
             FeatureType = f.FeatureTypeId,
             isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
-                ? f.BusinessFeatures.FirstOrDefault().IsEnabled
+                ? f.BusinessFeatures.First().IsEnabled
                 : null
         }).ToListAsync(cancellationToken);
 

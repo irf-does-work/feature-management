@@ -10,13 +10,13 @@ namespace FeatureToggle.Application.DTOs
     public class LogDTO { 
         public int LogId { get; set; }
 
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
 
-        public string UserName { get; set; }
+        public required string UserName { get; set; }
 
         public int FeatureId { get; set; }
 
-        public string FeatureName { get; set; }
+        public required string FeatureName { get; set; }
 
         public int? BusinessId { get; set; }
 

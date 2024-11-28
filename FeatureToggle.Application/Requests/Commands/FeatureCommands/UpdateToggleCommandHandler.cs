@@ -11,12 +11,12 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
     {
         public async Task<int> Handle(UpdateToggleCommand request, CancellationToken cancellationToken)
         {
-            Feature? feature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
-            User? user = await featureManagementContext.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
+            Feature feature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+            User user = await featureManagementContext.Users.FirstAsync(x => x.Id == request.UserId, cancellationToken);
 
             if (request.BusinessId is null) //checking if release toggle
             {
-                BusinessFeatureFlag? selectBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+                BusinessFeatureFlag selectBusiness = await businessContext.BusinessFeatureFlag.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
                 if (request.EnableOrDisable)
                 {
@@ -31,7 +31,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             businessContext.BusinessFeatureFlag.Update(selectBusiness);
 
 
-                            AddLogCommand addLog = new AddLogCommand()
+                            AddLogCommand addLog = new()
                             {
                                 FeatureId = request.FeatureId,
                                 FeatureName = feature.FeatureName,
@@ -49,7 +49,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     }
                     else
                     {
-                        Feature? requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId, cancellationToken: cancellationToken);
+                        Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken: cancellationToken);
 
                         BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature);
 
@@ -109,7 +109,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
             else // if feature toggle
             {
                 //To get business Name for feature toggle
-                Business? business = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
+                Business business = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
 
                 BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
 
@@ -146,7 +146,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     else
                     {
 
-                        Feature? requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId);
+                        Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId);
 
                         if (requiredFeature.FeatureTypeId == 2)
                         {
@@ -180,7 +180,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                 else  //Disable feature toggle
                 {
 
-                    Feature? requiredFeature = await businessContext.Feature.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId);
+                    Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId);
 
                     if (requiredFeature.FeatureTypeId == 2)
                     {
