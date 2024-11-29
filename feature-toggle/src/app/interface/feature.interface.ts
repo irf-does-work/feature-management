@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { Form, FormControl } from "@angular/forms";
 import { FeatureStatus, FeatureType } from "../enum/feature.enum";
 
 export interface ILoginForm {
@@ -97,4 +97,12 @@ export interface ISignUpReturn {
     success: boolean,
     message : string,
     errors: string[],
+}
+
+export interface IFilterForm {
+    searchQuery : FormControl<string | null>
+    featureToggleFilter : FormControl<boolean | null>
+    releaseToggleFilter : FormControl<boolean | null>
+    enabledFilter : FormControl<boolean | null>
+    disabledFilter : FormControl<boolean | null>
 }
