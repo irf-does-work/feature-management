@@ -4,8 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IFeature, IBusiness, IUpdateToggle, IRetrievedFeatures, IselectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
-import { response } from 'express';
+import { IBusiness, IUpdateToggle, IselectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
 
 import { FeatureService } from '../feature.service';
 import { ToastrService } from 'ngx-toastr';
@@ -52,7 +51,7 @@ export class FeatureCardComponent {
     featureCount: 0,
     totalPages: 0,
     featureList: []
-  }; 
+  };
 
 
   ngOnChanges() {
@@ -63,7 +62,7 @@ export class FeatureCardComponent {
   }
 
   fetchFeatures() {
-    this.featureService.getFeatures(this.selectedFilters!,this.pageNumber).subscribe({
+    this.featureService.getFeatures(this.selectedFilters!, this.pageNumber).subscribe({
       next: (response) => {
         this.isLoading = false;
         this.paginatedfeatures = response;
@@ -97,7 +96,7 @@ export class FeatureCardComponent {
   }
 
 
-  
+
 
   openDialog(action: true | false, featureId: number): void {
 
@@ -121,7 +120,7 @@ export class FeatureCardComponent {
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
           if (result) {
             this.business = result.businessId;
-            this.update_Toggle(featureId, Number(result.businessId), action); 
+            this.update_Toggle(featureId, Number(result.businessId), action);
           }
         });
       },
@@ -147,7 +146,7 @@ export class FeatureCardComponent {
 
 
     this.featureService.updateToggle(data).subscribe({
-      next: (response: any) => {
+      next: (response: number) => {
         if (response === 1) {
           if (data.enableOrDisable == true) {
 
@@ -157,10 +156,10 @@ export class FeatureCardComponent {
             this.toastr.warning('Update Successful', 'Feature Disabled')
           }
 
-        }   
-        else{
+        }
+        else {
           this.toastr.error('Update Unsuccessful', 'Something went wrong!')
-        }   
+        }
       },
       error: (error) => {
         console.error('Error updating feature:', error);

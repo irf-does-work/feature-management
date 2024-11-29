@@ -3,9 +3,7 @@ import { TOKEN_KEY } from './shared/constants';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
   const authToken = localStorage.getItem(TOKEN_KEY);
-
-  // console.log("console from auth interceptor\n" + `Bearer ${authToken}`);
-
+  
   if (!authToken) {
     return next(req);
   }

@@ -1,11 +1,10 @@
-import { booleanAttribute, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FeatureService } from '../../feature.service';
 import { Router, RouterLink } from '@angular/router';
-import { ValidatorFn, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
-import { ISignUpAccept, ISignUpForm } from '../../interface/feature.interface';
+import { ValidatorFn, ReactiveFormsModule } from '@angular/forms';
+import { ISignUpAccept, ISignUpForm, ISignUpReturn } from '../../interface/feature.interface';
 import { ToastrService } from 'ngx-toastr';
-import { resolveAny } from 'dns';
 
 
 @Component({
@@ -71,11 +70,17 @@ export class SignupComponent implements OnInit {
 
 
       this.userService.addUser(userData).subscribe({
-        next: (response: any) => {          
-          this.toastr.success('New user created!', 'Registration Successful');
-          this.router.navigate(['user/login']);
+        next: (response: ISignUpReturn) => {
+          if (response.success) {
+            this.toastr.success('New user created!', 'Registration Successful');
+            this.router.navigate(['user/login']);
+          }
+          else {
+            this.toastr.error('User was not created', 'Registration Unsuccessful');
+          }
+
         },
-        error: (error: any) => {
+        error: (error) => {
 
           this.toastr.error('User was not created', 'Registration Unsuccessful')
 
