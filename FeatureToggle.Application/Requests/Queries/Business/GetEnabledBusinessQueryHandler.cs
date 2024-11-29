@@ -15,11 +15,11 @@ namespace FeatureToggle.Application.Requests.Queries.Business
     {
         public async Task<List<GetBusinessDTO>> Handle(GetEnabledBusinessQuery request, CancellationToken cancellationToken)
         {
-            var businessesWithFlags = businessContext.BusinessFeatureFlag
+            IQueryable<int?> businessesWithFlags = businessContext.BusinessFeatureFlag
                 .Where(bff => bff.FeatureId == request.FeatureId && (bff.IsEnabled == false || bff.BusinessId == null))
                 .Select(bff => bff.BusinessId);
 
-            var businessesWithoutFlags = businessContext.Business
+            IQueryable<GetBusinessDTO> businessesWithoutFlags = businessContext.Business
                 .Where(b => !businessContext.BusinessFeatureFlag
                     .Where(bff => bff.FeatureId == request.FeatureId)
                     .Select(bff => bff.BusinessId)
@@ -30,7 +30,7 @@ namespace FeatureToggle.Application.Requests.Queries.Business
                     BusinessName = b.BusinessName
                 });
              
-            var allBusinesses = await businessesWithoutFlags
+            List<GetBusinessDTO> allBusinesses = await businessesWithoutFlags
                 .Union(
                     businessContext.Business
                         .Where(b => businessesWithFlags.Contains(b.BusinessId))

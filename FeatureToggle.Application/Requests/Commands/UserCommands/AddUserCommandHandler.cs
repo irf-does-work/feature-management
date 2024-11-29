@@ -27,7 +27,7 @@ namespace FeatureToggle.Application.Requests.Commands.UserCommands
             }
 
 
-            var result = await userManager.CreateAsync(newUser, request.Password);
+            IdentityResult result = await userManager.CreateAsync(newUser, request.Password);
 
 
             return result.Succeeded ? new AddUserResponseDTO
