@@ -1,5 +1,11 @@
 <app-navbar></app-navbar>
 
+@if (isLoading) {
+  <div class="loading-overlay">
+      <span class="loader"></span>
+  </div>
+  }
+
 <div class="container-fluid d-flex justify-content-center">
   <div class="w-75 mx-5 my-3">
       <form class="navbar-form navbar-left ">

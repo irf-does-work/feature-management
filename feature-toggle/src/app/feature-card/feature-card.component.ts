@@ -56,6 +56,7 @@ export class FeatureCardComponent {
 
   ngOnChanges() {
     if (this.selectedFilters) {
+      this.isLoading = true;
       this.pageNumber = 0;
       this.fetchFeatures();
     }
@@ -64,8 +65,9 @@ export class FeatureCardComponent {
   fetchFeatures() {
     this.featureService.getFeatures(this.selectedFilters!, this.pageNumber).subscribe({
       next: (response) => {
-        this.isLoading = false;
+        
         this.paginatedfeatures = response;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching features:', err);

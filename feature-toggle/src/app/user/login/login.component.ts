@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent implements OnInit {
   userForm: FormGroup<ILoginForm>;
   isSubmitted: boolean = false;
+  isLoading?: boolean ;
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -39,6 +40,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isLoading = true;
     if (this.userForm.valid) {
       const userDetails: ILoginAccept = {
         email: this.userForm.value.email ?? '',
@@ -51,10 +53,12 @@ export class LoginComponent implements OnInit {
           if (response.token !== null) {
             this.userService.saveToken(response.token);
             this.router.navigate(['/home']);
-            this.toastr.success('Welcome back!', 'Login Successful')
+            this.toastr.success('Welcome back!', 'Login Successful');
+            this.isLoading = false;
           }
           else {
             this.toastr.error('Something went wrong', 'Login failed')
+            this.isLoading = false;
             throw new Error('Login failed');
           }
         },

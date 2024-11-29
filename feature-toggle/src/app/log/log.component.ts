@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 export class LogComponent implements OnInit {
   pageNumber: number = 0;
   searchBarInput: string = '';
+  isLoading: boolean = true ;
 
   dataSource: IPaginationLog = {
     pageSize: 0,
@@ -38,6 +39,7 @@ export class LogComponent implements OnInit {
     this.featureService.getLog(this.pageNumber, this.searchBarInput).subscribe({
       next: (response: IPaginationLog) => {
         this.dataSource = response;
+        this.isLoading = false;
         if (this.dataSource.logs.length === 0) {
           this.toastr.warning('No Logs');
         }

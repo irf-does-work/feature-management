@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SignupComponent implements OnInit {
   userForm: FormGroup<ISignUpForm>;
+  isLoading?: boolean ;
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): null => {
     const password = control.get('password')
@@ -60,6 +61,7 @@ export class SignupComponent implements OnInit {
 
 
   onSubmit() {
+    this.isLoading = true;
     this.isSubmitted = true;
     if (this.userForm.valid) {
       const userData: ISignUpAccept = {
@@ -74,9 +76,11 @@ export class SignupComponent implements OnInit {
           if (response.success) {
             this.toastr.success('New user created!', 'Registration Successful');
             this.router.navigate(['user/login']);
+            this.isLoading = false;
           }
           else {
             this.toastr.error('User was not created', 'Registration Unsuccessful');
+            this.isLoading = false;
           }
 
         },
