@@ -19,9 +19,11 @@ export class HomeComponent {
 
   rtCheckboxSate: boolean = false;
   ftCheckboxSate: boolean = false;
-
+  rtEnabledCheckboxesState : boolean = false;
+  enabledCheckboxSate: boolean = false;
+  disabledCheckboxSate: boolean = false;
   searchBarInput: string ='';
-  //selectedFilters: string[] = [];
+  
   selectedFilters2: IselectedFilters = {
     featureFilter: null,
     releaseFilter: null,
@@ -29,6 +31,7 @@ export class HomeComponent {
     disabledFilter: null,
     searchQuery: null
   };
+  
   @Output() applyFiltersEvent = new EventEmitter<IselectedFilters>(); //
   constructor(private featureService: FeatureService) { }
 
@@ -41,51 +44,37 @@ export class HomeComponent {
       searchQuery: null
     };
 
-    this.selectedFilters2.searchQuery = this.searchBarInput;
-    const checkboxes = document.querySelectorAll('.form-check-input');
+    this.ftCheckboxSate === true ? this.selectedFilters2.featureFilter = true : this.selectedFilters2.featureFilter = null;
+    this.rtCheckboxSate === true ? this.selectedFilters2.releaseFilter = true : this.selectedFilters2.releaseFilter = null;
+    this.enabledCheckboxSate === true ? this.selectedFilters2.enabledFilter = true : this.selectedFilters2.enabledFilter = null;
+    this.disabledCheckboxSate === true ? this.selectedFilters2.disabledFilter = true : this.selectedFilters2.disabledFilter = null;
+    this.searchBarInput !== null||'' ? this.selectedFilters2.searchQuery = this.searchBarInput : this.selectedFilters2.searchQuery = null
 
-    checkboxes.forEach((checkbox) => {
-      const inputElement = checkbox as HTMLInputElement;
-      if (inputElement.checked) {
-        switch (inputElement.id) {
-          case 'filterAction1':
-            this.selectedFilters2.featureFilter = true;
-            break;
-          case 'filterAction2':
-            this.selectedFilters2.releaseFilter = true;
-            break;
-          case 'filterAction3':
-            this.selectedFilters2.enabledFilter = true;
-            break;
-          case 'filterAction4':
-            this.selectedFilters2.disabledFilter = true;
-            break;
-        }
-      }
-
-      else {
-        switch (inputElement.id) {
-          case 'filterAction1':
-            this.selectedFilters2.featureFilter = null;
-            break;
-          case 'filterAction2':
-            this.selectedFilters2.releaseFilter = null;
-            break;
-          case 'filterAction3':
-            this.selectedFilters2.enabledFilter = null;
-            break;
-          case 'filterAction4':
-            this.selectedFilters2.disabledFilter = null;
-            break;
-        }
-      }
-
-    });
     this.applyFiltersEvent.emit(this.selectedFilters2);
 
   }
 
+  rtOptionsCheck(){
+    if(!this.rtCheckboxSate){
+      this.enabledCheckboxSate = false;
+      this.disabledCheckboxSate = false;
+    }
+  }
+
+  clearRtOptions(){
+    this.rtCheckboxSate = false;
+    this.enabledCheckboxSate = false;
+    this.disabledCheckboxSate = false;
+  }
+
   removeFilters(){
+    this.rtCheckboxSate = false;
+    this.ftCheckboxSate = false;
+    this.rtEnabledCheckboxesState = false;
+    this.enabledCheckboxSate = false;
+    this.disabledCheckboxSate = false;
+    this.searchBarInput =''; 
+
       this.selectedFilters2 = {
       featureFilter: null,
       releaseFilter: null,
@@ -93,38 +82,5 @@ export class HomeComponent {
       disabledFilter: null,
       searchQuery: null
     };
-  }
-
-  toggleReleaseCheckbox() {
-    const featureCheckbox = document.getElementById('filterAction1') as HTMLInputElement;
-    const releaseCheckbox = document.getElementById('filterAction2') as HTMLInputElement;
-    const enabledCheckbox = document.getElementById('filterAction3') as HTMLInputElement;
-    const disabledCheckbox = document.getElementById('filterAction4') as HTMLInputElement;
-
-    if (releaseCheckbox.checked) {
-      enabledCheckbox.removeAttribute('disabled');
-      disabledCheckbox.removeAttribute('disabled');
-      featureCheckbox.setAttribute('disabled', 'true');
-      featureCheckbox.checked = false;
-    }
-
-    else {
-      enabledCheckbox.setAttribute('disabled', 'true');
-      disabledCheckbox.setAttribute('disabled', 'true');
-      featureCheckbox.removeAttribute('disabled');
-      enabledCheckbox.checked = false;
-      disabledCheckbox.checked = false;
-    }
-  }
-
-  toggleFeatureCheckbox() {
-    const featureCheckbox = document.getElementById('filterAction1') as HTMLInputElement;
-    const releaseCheckbox = document.getElementById('filterAction2') as HTMLInputElement;
-    if(featureCheckbox.checked){
-      releaseCheckbox.setAttribute('disabled','true');
-    }
-    else{
-      releaseCheckbox.removeAttribute('disabled')
-    }
   }
 }
