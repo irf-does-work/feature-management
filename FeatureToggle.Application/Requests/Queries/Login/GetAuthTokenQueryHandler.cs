@@ -19,7 +19,6 @@ namespace FeatureToggle.Application.Requests.Queries.Login
         public async Task<LoginResponseDTO> Handle(GetAuthTokenQuery request, CancellationToken cancellationToken)
         {
             User? user = await _userManager.FindByEmailAsync(request.Email);
-            bool isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
             if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
             {
                 string secretKey = _optionsMonitor.CurrentValue.JWTSecret;

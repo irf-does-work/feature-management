@@ -77,7 +77,7 @@ builder.Services.AddAuthentication(x =>
                                     })
                                     .AddJwtBearer(x =>
                                     {
-                                        //x.SaveToken = false;
+                                        
                                         x.TokenValidationParameters = new TokenValidationParameters
                                         {
                                             ValidateIssuerSigningKey = true,
@@ -87,7 +87,7 @@ builder.Services.AddAuthentication(x =>
                                             ValidIssuer = builder.Configuration["Authentication:Issuer"], 
                                             ValidateAudience = true, 
                                             ValidAudience = builder.Configuration["Authentication:Audience"],
-                                            //ValidateLifetime = true
+                                            
                                         };
                                     });
 builder.Services.AddAuthorization(options =>
