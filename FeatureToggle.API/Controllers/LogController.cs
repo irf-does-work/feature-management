@@ -35,19 +35,7 @@ namespace FeatureToggle.API.Controllers
         [HttpGet("AllLogs")]
         public async Task<FileContentResult> GetAllLogs()
         {
-            List<LogDTO> logs = await mediator.Send(new GetAllLogsQuery());
-
-            using (MemoryStream memoryStream = new())
-            {
-                using (StreamWriter streamWriter = new(memoryStream))
-                using (CsvWriter csvWriter = new(streamWriter, CultureInfo.InvariantCulture))
-                {
-                    csvWriter.WriteRecords(logs);
-                    streamWriter.Flush();
-                }
-
-                return new FileContentResult(memoryStream.ToArray(), "text/csv");
-            }
+            return await mediator.Send(new GetAllLogsQuery());
         }
 
     }
