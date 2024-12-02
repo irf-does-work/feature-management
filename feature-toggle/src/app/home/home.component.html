@@ -20,7 +20,7 @@
                             <li>
                                 <div class="form-check mt-1">
                                     <input class="form-check-input" type="checkbox" id="filterAction1"
-                                        formControlName="featureToggleFilter" />
+                                        formControlName="featureToggleFilter" (change)="clearRtOptions()" />
                                     <label class="form-check-label" for="filterAction1">
                                         Feature Toggle
                                     </label>
@@ -75,4 +75,4 @@
 
 </div>
 
-<!-- <app-feature-card [selectedFilters]="selectedFilters2" (applyFilters)="applyFilters()"></app-feature-card> -->
+<app-feature-card [selectedFilters]="selectedFiltersFormValue" (applyFilters)="applyFilters()"></app-feature-card>

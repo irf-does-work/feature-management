@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IBusiness, IUpdateToggle, IselectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
+import { IBusiness, IUpdateToggle, ISelectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
 
 import { FeatureService } from '../feature.service';
 import { ToastrService } from 'ngx-toastr';
@@ -24,7 +24,7 @@ export class FeatureCardComponent {
   currentUser: string | undefined;
   pageNumber: number = 0;
   business: string | undefined;  // for displaying bussiness id in dialog
-  isLoading: boolean = true;
+  isLoading: boolean = false;  //change to ture
 
   constructor(
     public dialog: MatDialog,
@@ -43,9 +43,8 @@ export class FeatureCardComponent {
   featureTypeEnum = FeatureType;
   featureStatusEnum = FeatureStatus;
 
+  @Input() selectedFilters : ISelectedFilters | null = null
 
-
-  @Input() selectedFilters: IselectedFilters | null = null;
   paginatedfeatures: IPaginatedFeatures = {
     pageSize: 0,
     featureCount: 0,
@@ -55,7 +54,7 @@ export class FeatureCardComponent {
 
 
   ngOnChanges() {
-    if (this.selectedFilters) {
+     if (this.selectedFilters) {
       this.isLoading = true;
       this.pageNumber = 0;
       this.fetchFeatures();
@@ -64,8 +63,7 @@ export class FeatureCardComponent {
 
   fetchFeatures() {
     this.featureService.getFeatures(this.selectedFilters!, this.pageNumber).subscribe({
-      next: (response) => {
-        
+      next: (response) => {       
         this.paginatedfeatures = response;
         this.isLoading = false;
       },
@@ -96,8 +94,6 @@ export class FeatureCardComponent {
       this.fetchFeatures();
     }
   }
-
-
 
 
   openDialog(action: true | false, featureId: number): void {
@@ -169,6 +165,5 @@ export class FeatureCardComponent {
       }
     });
   }
-
 
 }

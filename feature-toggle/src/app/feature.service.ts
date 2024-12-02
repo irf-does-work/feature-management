@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject, tap } from 'rxjs';
-import { IBusiness, Ilog, ILoginAccept, ILoginReturn, IPaginatedFeatures, IPaginationLog, IselectedFilters, ISignUpAccept, ISignUpReturn, IUpdateToggle } from './interface/feature.interface';
+import { IBusiness, Ilog, ILoginAccept, ILoginReturn, IPaginatedFeatures, IPaginationLog, ISelectedFilters, ISignUpAccept, ISignUpReturn, IUpdateToggle } from './interface/feature.interface';
 import { TOKEN_KEY } from './shared/constants';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -86,16 +86,14 @@ export class FeatureService {
   }
 
 
-  //for feature(home) page
-  getFeatures(selectedFilters2: IselectedFilters, pageNumber: number): Observable<IPaginatedFeatures> {
-    const params = new HttpParams()
-      .set('featureToggleType', selectedFilters2.featureFilter !== null ? selectedFilters2.featureFilter.toString() : '')
-      .set('releaseToggleType', selectedFilters2.releaseFilter !== null ? selectedFilters2.releaseFilter.toString() : '')
-      .set('isEnabled', selectedFilters2.enabledFilter !== null ? selectedFilters2.enabledFilter.toString() : '')
-      .set('isDisabled', selectedFilters2.disabledFilter !== null ? selectedFilters2.disabledFilter.toString() : '')
-      .set('pageNumber', pageNumber)
-      .set('searchQuery', selectedFilters2.searchQuery !== null ? selectedFilters2.searchQuery : '');
-
+  getFeatures(selectedFilters2: ISelectedFilters, pageNumber: number): Observable<IPaginatedFeatures> {
+     let params = new HttpParams()
+    Object.entries(selectedFilters2).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        params = params.set(key, value.toString());
+      }
+    });
+    params.set('pageNumber', pageNumber)
     return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Filter`, { params });
   }
 
