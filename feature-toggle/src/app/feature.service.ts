@@ -65,7 +65,7 @@ export class FeatureService {
     localStorage.removeItem(TOKEN_KEY);
   }
 
-  decodeToken() {
+  decodeToken(){
     try {
       const token = localStorage.getItem(TOKEN_KEY);
       if (!token) {
@@ -87,11 +87,11 @@ export class FeatureService {
 
 
   getFeatures(selectedFilters2: ISelectedFilters, pageNumber: number): Observable<IPaginatedFeatures> {
-     let params = new HttpParams()
+    let params = new HttpParams()
     Object.entries(selectedFilters2).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        params = params.set(key, value.toString());
-      }
+    if (value !== null && value !== undefined) {
+      params = params.set(key, value.toString());
+    }
     });
     params.set('pageNumber', pageNumber)
     return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Filter`, { params });
@@ -99,7 +99,7 @@ export class FeatureService {
 
   downloadLogs() {
     return this.http.get(`${this.baseUrl}/api/Log/AllLogs`, {
-      responseType: 'blob', // Expect a binary response
+      responseType: 'blob', 
     });
   }
 

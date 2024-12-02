@@ -33,7 +33,7 @@ export class LogComponent implements OnInit {
     this.fetchPaginatedLog();
   }
 
-  displayedColumns: string[] = ['serialNo', 'UserId', 'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
+  displayedColumns: string[] = ['serialNo', 'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
 
   fetchPaginatedLog() {
     this.featureService.getLog(this.pageNumber, this.searchBarInput).subscribe({

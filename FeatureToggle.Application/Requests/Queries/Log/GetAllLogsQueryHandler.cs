@@ -20,12 +20,11 @@ namespace FeatureToggle.Application.Requests.Queries.Log
     {
         public async Task<List<LogDTO>> Handle(GetAllLogsQuery request, CancellationToken cancellationToken)
         {
-            List<LogDTO> query = await featureManagementContext.Logs
+            List<LogDTO> query = await featureManagementContext.Logs.Include(u => u.User)
                .Select(x => new LogDTO
                {
                    LogId = x.Id,
-                   UserId = x.UserId,
-                   UserName = x.UserName,
+                   UserName = x.User.UserName,
                    FeatureId = x.FeatureId,
                    FeatureName = x.FeatureName,
                    BusinessId = x.BusinessId,
