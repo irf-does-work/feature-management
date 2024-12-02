@@ -5,9 +5,9 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
 import { IBusiness, IUpdateToggle, IselectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
-
-import { FeatureService } from '../feature.service';
 import { ToastrService } from 'ngx-toastr';
+import { FeatureService } from '../services/feature.service';
+import { AuthService } from '../services/auth.service';
 
 
 
@@ -23,17 +23,18 @@ export class FeatureCardComponent {
   isAdmin: number = 0;
   currentUser: string | undefined;
   pageNumber: number = 0;
-  business: string | undefined;  // for displaying bussiness id in dialog
+  business: IBusiness | undefined;  // for displaying bussiness id in dialog
   isLoading: boolean = true;
 
   constructor(
     public dialog: MatDialog,
     private featureService: FeatureService,
+    private authService: AuthService,
     private toastr: ToastrService
   ) {
 
     //payload from jwt token
-    const payload = this.featureService.decodeToken();
+    const payload = this.authService.decodeToken();
 
     payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
 
@@ -118,10 +119,12 @@ export class FeatureCardComponent {
           }
         });
 
+        //console.log("this is response\n" + response[1].businessId);
+
         // Handle dialog close
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
           if (result) {
-            this.business = result.businessId;
+            // this.business = result;
             this.update_Toggle(featureId, Number(result.businessId), action);
           }
         });

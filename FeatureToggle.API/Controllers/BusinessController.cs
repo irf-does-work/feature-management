@@ -15,13 +15,13 @@ namespace FeatureToggle.API.Controllers
         [HttpGet("Enable")]
 
         public async Task<List<GetBusinessDTO>> GetEnabledFeature(
-            [FromQuery] int featureId
+            [FromQuery] GetEnabledBusinessQuery query
             )
         {
-            GetEnabledBusinessQuery query = new()
-            {
-                FeatureId = featureId
-            };
+            //GetEnabledBusinessQuery query = new()
+            //{
+            //    FeatureId = featureId
+            //};
 
             return await mediator.Send(query);  
         }

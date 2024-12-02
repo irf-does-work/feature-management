@@ -3,7 +3,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { FeatureCardComponent } from '../feature-card/feature-card.component';
 import { FormsModule } from '@angular/forms';
 import { IselectedFilters } from '../interface/feature.interface';
-import { FeatureService } from '../feature.service';
+import { FeatureService } from '../services/feature.service';
 
 
 @Component({

@@ -55,8 +55,8 @@ export interface IselectedFilters {
 }
 
 export interface IBusiness {
-    name: string;
     businessId: string;
+    businessName: string;
 }
 
 export interface IUpdateToggle {
