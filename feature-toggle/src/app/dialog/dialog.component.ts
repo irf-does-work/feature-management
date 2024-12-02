@@ -35,13 +35,6 @@ export class DialogComponent {
   searchControl = new FormControl(''); // For search input
   filteredBusinesses: IBusiness[] = []; // Filtered businesses to display
 
-  // constructor(
-  //   public dialogRef: MatDialogRef<DialogComponent>,
-  //   @Inject(MAT_DIALOG_DATA) public data: { businesses: IBusiness[] }
-  // ) { }
-
-
-
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { businesses: IBusiness[] }
@@ -81,6 +74,11 @@ export class DialogComponent {
     }
   }
   
+  onSelectionChange(): void {
+    this.searchControl.setValue(''); // Clear the search field
+    this.filteredBusinesses = [...this.data.businesses]; // Reset the list
+  }
+
 
   onCancel(): void {
     this.dialogRef.close();
