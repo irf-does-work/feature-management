@@ -12,7 +12,7 @@ namespace FeatureToggle.API.Controllers
     [ApiController]
     public class BusinessController(IMediator mediator) : ControllerBase
     {
-        [HttpGet("Enable")]
+        [HttpGet("enable")]
 
         public async Task<List<GetBusinessDTO>> GetEnabledFeature([FromQuery] GetEnabledBusinessQuery query)
         {
@@ -20,7 +20,7 @@ namespace FeatureToggle.API.Controllers
             return await mediator.Send(query, cancellationToken);  
         }
 
-        [HttpGet("Disable")]
+        [HttpGet("disable")]
 
         public async Task<List<GetBusinessDTO>> GetDisableFeature( [FromQuery] GetDisabledBusinessQuery query)
         {

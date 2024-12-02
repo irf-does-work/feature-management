@@ -23,7 +23,7 @@ namespace FeatureToggle.API.Controllers
         }
 
 
-        [HttpGet("AllLogs")]
+        [HttpGet("download-logs")]
         public async Task<FileContentResult> GetAllLogs()
         {
             CancellationToken cancellationToken = HttpContext.RequestAborted;

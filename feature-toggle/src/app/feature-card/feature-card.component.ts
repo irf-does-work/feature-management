@@ -63,7 +63,7 @@ export class FeatureCardComponent {
 
   fetchFeatures() {
     this.featureService.getFeatures(this.selectedFilters!, this.pageNumber).subscribe({
-      next: (response) => {       
+      next: (response) => {
         this.paginatedfeatures = response;
         this.isLoading = false;
       },

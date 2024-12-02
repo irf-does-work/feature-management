@@ -91,9 +91,6 @@ export class AuthService {
 
   getUserId(): string {
     const payload = this.decodeToken();
-
-    console.log(payload.UserID);
-
     return payload.UserID;
   }
 
