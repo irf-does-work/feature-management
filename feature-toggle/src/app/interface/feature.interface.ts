@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms";
+import { Form, FormControl } from "@angular/forms";
 import { FeatureStatus, FeatureType } from "../enum/feature.enum";
 
 export interface ILoginForm {
@@ -46,12 +46,20 @@ export interface IPaginatedFeatures {
     featureList: IRetrievedFeatures[];
 }
 
-export interface IselectedFilters {
-    featureFilter: boolean | null;
-    releaseFilter: boolean | null;
+export interface ISelectedFilters extends Partial<{
+    searchQuery: string | null;
+    featureToggleFilter: boolean | null;
+    releaseToggleFilter: boolean | null;
     enabledFilter: boolean | null;
     disabledFilter: boolean | null;
-    searchQuery: string | null;
+}> {}
+
+export interface IFilterForm {
+    searchQuery : FormControl<string | null >
+    featureToggleFilter : FormControl<boolean | null>
+    releaseToggleFilter : FormControl<boolean | null>
+    enabledFilter : FormControl<boolean | null>
+    disabledFilter : FormControl<boolean | null>
 }
 
 export interface IBusiness {
@@ -89,7 +97,6 @@ export interface IPaginationLog {
 export interface ILoginReturn {
     token: string | null,
     errorMessage: string | null;
-
 }
 
 export interface ISignUpReturn {
@@ -97,3 +104,4 @@ export interface ISignUpReturn {
     message : string,
     errors: string[],
 }
+

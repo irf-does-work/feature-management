@@ -38,7 +38,6 @@ export class LogComponent implements OnInit {
     this.fetchPaginatedLog();
   }
 
-
   fetchPaginatedLog() {
     this.featureService.getLog(this.pageNumber, this.searchBarInput).subscribe({
       next: (response: IPaginationLog) => {

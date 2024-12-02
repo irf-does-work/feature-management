@@ -4,7 +4,8 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IBusiness, IUpdateToggle, IselectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
+import { IBusiness, IUpdateToggle, ISelectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
+
 import { ToastrService } from 'ngx-toastr';
 import { FeatureService } from '../services/feature.service';
 import { AuthService } from '../services/auth.service';
@@ -41,9 +42,8 @@ export class FeatureCardComponent {
   featureTypeEnum = FeatureType;
   featureStatusEnum = FeatureStatus;
 
+  @Input() selectedFilters : ISelectedFilters | null = null
 
-
-  @Input() selectedFilters: IselectedFilters | null = null;
   paginatedfeatures: IPaginatedFeatures = {
     pageSize: 0,
     featureCount: 0,
@@ -53,7 +53,7 @@ export class FeatureCardComponent {
 
 
   ngOnChanges() {
-    if (this.selectedFilters) {
+     if (this.selectedFilters) {
       this.isLoading = true;
       this.pageNumber = 0;
       this.fetchFeatures();
@@ -62,8 +62,7 @@ export class FeatureCardComponent {
 
   fetchFeatures() {
     this.featureService.getFeatures(this.selectedFilters!, this.pageNumber).subscribe({
-      next: (response) => {
-        
+      next: (response) => {       
         this.paginatedfeatures = response;
         this.isLoading = false;
       },
@@ -94,8 +93,6 @@ export class FeatureCardComponent {
       this.fetchFeatures();
     }
   }
-
-
 
 
   openDialog(action: true | false, featureId: number): void {
@@ -169,6 +166,5 @@ export class FeatureCardComponent {
       }
     });
   }
-
 
 }

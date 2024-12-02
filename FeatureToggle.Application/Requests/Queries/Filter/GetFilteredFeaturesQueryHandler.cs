@@ -16,7 +16,7 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
 
         
         if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue &&
-            !request.IsEnabledFilter.HasValue && !request.IsDisabledFilter.HasValue)
+            !request.EnabledFilter.HasValue && !request.DisabledFilter.HasValue)
         {
             List<FilteredFeatureDTO> allFeatures = await baseQuery.Select(f => new FilteredFeatureDTO
             {
@@ -45,16 +45,16 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             };
         }
 
-        if (request.FeatureToggleFilter.HasValue)
+        if (request.FeatureToggleFilter == true)
         {
             baseQuery = baseQuery.Where(f => f.FeatureTypeId == 2); 
         }
 
-        if (request.ReleaseToggleFilter.HasValue)
+        if (request.ReleaseToggleFilter == true)
         {
             baseQuery = baseQuery.Where(f => f.FeatureTypeId == 1); 
 
-            if (request.IsEnabledFilter.HasValue && request.IsDisabledFilter.HasValue)
+            if (request.EnabledFilter == true && request.DisabledFilter == true)
             {
                 baseQuery = baseQuery.Where(f =>
                     f.BusinessFeatures!.Any(bf => bf.IsEnabled == true) ||   
@@ -62,12 +62,12 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
                     !f.BusinessFeatures!.Any()                      
                 );
             }
-            else if (request.IsEnabledFilter.HasValue)
+            else if (request.EnabledFilter == true)
             {
                 baseQuery = baseQuery.Where(f =>
                     f.BusinessFeatures!.Any(bf => bf.IsEnabled == true)); 
             }
-            else if (request.IsDisabledFilter.HasValue)
+            else if (request.DisabledFilter == true)
             {
                 baseQuery = baseQuery.Where(f =>
                     f.BusinessFeatures!.Any(bf => !bf.IsEnabled) ||      

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, Subject, tap } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
-import { IBusiness, IPaginatedFeatures, IPaginationLog, IselectedFilters, IUpdateToggle } from '../interface/feature.interface';
+import { IBusiness, IPaginatedFeatures, IPaginationLog, ISelectedFilters, IUpdateToggle } from '../interface/feature.interface';
 
 
 
@@ -17,8 +17,6 @@ export class FeatureService {
   public userId: number = 0;
 
   constructor(private router: Router, private http: HttpClient,private toastr: ToastrService) { }
-
-
 
   //for enabling or disabling feature
   updateToggle(data: IUpdateToggle): Observable<number> {
@@ -38,22 +36,21 @@ export class FeatureService {
     return this.http.get<IPaginationLog>(`${this.baseUrl}/api/Log`, { params })
   }
 
-  //for feature(home) page
-  getFeatures(selectedFilters2: IselectedFilters, pageNumber: number): Observable<IPaginatedFeatures> {
-    const params = new HttpParams()
-      .set('featureToggleType', selectedFilters2.featureFilter !== null ? selectedFilters2.featureFilter.toString() : '')
-      .set('releaseToggleType', selectedFilters2.releaseFilter !== null ? selectedFilters2.releaseFilter.toString() : '')
-      .set('isEnabled', selectedFilters2.enabledFilter !== null ? selectedFilters2.enabledFilter.toString() : '')
-      .set('isDisabled', selectedFilters2.disabledFilter !== null ? selectedFilters2.disabledFilter.toString() : '')
-      .set('pageNumber', pageNumber)
-      .set('searchQuery', selectedFilters2.searchQuery !== null ? selectedFilters2.searchQuery : '');
 
+  getFeatures(selectedFilters2: ISelectedFilters, pageNumber: number): Observable<IPaginatedFeatures> {
+    let params = new HttpParams()
+    Object.entries(selectedFilters2).forEach(([key, value]) => {
+    if (value !== null && value !== undefined) {
+      params = params.set(key, value.toString());
+    }
+    });
+    params.set('pageNumber', pageNumber)
     return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Filter`, { params });
   }
 
   downloadLogs() {
     return this.http.get(`${this.baseUrl}/api/Log/AllLogs`, {
-      responseType: 'blob', // Expect a binary response
+      responseType: 'blob', 
     });
   }
  
