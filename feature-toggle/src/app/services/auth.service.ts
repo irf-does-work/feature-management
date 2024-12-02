@@ -13,7 +13,6 @@ import { Observable } from 'rxjs';
 export class AuthService {
   private baseUrl = environment.apiUrl;
   public userId: number = 0;
-  public isAdmin: boolean = false;
 
   constructor(private router: Router, private http: HttpClient, private toastr: ToastrService) { }
 
@@ -85,9 +84,17 @@ export class AuthService {
   checkIsAdmin(): boolean{
     const payload = this.decodeToken();
 
-    payload.IsAdmin === "True" ? this.isAdmin = true : this.isAdmin = false;
+    const result = payload.IsAdmin === "True" ? true : false;
     
-    return this.isAdmin;
+    return result;
+  }
+
+  getUserId(): string {
+    const payload = this.decodeToken();
+
+    console.log(payload.UserID);
+
+    return payload.UserID;
   }
 
 }

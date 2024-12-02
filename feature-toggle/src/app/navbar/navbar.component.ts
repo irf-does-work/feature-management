@@ -19,7 +19,7 @@ export class NavbarComponent {
     private authService: AuthService
   ) {
 
-    this.isAdmin = this.authService.isAdmin;
+    this.isAdmin = this.authService.checkIsAdmin();
   }
 
   onLogout() {

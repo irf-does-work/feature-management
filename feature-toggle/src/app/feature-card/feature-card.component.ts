@@ -21,7 +21,7 @@ import { AuthService } from '../services/auth.service';
 })
 
 export class FeatureCardComponent {
-  isAdmin: boolean = false;
+  isAdmin: boolean;
   currentUser: string | undefined;
   pageNumber: number = 0;
   business: IBusiness | undefined;  // for displaying bussiness id in dialog
@@ -35,7 +35,8 @@ export class FeatureCardComponent {
   ) {
 
     //payload from jwt token
-    this.isAdmin = this.authService.isAdmin;
+    this.isAdmin = this.authService.checkIsAdmin();
+    this.currentUser = this.authService.getUserId();
 
   }
 
