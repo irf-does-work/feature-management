@@ -1,4 +1,6 @@
-﻿namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
+﻿using FeatureToggle.Domain.Entity.Enum;
+
+namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
 {
     public class Log(string userId,
                      string userName,
@@ -10,7 +12,6 @@
     {
         public int Id { get; private set; }
         public string UserId { get; private set; } = userId;
-
         public string UserName { get; private set; } = userName;
         public int FeatureId { get; private set; } = featureId;
 
@@ -18,7 +19,7 @@
         public int? BusinessId { get; private set; } = businessId;
 
         public string? BusinessName { get; private set; } = businessName;
-        public DateTime Time { get; private set; } = DateTime.Now;
+        public DateTime Time { get; private set; } = DateTime.UtcNow;
         public Actions Action { get; private set; } = action;
     }
 }

@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { TOKEN_KEY } from '../shared/constants';
+import { TOKEN_KEY, TOKEN_LENGTH, TOKEN_PAYLOAD } from '../shared/constants';
 import { ILoginAccept, ILoginReturn, ISignUpAccept, ISignUpReturn } from '../interface/feature.interface';
 import { Observable } from 'rxjs';
 
@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 export class AuthService {
   private baseUrl = environment.apiUrl;
   public userId: number = 0;
+  public isAdmin: boolean = false;
 
   constructor(private router: Router, private http: HttpClient, private toastr: ToastrService) { }
 
@@ -27,8 +28,13 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    this.checkExpiry();
-    return localStorage.getItem(TOKEN_KEY) != null ? true : false;
+    const result = localStorage.getItem(TOKEN_KEY) != null ? true : false;
+    if(result)
+      {
+        this.checkExpiry();
+      }
+    return result;
+
   }
 
   saveToken(token: string) {
@@ -42,20 +48,21 @@ export class AuthService {
   decodeToken() {
     try {
       const token = localStorage.getItem(TOKEN_KEY);
+      
       if (!token) {
-        return null;
+        throw new Error("Token not found in localStorage.");
       }
 
-      const tokenParts = token.split('.');
-      if (tokenParts.length !== 3) {
-        return null;
+      const tokenParts = token!.split('.');
+      if (tokenParts.length !== TOKEN_LENGTH) {
+        throw new Error("Invalid token format.");
       }
 
-      const payloadBase64 = tokenParts[1];
+      const payloadBase64 = tokenParts[TOKEN_PAYLOAD];
       const payloadJson = JSON.parse(window.atob(payloadBase64));
       return payloadJson;
     } catch (error) {
-      return null;
+      console.error(error);
     }
   }
 
@@ -74,6 +81,13 @@ export class AuthService {
       }
     }
   }
+  
+  checkIsAdmin(): boolean{
+    const payload = this.decodeToken();
 
+    payload.IsAdmin === "True" ? this.isAdmin = true : this.isAdmin = false;
+    
+    return this.isAdmin;
+  }
 
 }

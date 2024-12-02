@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
 
           if (response.token !== null) {
             this.authService.saveToken(response.token);
+            this.authService.checkIsAdmin();
             this.router.navigate(['/home']);
             this.toastr.success('Welcome back!', 'Login Successful');
             this.isLoading = false;

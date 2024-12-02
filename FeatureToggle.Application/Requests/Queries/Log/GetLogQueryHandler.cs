@@ -17,7 +17,6 @@ namespace FeatureToggle.Application.Requests.Queries.Log
                 .Select(x => new LogDTO
                 {
                     LogId = x.Id,
-                    UserId = x.UserId,
                     UserName = x.UserName,
                     FeatureId = x.FeatureId,
                     FeatureName = x.FeatureName,

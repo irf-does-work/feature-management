@@ -13,7 +13,8 @@ namespace FeatureToggle.API.Controllers
         [HttpPost("feature/update")]
         public async Task<int> UpdateFeature(UpdateToggleCommand command) 
         {
-            return await mediator.Send(command);
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
+            return await mediator.Send(command, cancellationToken);
         }
     }
 

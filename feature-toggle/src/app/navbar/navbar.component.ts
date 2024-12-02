@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  isAdmin: number | undefined;
+  isAdmin: boolean = false;
 
 
   constructor(private router: Router,
@@ -19,9 +19,7 @@ export class NavbarComponent {
     private authService: AuthService
   ) {
 
-    const payload = this.authService.decodeToken();
-
-    payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
+    this.isAdmin = this.authService.isAdmin;
   }
 
   onLogout() {

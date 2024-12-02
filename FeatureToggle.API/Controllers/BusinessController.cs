@@ -14,30 +14,18 @@ namespace FeatureToggle.API.Controllers
     {
         [HttpGet("Enable")]
 
-        public async Task<List<GetBusinessDTO>> GetEnabledFeature(
-            [FromQuery] GetEnabledBusinessQuery query
-            )
+        public async Task<List<GetBusinessDTO>> GetEnabledFeature([FromQuery] GetEnabledBusinessQuery query)
         {
-            //GetEnabledBusinessQuery query = new()
-            //{
-            //    FeatureId = featureId
-            //};
-
-            return await mediator.Send(query);  
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
+            return await mediator.Send(query, cancellationToken);  
         }
 
         [HttpGet("Disable")]
 
-        public async Task<List<GetBusinessDTO>> GetDisableFeature( 
-            [FromQuery] int featureId
-            )
+        public async Task<List<GetBusinessDTO>> GetDisableFeature( [FromQuery] GetDisabledBusinessQuery query)
         {
-            GetDisabledBusinessQuery query = new ()
-            {
-                FeatureId = featureId
-            };
-
-            return await mediator.Send(query); 
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
+            return await mediator.Send(query, cancellationToken); 
         }
     }
 }

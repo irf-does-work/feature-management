@@ -20,7 +20,7 @@ import { AuthService } from '../services/auth.service';
 })
 
 export class FeatureCardComponent {
-  isAdmin: number = 0;
+  isAdmin: boolean = false;
   currentUser: string | undefined;
   pageNumber: number = 0;
   business: IBusiness | undefined;  // for displaying bussiness id in dialog
@@ -34,11 +34,8 @@ export class FeatureCardComponent {
   ) {
 
     //payload from jwt token
-    const payload = this.authService.decodeToken();
+    this.isAdmin = this.authService.isAdmin;
 
-    payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
-
-    this.currentUser = payload.UserID
   }
 
   featureTypeEnum = FeatureType;

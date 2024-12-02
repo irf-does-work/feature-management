@@ -68,7 +68,6 @@ export interface IUpdateToggle {
 
 export interface Ilog {
     logId: number,
-    userId: string,
     userName: string,
     featureId: number,
     featureName: string,
