@@ -21,13 +21,13 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
             {
                 IQueryable<FilteredFeatureDTO> allFeatures = baseQuery.Select(f => new FilteredFeatureDTO
                 {
-                    FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                    FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
                         ? f.BusinessFeatures.FirstOrDefault()!.FeatureFlagId
                         : 0,
                     FeatureId = f.FeatureId,
                     FeatureName = f.FeatureName,
                     FeatureType = f.FeatureTypeId,
-                    isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                    isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
                         ? f.BusinessFeatures.FirstOrDefault()!.IsEnabled
                         : null
                 });
@@ -63,7 +63,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
                     baseQuery = baseQuery.Where(f =>
                         f.BusinessFeatures!.Any(bf => bf.IsEnabled == true) ||
                         f.BusinessFeatures!.Any(bf => !bf.IsEnabled) ||
-                        !f.BusinessFeatures!.Any()
+                        f.BusinessFeatures!.Count == 0
                     );
                 }
                 else if (request.EnabledFilter == true)
@@ -75,19 +75,19 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
                 {
                     baseQuery = baseQuery.Where(f =>
                         f.BusinessFeatures!.Any(bf => !bf.IsEnabled) ||
-                        !f.BusinessFeatures!.Any());
+                        f.BusinessFeatures!.Count == 0);
                 }
             }
 
             IQueryable<FilteredFeatureDTO> combinedQuery = baseQuery.Select(f => new FilteredFeatureDTO
             {
-                FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
                     ? f.BusinessFeatures.First().FeatureFlagId
                     : 0,
                 FeatureId = f.FeatureId,
                 FeatureName = f.FeatureName,
                 FeatureType = f.FeatureTypeId,
-                isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
+                isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
                     ? f.BusinessFeatures.First().IsEnabled
                     : null
             });
