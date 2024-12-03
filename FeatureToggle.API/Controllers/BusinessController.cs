@@ -12,20 +12,11 @@ namespace FeatureToggle.API.Controllers
     [ApiController]
     public class BusinessController(IMediator mediator) : ControllerBase
     {
-        [HttpGet("Enable")]
-
-        public async Task<List<GetBusinessDTO>> GetEnabledFeature([FromQuery] GetEnabledBusinessQuery query)
+        [HttpGet]
+        public async Task<List<GetBusinessDTO>> GetBusiness([FromQuery] GetBusinessQuery query)
         {
             CancellationToken cancellationToken = HttpContext.RequestAborted;
-            return await mediator.Send(query, cancellationToken);  
-        }
-
-        [HttpGet("Disable")]
-
-        public async Task<List<GetBusinessDTO>> GetDisableFeature( [FromQuery] GetDisabledBusinessQuery query)
-        {
-            CancellationToken cancellationToken = HttpContext.RequestAborted;
-            return await mediator.Send(query, cancellationToken); 
+            return await mediator.Send(query, cancellationToken);
         }
     }
 }

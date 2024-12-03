@@ -95,16 +95,9 @@ export class FeatureCardComponent {
     }
   }
 
-
   openDialog(action: true | false, featureId: number): void {
-
-    const apiEndpoint = action === true
-      ? `/api/Business/Enable`
-      : `/api/Business/Disable`;
-
-
     // Call the API to fetch businesses
-    this.featureService.getBusinesses(apiEndpoint, featureId).subscribe({
+    this.featureService.getBusinesses(action, featureId).subscribe({
       next: (response: IBusiness[]) => {
         // Open the dialog with the fetched businesses
         const dialogRef = this.dialog.open(DialogComponent, {
@@ -113,8 +106,6 @@ export class FeatureCardComponent {
             businesses: response
           }
         });
-
-        //console.log("this is response\n" + response[1].businessId);
 
         // Handle dialog close
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
@@ -130,8 +121,6 @@ export class FeatureCardComponent {
       }
     });
   }
-
-
 
 
   update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {

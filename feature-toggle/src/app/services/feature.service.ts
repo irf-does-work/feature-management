@@ -24,8 +24,8 @@ export class FeatureService {
   }
 
   //for displaying business in dialog box 
-  getBusinesses(apiEndpoint: string, featureId: number): Observable<IBusiness[]> {
-    return this.http.get<IBusiness[]>(`${this.baseUrl}${apiEndpoint}?featureId=${featureId}`);
+  getBusinesses(action: boolean, featureId: number): Observable<IBusiness[]> {
+    return this.http.get<IBusiness[]>(`${this.baseUrl}/api/Business?FeatureId=${featureId}&FeatureStatus=${action}`);
   }
 
   getLog(pageNumber: number, searchQuery: string): Observable<IPaginationLog> {
@@ -44,7 +44,7 @@ export class FeatureService {
       params = params.set(key, value.toString());
     }
     });
-    params.set('pageNumber', pageNumber)
+    params = params.set('pageNumber', pageNumber)
     return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Filter`, { params });
   }
 
