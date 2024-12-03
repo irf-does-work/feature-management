@@ -129,15 +129,14 @@ export class FeatureCardComponent {
       UserId: this.currentUser,
       featureId: featureId,
       businessId: businessId,
-      enableOrDisable: featureStatus == true ? true : false
-
     }
 
+    const enableOrDisable : string = featureStatus === true ? 'enable' : 'disable'
 
-    this.featureService.updateToggle(data).subscribe({
+    this.featureService.updateToggle(enableOrDisable,data).subscribe({
       next: (response: number) => {
         if (response === 1) {
-          if (data.enableOrDisable == true) {
+          if (featureStatus === true) {
 
             this.toastr.success('Update Successful', 'Feature Enabled')
           }

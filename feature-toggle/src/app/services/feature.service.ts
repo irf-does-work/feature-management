@@ -19,8 +19,8 @@ export class FeatureService {
   constructor(private router: Router, private http: HttpClient,private toastr: ToastrService) { }
 
   //for enabling or disabling feature
-  updateToggle(data: IUpdateToggle): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/api/BusinessFeatureFlag/toggle`, data);
+  updateToggle(enableOrDisable: string,data: IUpdateToggle): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/api/BusinessFeatureFlag/toggle/${enableOrDisable}`, data);
   }
 
   //for displaying business in dialog box 

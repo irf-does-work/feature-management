@@ -10,8 +10,15 @@ namespace FeatureToggle.API.Controllers
     [ApiController]
     public class BusinessFeatureFlagController(IMediator mediator) : ControllerBase
     {
-        [HttpPost("toggle")]
-        public async Task<int> UpdateFeature(UpdateToggleCommand command) 
+        [HttpPost("toggle/enable")]
+        public async Task<int> EnableFeature(EnableToggleCommand command) 
+        {
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
+            return await mediator.Send(command, cancellationToken);
+        }
+
+        [HttpPost("toggle/disable")]
+        public async Task<int> DisableFeature(DisableToggleCommand command)
         {
             CancellationToken cancellationToken = HttpContext.RequestAborted;
             return await mediator.Send(command, cancellationToken);
