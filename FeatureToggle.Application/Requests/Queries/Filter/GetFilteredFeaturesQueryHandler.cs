@@ -18,7 +18,7 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
         if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue &&
             !request.EnabledFilter.HasValue && !request.DisabledFilter.HasValue)
         {
-            List<FilteredFeatureDTO> allFeatures = await baseQuery.Select(f => new FilteredFeatureDTO
+            IQueryable<FilteredFeatureDTO> allFeatures =  baseQuery.Select(f => new FilteredFeatureDTO
             {
                 FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
                     ? f.BusinessFeatures.FirstOrDefault()!.FeatureFlagId
@@ -29,19 +29,22 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
                 isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
                     ? f.BusinessFeatures.FirstOrDefault()!.IsEnabled
                     : null
-            }).ToListAsync(cancellationToken);
+            });
 
             if(request.SearchQuery is not null)
             {
-                allFeatures = allFeatures.Where(af => af.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+                string searchQuery = request.SearchQuery.ToLower();
+                allFeatures = allFeatures.Where(af => EF.Functions.Like(af.FeatureName, $"%{searchQuery}%"));
             }
+
+            List<FilteredFeatureDTO> allFeaturesList = await allFeatures.Skip(request.PageNumber * pageSize).Take(pageSize).ToListAsync(cancellationToken);
 
             return new PaginatedFeatureListDTO
             {
-                FeatureCount = allFeatures.Count,
-                TotalPages = (allFeatures.Count + pageSize - 1) / pageSize,
+                FeatureCount = allFeatures.Count(),
+                TotalPages = (allFeatures.Count() + pageSize - 1) / pageSize,
                 PageSize = pageSize,
-                FeatureList = allFeatures.Skip(request.PageNumber * pageSize).Take(pageSize).ToList()
+                FeatureList = allFeaturesList
             };
         }
 
@@ -75,7 +78,7 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             }
         }
 
-        List<FilteredFeatureDTO> combinedQuery = await baseQuery.Select(f => new FilteredFeatureDTO
+        IQueryable<FilteredFeatureDTO> combinedQuery = baseQuery.Select(f => new FilteredFeatureDTO
         {
             FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Any()
                 ? f.BusinessFeatures.First().FeatureFlagId
@@ -86,18 +89,20 @@ public class GetFilteredFeaturesQueryHandler(BusinessContext businessContext) : 
             isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Any()
                 ? f.BusinessFeatures.First().IsEnabled
                 : null
-        }).ToListAsync(cancellationToken);
+        });
 
         if (request.SearchQuery is not null)
         {
-            combinedQuery = combinedQuery.Where(af => af.FeatureName.Contains(request.SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            string searchQuery = request.SearchQuery.ToLower();
+            combinedQuery = combinedQuery.Where(af => EF.Functions.Like(af.FeatureName, $"%{searchQuery}%"));
         }
+
         List<FilteredFeatureDTO> featureList = combinedQuery
             .Skip(request.PageNumber * pageSize)
             .Take(pageSize)
             .ToList();
 
-        int totalCount = combinedQuery.Count;
+        int totalCount = combinedQuery.Count();
 
         return new PaginatedFeatureListDTO
         {

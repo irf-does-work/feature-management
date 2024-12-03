@@ -20,7 +20,7 @@ export class FeatureService {
 
   //for enabling or disabling feature
   updateToggle(data: IUpdateToggle): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/api/BusinessFeatureFlag/feature/update`, data);
+    return this.http.post<number>(`${this.baseUrl}/api/BusinessFeatureFlag/toggle`, data);
   }
 
   //for displaying business in dialog box 
@@ -44,12 +44,12 @@ export class FeatureService {
       params = params.set(key, value.toString());
     }
     });
-    params = params.set('pageNumber', pageNumber)
-    return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Filter`, { params });
+    params = params.set('PageNumber', pageNumber)
+    return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Feature`, { params });
   }
 
   downloadLogs() {
-    return this.http.get(`${this.baseUrl}/api/Log/AllLogs`, {
+    return this.http.get(`${this.baseUrl}/api/Log/download-logs`, {
       responseType: 'blob', 
     });
   }

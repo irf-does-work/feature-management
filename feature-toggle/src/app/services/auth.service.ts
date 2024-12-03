@@ -68,8 +68,8 @@ export class AuthService {
   checkExpiry() {
     const payload = this.decodeToken();
     if (payload) {
-      const expTime = payload.exp; // expiry in epoch seconds from payload
-      const now = Date.now() / 1000; // Unix timestamp in milliseconds
+      const expTime = payload.exp;
+      const now = Date.now() / 1000; 
       const diff = expTime - (Math.floor(now));
 
       if (diff <= 0) {
@@ -91,9 +91,6 @@ export class AuthService {
 
   getUserId(): string {
     const payload = this.decodeToken();
-
-    console.log(payload.UserID);
-
     return payload.UserID;
   }
 
