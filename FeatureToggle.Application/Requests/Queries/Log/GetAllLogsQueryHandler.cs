@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
+using CsvHelper;
 using FeatureToggle.Application.DTOs;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using CsvHelper;
-using System.IO;
-using System.Globalization;
-using System;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Queries.Log
 {

@@ -5,7 +5,6 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
 import { IBusiness, IUpdateToggle, ISelectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
-
 import { ToastrService } from 'ngx-toastr';
 import { FeatureService } from '../services/feature.service';
 import { AuthService } from '../services/auth.service';
@@ -97,10 +96,8 @@ export class FeatureCardComponent {
   }
 
   openDialog(action: true | false, featureId: number): void {
-    // Call the API to fetch businesses
     this.featureService.getBusinesses(action, featureId).subscribe({
       next: (response: IBusiness[]) => {
-        // Open the dialog with the fetched businesses
         const dialogRef = this.dialog.open(DialogComponent, {
           width: '20%',
           data: {
@@ -108,10 +105,8 @@ export class FeatureCardComponent {
           }
         });
 
-        // Handle dialog close
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
           if (result) {
-            // this.business = result;
             this.updateFeatureToggle(featureId, Number(result.businessId), action);
           }
         });

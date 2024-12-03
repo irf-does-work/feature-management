@@ -1,11 +1,8 @@
 ﻿using FeatureToggle.API.Identity;
-﻿using CsvHelper;
-using System.Globalization;
 using FeatureToggle.Application.DTOs;
 using FeatureToggle.Application.Requests.Queries.Log;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers

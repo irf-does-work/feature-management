@@ -1,5 +1,4 @@
 ﻿using FeatureToggle.Application.DTOs;
-using FeatureToggle.Domain.Entity.BusinessSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

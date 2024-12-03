@@ -1,8 +1,6 @@
-﻿using System.Threading;
-using FeatureToggle.Application.DTOs;
+﻿using FeatureToggle.Application.DTOs;
 using FeatureToggle.Application.Requests.Commands.UserCommands;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers
