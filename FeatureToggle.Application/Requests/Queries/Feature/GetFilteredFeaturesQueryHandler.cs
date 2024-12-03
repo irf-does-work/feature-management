@@ -98,10 +98,10 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
                 combinedQuery = combinedQuery.Where(af => EF.Functions.Like(af.FeatureName, $"%{searchQuery}%"));
             }
 
-            List<FilteredFeatureDTO> featureList = combinedQuery
+            List<FilteredFeatureDTO> featureList = await combinedQuery
                 .Skip(request.PageNumber * pageSize)
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync(cancellationToken);
 
             int totalCount = combinedQuery.Count();
 
