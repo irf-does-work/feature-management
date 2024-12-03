@@ -153,7 +153,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         {
                             Business? requiredBusiness = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId);
 
-                            BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature, requiredBusiness);
+                            BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature, requiredBusiness!);
 
                             await businessContext.AddAsync(newBusinessFlag, cancellationToken);
 

@@ -1,5 +1,5 @@
 ﻿using FeatureToggle.Application.DTOs;
-using FeatureToggle.Application.Requests.Queries.Filter;
+using FeatureToggle.Application.Requests.Queries.Feature;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

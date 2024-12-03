@@ -1,10 +1,7 @@
 ﻿using FeatureToggle.Application.DTOs;
-using FeatureToggle.Domain.Entity.FeatureManagementSchema;
 using FeatureToggle.Infrastructure.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace FeatureToggle.Application.Requests.Queries.Log
 {
@@ -40,9 +37,9 @@ namespace FeatureToggle.Application.Requests.Queries.Log
             int pageSize = request.PageSize;
             int totalPages = (totalCount / pageSize) +1;
 
-            List<LogDTO> queryList = query.Skip((page) * pageSize).Take(pageSize).ToList();
+            List<LogDTO> queryList = await query.Skip((page) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
 
-            PaginatedLogListDTO result = new PaginatedLogListDTO
+            PaginatedLogListDTO result = new()
             {
                 TotalCount = totalCount,
                 TotalPages = totalPages,

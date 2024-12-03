@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FeatureToggle.Application.DTOs;
 using MediatR;
 
-namespace FeatureToggle.Application.Requests.Queries.Filter
+namespace FeatureToggle.Application.Requests.Queries.Feature
 {
     public class GetFilteredFeaturesQuery : IRequest<PaginatedFeatureListDTO>
     {
