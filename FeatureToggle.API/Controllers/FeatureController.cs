@@ -2,7 +2,6 @@
 using FeatureToggle.Application.Requests.Queries.Filter;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.API.Controllers
