@@ -32,8 +32,8 @@ import { IBusiness } from '../interface/feature.interface';
 export class DialogComponent {
   @ViewChild('businessSelect') businessSelect!: MatSelect;
   businessControl = new FormControl<IBusiness | null>(null, Validators.required);
-  searchControl = new FormControl(''); // For search input
-  filteredBusinesses: IBusiness[] = []; // Filtered businesses to display
+  searchControl = new FormControl(''); 
+  filteredBusinesses: IBusiness[] = []; 
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
@@ -60,14 +60,12 @@ export class DialogComponent {
     const searchTerm = this.searchControl.value?.trim().toLowerCase() || '';
   
     if (searchTerm) {
-      // Filter businesses and open the dropdown
       this.filterBusinesses();
       if (!this.businessSelect.panelOpen) {
         this.businessSelect.open();
       }
     } else {
-      // Clear filtered businesses and close the dropdown
-      this.filteredBusinesses = [...this.data.businesses]; // Reset to full list
+      this.filteredBusinesses = [...this.data.businesses]; 
       if (this.businessSelect.panelOpen) {
         this.businessSelect.close();
       }
@@ -75,8 +73,8 @@ export class DialogComponent {
   }
   
   onSelectionChange(): void {
-    this.searchControl.setValue(''); // Clear the search field
-    this.filteredBusinesses = [...this.data.businesses]; // Reset the list
+    this.searchControl.setValue(''); 
+    this.filteredBusinesses = [...this.data.businesses];
   }
 
 

@@ -6,7 +6,6 @@ import { tap } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
   const authToken = localStorage.getItem(TOKEN_KEY);
-  //private toastr: ToastrService
   const toastr = inject(ToastrService);
 
 
@@ -18,7 +17,6 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
     headers: req.headers.set('Authorization', `Bearer ${authToken}`),
   });
 
-  // return next(newRq);
   return next(newRq).pipe(
     tap({
       next: (event) => {

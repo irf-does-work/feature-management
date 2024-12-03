@@ -21,9 +21,7 @@ export class LogComponent implements OnInit {
   searchBarInput: string = '';
   isLoading: boolean = true ;
 
-  displayedColumns: string[] = ['serialNo', 
-    // 'UserId', 
-    'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
+  displayedColumns: string[] = ['serialNo', 'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
 
   dataSource: IPaginationLog = {
     pageSize: 0,
@@ -43,7 +41,7 @@ export class LogComponent implements OnInit {
       next: (response: IPaginationLog) => {
         
         response.logs.forEach(log => {
-          log.time = new Date(log.time + 'Z'); // Ensure UTC with 'Z' suffix
+          log.time = new Date(log.time + 'Z');
         });
 
         this.dataSource = response;

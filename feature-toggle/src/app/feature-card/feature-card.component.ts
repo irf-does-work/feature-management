@@ -111,7 +111,7 @@ export class FeatureCardComponent {
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
           if (result) {
             // this.business = result;
-            this.update_Toggle(featureId, Number(result.businessId), action);
+            this.updateFeatureToggle(featureId, Number(result.businessId), action);
           }
         });
       },
@@ -123,7 +123,7 @@ export class FeatureCardComponent {
   }
 
 
-  update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {
+  updateFeatureToggle(featureId: number, businessId: number | null, featureStatus: boolean) {
 
     const data: IUpdateToggle = {
       UserId: this.currentUser,
