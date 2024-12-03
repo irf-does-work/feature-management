@@ -21,9 +21,7 @@ export class LogComponent implements OnInit {
   searchBarInput: string = '';
   isLoading: boolean = true ;
 
-  displayedColumns: string[] = ['serialNo', 
-    // 'UserId', 
-    'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
+  displayedColumns: string[] = ['serialNo', 'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
 
   dataSource: IPaginationLog = {
     pageSize: 0,
