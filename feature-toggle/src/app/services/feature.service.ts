@@ -45,7 +45,7 @@ export class FeatureService {
     }
     });
     params = params.set('PageNumber', pageNumber)
-    return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Filter`, { params });
+    return this.http.get<IPaginatedFeatures>(`${this.baseUrl}/api/Feature`, { params });
   }
 
   downloadLogs() {
