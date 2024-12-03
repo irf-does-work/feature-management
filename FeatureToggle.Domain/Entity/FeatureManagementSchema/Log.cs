@@ -2,29 +2,17 @@
 
 namespace FeatureToggle.Domain.Entity.FeatureManagementSchema
 {
-    public class Log
+    public class Log(string userId, int featureId, string featureName, int? businessId, string? businessName, Actions action)
     {
         public int Id { get; private set; }
-        public string UserId { get; private set; }  
+        public string UserId { get; private set; } = userId;
         public User User { get; private set; }
-        public int FeatureId { get; private set; }
-        public string FeatureName { get; private set; }
-        public int? BusinessId { get; private set; }
-       
-        public string? BusinessName { get; private set; }  
-        public DateTime Time { get; private set; }
-        public Actions Action { get; private set; }
+        public int FeatureId { get; private set; } = featureId;
+        public string FeatureName { get; private set; } = featureName;
+        public int? BusinessId { get; private set; } = businessId;
 
-        public Log(string userId, int featureId, string featureName, int? businessId, string? businessName, Actions action)
-        {
-            UserId = userId;
-            FeatureId = featureId;
-            FeatureName = featureName;
-            BusinessId = businessId;
-            BusinessName = businessName;
-            Action = action;
-            Time = DateTime.UtcNow;
-        }
-
+        public string? BusinessName { get; private set; } = businessName;
+        public DateTime Time { get; private set; } = DateTime.UtcNow;
+        public Actions Action { get; private set; } = action;
     }
 }
