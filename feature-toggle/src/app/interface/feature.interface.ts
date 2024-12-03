@@ -71,7 +71,7 @@ export interface IUpdateToggle {
     UserId: string | undefined;
     featureId: number;
     businessId: number | null;
-    enableOrDisable: boolean;
+    //enableOrDisable: boolean;
 }
 
 export interface Ilog {
