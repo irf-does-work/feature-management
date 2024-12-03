@@ -56,11 +56,11 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     {
                         Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
-                        BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature);
+                        BusinessFeatureFlag newBusinessFlag = new(requiredFeature);
 
                         await businessContext.AddAsync(newBusinessFlag, cancellationToken);
 
-                        AddLogCommand addLog = new AddLogCommand()
+                        AddLogCommand addLog = new()
                         {
                             FeatureId = request.FeatureId,
                             FeatureName = feature.FeatureName,
@@ -71,7 +71,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             action = Actions.Enabled
                         };
 
-                        await mediator.Send(addLog);
+                        await mediator.Send(addLog, cancellationToken);
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
                     }
@@ -96,7 +96,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             selectedBusiness.UpdateIsenabled(true);
                             businessContext.BusinessFeatureFlag.Update(selectedBusiness);
 
-                            AddLogCommand addLog = new AddLogCommand()
+                            AddLogCommand addLog = new()
                             {
                                 FeatureId = request.FeatureId,
                                 FeatureName = feature.FeatureName,
@@ -107,7 +107,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                                 action = Actions.Enabled
                             };
 
-                            await mediator.Send(addLog);
+                            await mediator.Send(addLog, cancellationToken);
 
                             return await businessContext.SaveChangesAsync(cancellationToken);
                         }
@@ -119,13 +119,13 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     else
                     {
 
-                        Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId);
+                        Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
                         if (requiredFeature.FeatureTypeId == 2)
                         {
-                            Business? requiredBusiness = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId);
+                            Business? requiredBusiness = await businessContext.Business.FirstOrDefaultAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
 
-                            BusinessFeatureFlag newBusinessFlag = new BusinessFeatureFlag(requiredFeature, requiredBusiness!);
+                            BusinessFeatureFlag newBusinessFlag = new(requiredFeature, requiredBusiness!);
 
                             await businessContext.AddAsync(newBusinessFlag, cancellationToken);
 

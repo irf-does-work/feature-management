@@ -66,6 +66,7 @@ export class FeatureCardComponent {
       next: (response) => {
         this.paginatedfeatures = response;
         this.isLoading = false;
+        if(this.paginatedfeatures.featureCount === 0) this.toastr.warning("We couldn't find what you searched for","Sorry!");
       },
       error: (err) => {
         console.error('Error fetching features:', err);
