@@ -27,7 +27,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
                     FeatureId = f.FeatureId,
                     FeatureName = f.FeatureName,
                     FeatureType = f.FeatureTypeId,
-                    isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
+                    IsEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
                         ? f.BusinessFeatures.FirstOrDefault()!.IsEnabled
                         : null
                 });
@@ -87,7 +87,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
                 FeatureId = f.FeatureId,
                 FeatureName = f.FeatureName,
                 FeatureType = f.FeatureTypeId,
-                isEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
+                IsEnabled = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
                     ? f.BusinessFeatures.First().IsEnabled
                     : null
             });

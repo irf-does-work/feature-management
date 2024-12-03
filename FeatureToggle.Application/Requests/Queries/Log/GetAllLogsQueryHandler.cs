@@ -38,19 +38,17 @@ namespace FeatureToggle.Application.Requests.Queries.Log
                .OrderByDescending(x => x.Time)
             .ToListAsync(cancellationToken);
 
-            
-            using (MemoryStream memoryStream = new())
-            {
-                using (StreamWriter streamWriter = new(memoryStream))
-                using (CsvWriter csvWriter = new(streamWriter, CultureInfo.InvariantCulture))
-                {
-                    csvWriter.WriteRecords(query);
-                    streamWriter.Flush();
-                }
 
-                FileContentResult result = new(memoryStream.ToArray(), "text/csv");
-                return result;
+            using MemoryStream memoryStream = new();
+            using (StreamWriter streamWriter = new(memoryStream))
+            using (CsvWriter csvWriter = new(streamWriter, CultureInfo.InvariantCulture))
+            {
+                csvWriter.WriteRecords(query);
+                streamWriter.Flush();
             }
+
+            FileContentResult result = new(memoryStream.ToArray(), "text/csv");
+            return result;
 
 
         }
