@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.Application.Requests.Queries.Log
 {
-    public class GetAllLogsQuery : IRequest<FileContentResult>
+    public class DownloadLogsQuery : IRequest<FileContentResult>
     {
 
     }

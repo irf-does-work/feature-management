@@ -20,9 +20,16 @@ namespace FeatureToggle.API.Controllers
 
 
         [HttpGet("download-logs")]
+<<<<<<< HEAD
         public async Task<FileContentResult> GetAllLogs(CancellationToken cancellationToken = default)
         {
             return await mediator.Send(new GetAllLogsQuery(),cancellationToken);
+=======
+        public async Task<FileContentResult> DownloadLogs()
+        {
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
+            return await mediator.Send(new DownloadLogsQuery(),cancellationToken);
+>>>>>>> cyril/update-toggle-split
         }
 
     }

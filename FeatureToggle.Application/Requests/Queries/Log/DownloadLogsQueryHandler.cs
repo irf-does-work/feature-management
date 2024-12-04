@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Queries.Log
 {
-    public class GetAllLogsQueryHandler(FeatureManagementContext featureManagementContext) : IRequestHandler<GetAllLogsQuery, FileContentResult>
+    public class DownloadLogsQueryHandler(FeatureManagementContext featureManagementContext) : IRequestHandler<DownloadLogsQuery, FileContentResult>
     {
-        public async Task<FileContentResult> Handle(GetAllLogsQuery request, CancellationToken cancellationToken)
+        public async Task<FileContentResult> Handle(DownloadLogsQuery request, CancellationToken cancellationToken)
         {
             List<LogDTO> query = await featureManagementContext.Logs.Include(u => u.User)
                .Select(x => new LogDTO
