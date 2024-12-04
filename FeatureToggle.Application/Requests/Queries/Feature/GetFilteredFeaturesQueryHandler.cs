@@ -20,9 +20,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
             {
                 IQueryable<FilteredFeatureDTO> allFeatures = baseQuery.Select(f => new FilteredFeatureDTO
                 {
-                    //FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
-                    //    ? f.BusinessFeatures.FirstOrDefault()!.FeatureFlagId
-                    //    : 0,
+
                     FeatureId = f.FeatureId,
                     FeatureName = f.FeatureName,
                     FeatureType = f.FeatureTypeId,
@@ -80,9 +78,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
 
             IQueryable<FilteredFeatureDTO> combinedQuery = baseQuery.Select(f => new FilteredFeatureDTO
             {
-                //FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
-                //    ? f.BusinessFeatures.First().FeatureFlagId
-                //    : 0,
+
                 FeatureId = f.FeatureId,
                 FeatureName = f.FeatureName,
                 FeatureType = f.FeatureTypeId,
