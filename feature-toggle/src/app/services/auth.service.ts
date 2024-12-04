@@ -26,28 +26,27 @@ export class AuthService {
     return this.http.post<ISignUpReturn>(`${this.baseUrl}/api/User`, data);
   }
 
-  isLoggedIn() {
-    const result = localStorage.getItem(TOKEN_KEY) != null ? true : false;
-    if(result)
-      {
-        this.checkExpiry();
-      }
+  isLoggedIn() : boolean {
+    const result : boolean = localStorage.getItem(TOKEN_KEY) != null ? true : false;
+    if (result) {
+      this.checkExpiry();
+    }
     return result;
 
   }
 
-  saveToken(token: string) {
+  saveToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
   }
 
-  deleteToken() {
+  deleteToken(): void {
     localStorage.removeItem(TOKEN_KEY);
   }
 
   decodeToken() {
     try {
       const token = localStorage.getItem(TOKEN_KEY);
-      
+
       if (!token) {
         throw new Error("Token not found in localStorage.");
       }
@@ -65,11 +64,11 @@ export class AuthService {
     }
   }
 
-  checkExpiry() {
+  checkExpiry(): void {
     const payload = this.decodeToken();
     if (payload) {
       const expTime = payload.exp;
-      const now = Date.now() / 1000; 
+      const now = Date.now() / 1000;
       const diff = expTime - (Math.floor(now));
 
       if (diff <= 0) {
@@ -80,12 +79,12 @@ export class AuthService {
       }
     }
   }
-  
-  checkIsAdmin(): boolean{
+
+  checkIsAdmin(): boolean {
     const payload = this.decodeToken();
 
     const result = payload.IsAdmin === "True" ? true : false;
-    
+
     return result;
   }
 

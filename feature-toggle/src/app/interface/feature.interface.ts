@@ -105,3 +105,14 @@ export interface ISignUpReturn {
     errors: string[],
 }
 
+export interface IJwtPayload {
+    // {
+    //     "UserID": "d718ebff-72ea-4dd3-8142-bb359c67b823",
+    //     "IsAdmin": "True",
+    //     "nbf": 1733293622,
+    //     "exp": 1733336822,
+    //     : 1733293622,
+    //     "iss": "sample-issuer",
+    //     "aud": "sample-audience"
+    //   }
+}
