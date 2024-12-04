@@ -13,7 +13,7 @@ namespace FeatureToggle.Domain.Configurations
 
             builder
             .HasOne(bf => bf.Business) 
-            .WithMany() 
+            .WithMany(x => x.BusinessFeatures) 
             .HasForeignKey(bf => bf.BusinessId); 
 
            

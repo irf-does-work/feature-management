@@ -11,33 +11,18 @@ namespace FeatureToggle.Application.Requests.Queries.Business
         {
             if (request.FeatureStatus)
             {
-                //Get Enabled 
+                // to Enable
 
-                IQueryable<int?> businessesWithFlags = businessContext.BusinessFeatureFlag
-                   .Where(bff => bff.FeatureId == request.FeatureId && (bff.IsEnabled == false || bff.BusinessId == null))
-                   .Select(bff => bff.BusinessId);
-
-                IQueryable<GetBusinessDTO> businessesWithoutFlags = businessContext.Business
-                    .Where(b => !businessContext.BusinessFeatureFlag
-                        .Where(bff => bff.FeatureId == request.FeatureId)
-                        .Select(bff => bff.BusinessId)
-                        .Contains(b.BusinessId))
+                List<GetBusinessDTO> allBusinesses = await businessContext.Business
+                    .Where(b =>
+                        !b.BusinessFeatures!.Any(bf => bf.FeatureId == request.FeatureId)   // not in bff
+                        || b.BusinessFeatures!.Any(bf => bf.FeatureId == request.FeatureId && bf.IsEnabled == false)   // disabled in bff
+                    )
                     .Select(b => new GetBusinessDTO
                     {
                         BusinessId = b.BusinessId,
                         BusinessName = b.BusinessName
-                    });
-
-                List<GetBusinessDTO> allBusinesses = await businessesWithoutFlags
-                    .Union(
-                        businessContext.Business
-                            .Where(b => businessesWithFlags.Contains(b.BusinessId))
-                            .Select(b => new GetBusinessDTO
-                            {
-                                BusinessId = b.BusinessId,
-                                BusinessName = b.BusinessName
-                            })
-                    )
+                    })
                     .ToListAsync(cancellationToken);
 
                 return allBusinesses;
@@ -46,19 +31,18 @@ namespace FeatureToggle.Application.Requests.Queries.Business
 
             else
             {
-                //Get Disabled business
-
+                //  to Disable 
                 List<GetBusinessDTO> result = await businessContext.Business
-                .Join(
-                    businessContext.BusinessFeatureFlag.Where(ff => ff.FeatureId == request.FeatureId && ff.IsEnabled == true),
-                    business => business.BusinessId,
-                    featureFlag => featureFlag.BusinessId,
-                    (business, featureFlag) => new GetBusinessDTO
-                    {
-                        BusinessId = business.BusinessId,
-                        BusinessName = business.BusinessName
-                    })
-                .ToListAsync(cancellationToken);
+                    .Join(
+                        businessContext.BusinessFeatureFlag.Where(ff => ff.FeatureId == request.FeatureId && ff.IsEnabled == true),
+                        business => business.BusinessId,
+                        featureFlag => featureFlag.BusinessId,
+                        (business, featureFlag) => new GetBusinessDTO
+                        {
+                            BusinessId = business.BusinessId,
+                            BusinessName = business.BusinessName
+                        })
+                    .ToListAsync(cancellationToken);
 
                 return result;
             }

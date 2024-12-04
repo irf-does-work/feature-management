@@ -64,7 +64,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
             
                 //Disable feature toggle
                 
-                Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId);
+                Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
                 if (requiredFeature.FeatureTypeId == 2)
                 {
