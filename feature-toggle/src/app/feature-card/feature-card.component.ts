@@ -25,7 +25,16 @@ export class FeatureCardComponent {
   pageNumber: number = 0;
   business: IBusiness | undefined;  // for displaying bussiness id in dialog
   isLoading: boolean = true;
+  featureTypeEnum = FeatureType;
+  featureStatusEnum = FeatureStatus;
+  paginatedfeatures: IPaginatedFeatures = {
+    pageSize: 0,
+    featureCount: 0,
+    totalPages: 0,
+    featureList: []
+  };
 
+  @Input() selectedFilters : ISelectedFilters | null = null
   constructor(
     public dialog: MatDialog,
     private featureService: FeatureService,
@@ -38,19 +47,6 @@ export class FeatureCardComponent {
     this.currentUser = this.authService.getUserId();
 
   }
-
-  featureTypeEnum = FeatureType;
-  featureStatusEnum = FeatureStatus;
-
-  @Input() selectedFilters : ISelectedFilters | null = null
-
-  paginatedfeatures: IPaginatedFeatures = {
-    pageSize: 0,
-    featureCount: 0,
-    totalPages: 0,
-    featureList: []
-  };
-
 
   ngOnChanges() {
      if (this.selectedFilters) {
