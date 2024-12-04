@@ -12,7 +12,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
 
         public async Task<PaginatedFeatureListDTO> Handle(GetFilteredFeaturesQuery request, CancellationToken cancellationToken)
         {
-            IQueryable<Domain.Entity.BusinessSchema.Feature> baseQuery = _businessContext.Feature.Include(f => f.BusinessFeatures);
+            IQueryable<Domain.Entity.BusinessSchema.Feature> baseQuery = _businessContext.Feature;
 
 
             if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue &&
@@ -20,9 +20,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
             {
                 IQueryable<FilteredFeatureDTO> allFeatures = baseQuery.Select(f => new FilteredFeatureDTO
                 {
-                    FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
-                        ? f.BusinessFeatures.FirstOrDefault()!.FeatureFlagId
-                        : 0,
+
                     FeatureId = f.FeatureId,
                     FeatureName = f.FeatureName,
                     FeatureType = f.FeatureTypeId,
@@ -80,9 +78,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
 
             IQueryable<FilteredFeatureDTO> combinedQuery = baseQuery.Select(f => new FilteredFeatureDTO
             {
-                FeatureFlagId = f.BusinessFeatures != null && f.BusinessFeatures.Count != 0
-                    ? f.BusinessFeatures.First().FeatureFlagId
-                    : 0,
+
                 FeatureId = f.FeatureId,
                 FeatureName = f.FeatureName,
                 FeatureType = f.FeatureTypeId,
