@@ -21,10 +21,10 @@ namespace FeatureToggle.API.Controllers
 
 
         [HttpGet("download-logs")]
-        public async Task<FileContentResult> GetAllLogs()
+        public async Task<FileContentResult> DownloadLogs()
         {
             CancellationToken cancellationToken = HttpContext.RequestAborted;
-            return await mediator.Send(new GetAllLogsQuery(),cancellationToken);
+            return await mediator.Send(new DownloadLogsQuery(),cancellationToken);
         }
 
     }
