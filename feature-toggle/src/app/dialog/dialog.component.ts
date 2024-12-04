@@ -52,7 +52,7 @@ export class DialogComponent {
 
 
   onSearchKeyUp(): void {
-    const searchTerm = this.searchControl.value?.trim().toLowerCase() || '';
+    const searchTerm : string = this.searchControl.value?.trim().toLowerCase() || '';
   
     if (searchTerm) {
       this.filterBusinesses(searchTerm);

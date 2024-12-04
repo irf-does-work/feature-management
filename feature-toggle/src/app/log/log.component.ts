@@ -19,7 +19,7 @@ import { FeatureService } from '../services/feature.service';
 export class LogComponent implements OnInit {
   pageNumber: number = 0;
   searchBarInput: string = '';
-  isLoading: boolean = true ;
+  isLoading: boolean = true;
 
   displayedColumns: string[] = ['serialNo', 'Username', 'FeatureId', 'FeatureName', 'BusinessId', 'BusinessName', 'Date', 'Time', 'Action'];
 
@@ -31,7 +31,7 @@ export class LogComponent implements OnInit {
     logs: []
   };
 
-  constructor(private authService: AuthService, private featureService: FeatureService ,private toastr: ToastrService) { }
+  constructor(private authService: AuthService, private featureService: FeatureService, private toastr: ToastrService) { }
   ngOnInit(): void {
     this.fetchPaginatedLog();
   }
@@ -39,7 +39,7 @@ export class LogComponent implements OnInit {
   fetchPaginatedLog() {
     this.featureService.getLog(this.pageNumber, this.searchBarInput).subscribe({
       next: (response: IPaginationLog) => {
-        
+
         response.logs.forEach(log => {
           log.time = new Date(log.time + 'Z');
         });
@@ -87,9 +87,9 @@ export class LogComponent implements OnInit {
     this.isLoading = true;
     this.featureService.downloadLogs().subscribe({
       next: (response_blob) => {
-        const timestamp = Date.now();
-        const a = document.createElement('a');
-        const objectUrl = URL.createObjectURL(response_blob);
+        const timestamp: number = Date.now();
+        const a: HTMLAnchorElement = document.createElement('a');
+        const objectUrl: string = URL.createObjectURL(response_blob);
         a.href = objectUrl;
         a.download = `feature-logs_${timestamp}.csv`;
         a.click();

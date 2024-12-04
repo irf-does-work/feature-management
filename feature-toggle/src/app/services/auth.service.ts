@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = environment.apiUrl;
+  private baseUrl: string = environment.apiUrl;
   public userId: number = 0;
 
   constructor(private router: Router, private http: HttpClient, private toastr: ToastrService) { }
@@ -45,13 +45,13 @@ export class AuthService {
 
   decodeToken(): IJwtPayload {
     try {
-      const token = localStorage.getItem(TOKEN_KEY);
+      const token: string | null = localStorage.getItem(TOKEN_KEY);
 
       if (!token) {
         throw new Error("Token not found in localStorage.");
       }
 
-      const tokenParts = token!.split('.');
+      const tokenParts: string[] = token!.split('.');
       if (tokenParts.length !== TOKEN_LENGTH) {
         throw new Error("Invalid token format.");
       }
@@ -66,11 +66,11 @@ export class AuthService {
   }
 
   checkExpiry(): void {
-    const payload = this.decodeToken();
+    const payload: IJwtPayload = this.decodeToken();
     if (payload) {
-      const expTime = payload.exp;
-      const now = Date.now() / 1000;
-      const diff = expTime - (Math.floor(now));
+      const expTime: number = payload.exp;
+      const now: number = Date.now() / 1000;
+      const diff: number = expTime - (Math.floor(now));
 
       if (diff <= 0) {
         this.deleteToken();
@@ -82,15 +82,15 @@ export class AuthService {
   }
 
   checkIsAdmin(): boolean {
-    const payload = this.decodeToken();
+    const payload: IJwtPayload = this.decodeToken();
 
-    const result = payload.IsAdmin === "True" ? true : false;
+    const result: boolean = payload.IsAdmin === "True" ? true : false;
 
     return result;
   }
 
   getUserId(): string {
-    const payload = this.decodeToken();
+    const payload: IJwtPayload = this.decodeToken();
     return payload.UserID;
   }
 
