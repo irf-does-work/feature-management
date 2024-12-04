@@ -1,4 +1,5 @@
-﻿using FeatureToggle.Application.Requests.Commands.FeatureCommands;
+﻿using FeatureToggle.API.Identity;
+using FeatureToggle.Application.Requests.Commands.FeatureCommands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace FeatureToggle.API.Controllers
             return await mediator.Send(command, cancellationToken);
         }
 
+        [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPost("toggle/disable")]
         public async Task<int> DisableFeature(DisableToggleCommand command)
         {

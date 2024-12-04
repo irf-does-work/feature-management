@@ -4,6 +4,7 @@
     {
         public int BusinessId { get;  }
         public string BusinessName { get;  } = string.Empty;
-        
+        public List<BusinessFeatureFlag>? BusinessFeatures { get; }
+
     }
 }
