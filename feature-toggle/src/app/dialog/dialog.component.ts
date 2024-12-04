@@ -44,15 +44,10 @@ export class DialogComponent {
 
   }
 
-  filterBusinesses(): void {
-    const searchTerm = this.searchControl.value?.toLowerCase() || '';
-    console.log(searchTerm)
-
+  filterBusinesses(searchTerm : string): void {
     this.filteredBusinesses = this.data.businesses.filter((business) =>
       business.businessName.toLowerCase().includes(searchTerm)
     );
-
-    console.log(this.filteredBusinesses)
   }
 
 
@@ -60,7 +55,7 @@ export class DialogComponent {
     const searchTerm = this.searchControl.value?.trim().toLowerCase() || '';
   
     if (searchTerm) {
-      this.filterBusinesses();
+      this.filterBusinesses(searchTerm);
       if (!this.businessSelect.panelOpen) {
         this.businessSelect.open();
       }
