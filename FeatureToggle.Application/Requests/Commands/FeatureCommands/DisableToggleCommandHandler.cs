@@ -19,22 +19,51 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
             {
                 BusinessFeatureFlag selectBusiness = await businessContext.BusinessFeatureFlag.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
 
-            
                 //Disable release toggle
-                if (selectBusiness is not null)
+
+                selectBusiness.UpdateIsenabled(false);
+
+                businessContext.BusinessFeatureFlag.Update(selectBusiness);
+
+                AddLogCommand addLog = new AddLogCommand()
                 {
+                    FeatureId = request.FeatureId,
+                    FeatureName = feature.FeatureName,
+                    BusinessId = null,
+                    BusinessName = null,
+                    UserId = request.UserId,
+                    UserName = user.UserName,
+                    action = Actions.Disabled
+                };
 
-                    selectBusiness.UpdateIsenabled(false);
+                await mediator.Send(addLog, cancellationToken);
 
-                    businessContext.BusinessFeatureFlag.Update(selectBusiness);
+                return await businessContext.SaveChangesAsync(cancellationToken);
+
+            }
 
 
-                    AddLogCommand addLog = new AddLogCommand()
+            else // if feature toggle
+            {
+                //business Name for feature toggle
+                Business business = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
+
+                BusinessFeatureFlag selectedBusiness = await businessContext.BusinessFeatureFlag.FirstAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
+
+                //Disable feature toggle
+                
+                if (feature.FeatureTypeId == 2)
+                {
+                    selectedBusiness.UpdateIsenabled(false);
+
+                    businessContext.BusinessFeatureFlag.Update(selectedBusiness);
+
+                    AddLogCommand addLog = new()
                     {
                         FeatureId = request.FeatureId,
                         FeatureName = feature.FeatureName,
-                        BusinessId = null,
-                        BusinessName = null,
+                        BusinessId = request.BusinessId,
+                        BusinessName = business.BusinessName,
                         UserId = request.UserId,
                         UserName = user.UserName,
                         action = Actions.Disabled
@@ -43,57 +72,6 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     await mediator.Send(addLog, cancellationToken);
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
-                }
-
-                return -1;
-
-                
-
-            }
-
-
-            else // if feature toggle
-            {
-                //To get business Name for feature toggle
-                Business business = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
-
-                BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
-
-
-
-            
-                //Disable feature toggle
-                
-                Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId);
-
-                if (requiredFeature.FeatureTypeId == 2)
-                {
-
-                    if (selectedBusiness is not null)
-                    {
-
-                        selectedBusiness.UpdateIsenabled(false);
-
-                        businessContext.BusinessFeatureFlag.Update(selectedBusiness);
-
-                        AddLogCommand addLog = new()
-                        {
-                            FeatureId = request.FeatureId,
-                            FeatureName = feature.FeatureName,
-                            BusinessId = request.BusinessId,
-                            BusinessName = business.BusinessName,
-                            UserId = request.UserId,
-                            UserName = user.UserName,
-                            action = Actions.Disabled
-                        };
-
-                        await mediator.Send(addLog, cancellationToken);
-
-
-                        return await businessContext.SaveChangesAsync(cancellationToken);
-
-                    }
-
 
                 }
                 return -1;

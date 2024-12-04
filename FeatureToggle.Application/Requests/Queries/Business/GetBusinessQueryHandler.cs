@@ -14,7 +14,7 @@ namespace FeatureToggle.Application.Requests.Queries.Business
                 //Get Enabled 
 
                 IQueryable<int?> businessesWithFlags = businessContext.BusinessFeatureFlag
-                   .Where(bff => bff.FeatureId == request.FeatureId && (bff.IsEnabled == false || bff.BusinessId == null))
+                   .Where(bff => bff.FeatureId == request.FeatureId && bff.IsEnabled == false)
                    .Select(bff => bff.BusinessId);
 
                 IQueryable<GetBusinessDTO> businessesWithoutFlags = businessContext.Business
