@@ -22,7 +22,7 @@ namespace FeatureToggle.API.Controllers
         [HttpGet("download-logs")]
         public async Task<FileContentResult> DownloadLogs(CancellationToken cancellationToken = default)
         {
-            return await mediator.Send(new GetAllLogsQuery(),cancellationToken);
+            return await mediator.Send(new DownloadLogsQuery(),cancellationToken);
         }
 
     }
