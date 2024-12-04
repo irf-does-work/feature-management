@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { TOKEN_KEY, TOKEN_LENGTH, TOKEN_PAYLOAD } from '../shared/constants';
-import { ILoginAccept, ILoginReturn, ISignUpAccept, ISignUpReturn } from '../interface/feature.interface';
+import { IJwtPayload, ILoginAccept, ILoginReturn, ISignUpAccept, ISignUpReturn } from '../interface/feature.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -26,8 +26,8 @@ export class AuthService {
     return this.http.post<ISignUpReturn>(`${this.baseUrl}/api/User`, data);
   }
 
-  isLoggedIn() : boolean {
-    const result : boolean = localStorage.getItem(TOKEN_KEY) != null ? true : false;
+  isLoggedIn(): boolean {
+    const result: boolean = localStorage.getItem(TOKEN_KEY) != null ? true : false;
     if (result) {
       this.checkExpiry();
     }
@@ -43,7 +43,7 @@ export class AuthService {
     localStorage.removeItem(TOKEN_KEY);
   }
 
-  decodeToken() {
+  decodeToken(): IJwtPayload {
     try {
       const token = localStorage.getItem(TOKEN_KEY);
 
@@ -56,11 +56,12 @@ export class AuthService {
         throw new Error("Invalid token format.");
       }
 
-      const payloadBase64 = tokenParts[TOKEN_PAYLOAD];
-      const payloadJson = JSON.parse(window.atob(payloadBase64));
+      const payloadBase64: string = tokenParts[TOKEN_PAYLOAD];
+      const payloadJson: IJwtPayload = JSON.parse(window.atob(payloadBase64));
       return payloadJson;
     } catch (error) {
       console.error(error);
+      return {} as IJwtPayload;
     }
   }
 
