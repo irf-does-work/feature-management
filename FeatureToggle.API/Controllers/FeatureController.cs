@@ -12,9 +12,9 @@ namespace FeatureToggle.API.Controllers
     public class FeatureController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<PaginatedFeatureListDTO> GetFilteredFeatures([FromQuery] GetFilteredFeaturesQuery query)
+        public async Task<PaginatedFeatureListDTO> GetFilteredFeatures([FromQuery] GetFilteredFeaturesQuery query,
+                                                                       CancellationToken cancellationToken = default)
         {
-            CancellationToken cancellationToken = HttpContext.RequestAborted;
             return await mediator.Send(query,cancellationToken);
         }
 

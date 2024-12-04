@@ -13,17 +13,15 @@ namespace FeatureToggle.API.Controllers
     public class LogController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
-        public async Task<PaginatedLogListDTO> GetLogs([FromQuery] GetLogQuery query)
+        public async Task<PaginatedLogListDTO> GetLogs([FromQuery] GetLogQuery query, CancellationToken cancellationToken = default)
         {
-            CancellationToken cancellationToken = HttpContext.RequestAborted;
             return await mediator.Send(query,cancellationToken);
         }
 
 
         [HttpGet("download-logs")]
-        public async Task<FileContentResult> GetAllLogs()
+        public async Task<FileContentResult> GetAllLogs(CancellationToken cancellationToken = default)
         {
-            CancellationToken cancellationToken = HttpContext.RequestAborted;
             return await mediator.Send(new GetAllLogsQuery(),cancellationToken);
         }
 
