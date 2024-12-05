@@ -28,7 +28,7 @@ namespace FeatureToggle.Application.Requests.Queries.Log
 
             if (request.SearchQuery is not null)
             {
-                string searchQuery = request.SearchQuery.ToLower();
+                string searchQuery = request.SearchQuery.Trim().ToLower();
                 query = query.Where(af => EF.Functions.Like(af.FeatureName, $"%{searchQuery}%"));
             }
 

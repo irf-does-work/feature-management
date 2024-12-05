@@ -35,3 +35,12 @@ hr {
   border-top: 1px solid #ccc;
   padding: 0;
 }
+
+.card {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.5s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.07); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+}

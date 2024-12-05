@@ -15,8 +15,8 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
             IQueryable<Domain.Entity.BusinessSchema.Feature> baseQuery = _businessContext.Feature;
 
 
-            if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue &&
-                !request.EnabledFilter.HasValue && !request.DisabledFilter.HasValue)
+            if (!request.FeatureToggleFilter.HasValue && !request.ReleaseToggleFilter.HasValue
+                && !request.EnabledFilter.HasValue && !request.DisabledFilter.HasValue)
             {
                 IQueryable<FilteredFeatureDTO> allFeatures = baseQuery.Select(f => new FilteredFeatureDTO
                 {
@@ -31,11 +31,13 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
 
                 if (request.SearchQuery is not null)
                 {
-                    string searchQuery = request.SearchQuery.ToLower();
+                    string searchQuery = request.SearchQuery.Trim().ToLower();
                     allFeatures = allFeatures.Where(af => EF.Functions.Like(af.FeatureName, $"%{searchQuery}%"));
                 }
 
-                List<FilteredFeatureDTO> allFeaturesList = await allFeatures.Skip(request.PageNumber * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+                List<FilteredFeatureDTO> allFeaturesList = await allFeatures.Skip(request.PageNumber * pageSize)
+                                                                            .Take(pageSize)
+                                                                            .ToListAsync(cancellationToken);
 
                 return new PaginatedFeatureListDTO
                 {
@@ -78,7 +80,7 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
 
             IQueryable<FilteredFeatureDTO> combinedQuery = baseQuery.Select(f => new FilteredFeatureDTO
             {
-
+ 
                 FeatureId = f.FeatureId,
                 FeatureName = f.FeatureName,
                 FeatureType = f.FeatureTypeId,
@@ -89,14 +91,13 @@ namespace FeatureToggle.Application.Requests.Queries.Feature
 
             if (request.SearchQuery is not null)
             {
-                string searchQuery = request.SearchQuery.ToLower();
+                string searchQuery = request.SearchQuery.Trim().ToLower();
                 combinedQuery = combinedQuery.Where(af => EF.Functions.Like(af.FeatureName, $"%{searchQuery}%"));
             }
 
-            List<FilteredFeatureDTO> featureList = await combinedQuery
-                .Skip(request.PageNumber * pageSize)
-                .Take(pageSize)
-                .ToListAsync(cancellationToken);
+            List<FilteredFeatureDTO> featureList = await combinedQuery.Skip(request.PageNumber * pageSize)
+                                                                      .Take(pageSize)
+                                                                      .ToListAsync(cancellationToken);
 
             int totalCount = combinedQuery.Count();
 

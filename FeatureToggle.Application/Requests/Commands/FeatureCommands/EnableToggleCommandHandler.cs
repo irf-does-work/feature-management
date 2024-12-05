@@ -48,8 +48,6 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                 }
                 else
                 {
-                    //Feature requiredFeature = await businessContext.Feature.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
-
                     BusinessFeatureFlag newBusinessFlag = new(feature);
 
                     await businessContext.AddAsync(newBusinessFlag, cancellationToken);
@@ -78,7 +76,9 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                 //To get business Name for feature toggle
                 Business business = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
 
-                BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
+                BusinessFeatureFlag? selectedBusiness = await businessContext.BusinessFeatureFlag.FirstOrDefaultAsync(x => x.FeatureId == request.FeatureId 
+                                                                                                                        && x.BusinessId == request.BusinessId, 
+                                                                                                                        cancellationToken);
 
                 //Enable feature toggle
                 if (selectedBusiness is not null)
@@ -113,7 +113,8 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
                     if (feature.FeatureTypeId == 2)
                     {
-                        Business requiredBusiness = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
+                        Business requiredBusiness = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId,
+                                                                                              cancellationToken);
 
                         BusinessFeatureFlag newBusinessFlag = new(feature, requiredBusiness!);
 

@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 {
-    public class DisableToggleCommandHandler(BusinessContext businessContext, FeatureManagementContext featureManagementContext, IMediator mediator) : IRequestHandler<DisableToggleCommand, int>
+    public class DisableToggleCommandHandler(BusinessContext businessContext,
+                                             FeatureManagementContext featureManagementContext,
+                                             IMediator mediator) : IRequestHandler<DisableToggleCommand, int>
     {
         public async Task<int> Handle(DisableToggleCommand request, CancellationToken cancellationToken)
         {
@@ -17,7 +19,8 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 
             if (request.BusinessId is null) //checking if release toggle
             {
-                BusinessFeatureFlag selectBusiness = await businessContext.BusinessFeatureFlag.FirstAsync(x => x.FeatureId == request.FeatureId, cancellationToken);
+                BusinessFeatureFlag selectBusiness = await businessContext.BusinessFeatureFlag.FirstAsync(x => x.FeatureId == request.FeatureId,
+                                                                                                          cancellationToken);
 
                 //Disable release toggle
 
@@ -46,9 +49,12 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
             else // if feature toggle
             {
                 //business Name for feature toggle
-                Business business = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId, cancellationToken);
+                Business business = await businessContext.Business.FirstAsync(x => x.BusinessId == request.BusinessId,
+                                                                              cancellationToken);
 
-                BusinessFeatureFlag selectedBusiness = await businessContext.BusinessFeatureFlag.FirstAsync(x => x.FeatureId == request.FeatureId && x.BusinessId == request.BusinessId, cancellationToken);
+                BusinessFeatureFlag selectedBusiness = await businessContext.BusinessFeatureFlag.FirstAsync(x => x.FeatureId == request.FeatureId 
+                                                                                                              && x.BusinessId == request.BusinessId,
+                                                                                                              cancellationToken);
 
                 //Disable feature toggle
                 
