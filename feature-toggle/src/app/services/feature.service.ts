@@ -29,7 +29,7 @@ export class FeatureService {
   }
 
   getLog(pageNumber: number, searchQuery: string): Observable<IPaginationLog> {
-    const params = new HttpParams()
+    const params : HttpParams= new HttpParams()
       .set('page', pageNumber)
       .set('pageSize', 12)
       .set('searchQuery', searchQuery !== null ? searchQuery : '')

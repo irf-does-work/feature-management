@@ -52,14 +52,14 @@ export interface ISelectedFilters extends Partial<{
     releaseToggleFilter: boolean | null;
     enabledFilter: boolean | null;
     disabledFilter: boolean | null;
-}> {}
+}> { }
 
 export interface IFilterForm {
-    searchQuery : FormControl<string | null >
-    featureToggleFilter : FormControl<boolean | null>
-    releaseToggleFilter : FormControl<boolean | null>
-    enabledFilter : FormControl<boolean | null>
-    disabledFilter : FormControl<boolean | null>
+    searchQuery: FormControl<string | null>
+    featureToggleFilter: FormControl<boolean | null>
+    releaseToggleFilter: FormControl<boolean | null>
+    enabledFilter: FormControl<boolean | null>
+    disabledFilter: FormControl<boolean | null>
 }
 
 export interface IBusiness {
@@ -101,18 +101,16 @@ export interface ILoginReturn {
 
 export interface ISignUpReturn {
     success: boolean,
-    message : string,
+    message: string,
     errors: string[],
 }
 
 export interface IJwtPayload {
-    // {
-    //     "UserID": "d718ebff-72ea-4dd3-8142-bb359c67b823",
-    //     "IsAdmin": "True",
-    //     "nbf": 1733293622,
-    //     "exp": 1733336822,
-    //     : 1733293622,
-    //     "iss": "sample-issuer",
-    //     "aud": "sample-audience"
-    //   }
+    UserID: string,
+    IsAdmin: string,
+    nbf: number,
+    exp: number,
+    iat: number,
+    iss: string,
+    aud: string;
 }

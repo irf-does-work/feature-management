@@ -6,11 +6,11 @@
         <form [formGroup]="selectedFiltersForm" class="navbar-form navbar-left">
             <div class="d-flex">
                 <!-- Search Query Input -->
-                <input type="text" formControlName="searchQuery" class="form-control" placeholder="Search" />
+                <input type="text" formControlName="searchQuery" class="form-control rounded-4 search-div" placeholder="Search" />
 
                 <!-- Filter Dropdown -->
                 <div class="dropdown">
-                    <button type="button" class="btn btn-primary ms-3" id="dropdownMenuButton1"
+                    <button type="button" class="btn btn-primary ms-3 rounded-4" id="dropdownMenuButton1"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-filter"></i>
                     </button>
@@ -58,14 +58,14 @@
                                 </div>
                             </li>
                             <li class="text-center">
-                                <button type="button" class="btn btn-primary my-2" (click)="removeFilters()">
+                                <button type="button" class="btn btn-primary rounded-4 my-2 " (click)="removeFilters()">
                                     Remove Filters
                                 </button>
                             </li>
                         </div>
                     </ul>
                 </div>
-                <button type="button" class="btn btn-primary ms-3 w-25" (click)="applyFilters()">
+                <button type="button" class="btn btn-primary rounded-4 ms-3 w-25" (click)="applyFilters()">
                     Search Feature
                 </button>
             </div>

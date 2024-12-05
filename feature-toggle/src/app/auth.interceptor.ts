@@ -5,7 +5,7 @@ import { inject } from '@angular/core';
 import { tap } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
-  const authToken = localStorage.getItem(TOKEN_KEY);
+  const authToken :string | null = localStorage.getItem(TOKEN_KEY);
   const toastr = inject(ToastrService);
 
 
@@ -13,7 +13,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
     return next(req);
   }
 
-  const newRq = req.clone({
+  const newRq : HttpRequest<any>= req.clone({
     headers: req.headers.set('Authorization', `Bearer ${authToken}`),
   });
 
