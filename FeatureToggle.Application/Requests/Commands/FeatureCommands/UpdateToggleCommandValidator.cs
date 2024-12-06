@@ -2,9 +2,9 @@
 
 namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 {
-    public class DisableToggleCommandValidator : AbstractValidator<DisableToggleCommand>
+    public class UpdateToggleCommandValidator : AbstractValidator<UpdateToggleCommand>
     {
-        public DisableToggleCommandValidator() 
+        public UpdateToggleCommandValidator() 
         {
             RuleFor(x => x.UserId).NotEmpty();
             RuleFor(x => x.FeatureId).NotEmpty();
