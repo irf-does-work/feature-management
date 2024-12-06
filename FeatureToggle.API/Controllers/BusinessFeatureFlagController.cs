@@ -12,15 +12,17 @@ namespace FeatureToggle.API.Controllers
     public class BusinessFeatureFlagController(IMediator mediator) : ControllerBase
     {
         [HttpPost("toggle/enable")]
-        public async Task<int> EnableFeature(EnableToggleCommand command, CancellationToken cancellationToken = default) 
+        public async Task<int> EnableFeature(UpdateToggleCommand command, CancellationToken cancellationToken = default) 
         {
+            command.EnabledOrDisabled = true;
             return await mediator.Send(command, cancellationToken);
         }
 
         [Authorize(Policy = IdentityData.AdminUserPolicyName)]
         [HttpPost("toggle/disable")]
-        public async Task<int> DisableFeature(DisableToggleCommand command, CancellationToken cancellationToken = default)
+        public async Task<int> DisableFeature(UpdateToggleCommand command, CancellationToken cancellationToken = default)
         {
+            command.EnabledOrDisabled = false;
             return await mediator.Send(command, cancellationToken);
         }
     }
