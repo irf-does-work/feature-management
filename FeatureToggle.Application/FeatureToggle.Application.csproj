@@ -21,13 +21,13 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="FeatureToggle.Domain">
-      <HintPath>..\FeatureToggle.Domain\bin\Debug\net8.0\FeatureToggle.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="FeatureToggle.Infrastructure">
-      <HintPath>..\FeatureToggle.Infrastructure\bin\Debug\net8.0\FeatureToggle.Infrastructure.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\FeatureToggle.Domain\FeatureToggle.Domain.csproj" />
+		<ProjectReference Include="..\FeatureToggle.Infrastructure\FeatureToggle.Infrastructure.csproj" />
+	</ItemGroup>
+
 
 </Project>

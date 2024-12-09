@@ -4,6 +4,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a03e5ca9-e7a7-4609-82ec-d6cb1247071c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,19 +22,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="FeatureToggle.Application">
-      <HintPath>..\FeatureToggle.Application\bin\Debug\net8.0\FeatureToggle.Application.dll</HintPath>
-    </Reference>
-    <Reference Include="FeatureToggle.Domain">
-      <HintPath>..\FeatureToggle.Domain\bin\Debug\net8.0\FeatureToggle.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="FeatureToggle.Infrastructure">
-      <HintPath>..\FeatureToggle.Infrastructure\bin\Debug\net8.0\FeatureToggle.Infrastructure.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+ 
+
+	<ItemGroup>
+		<ProjectReference Include="..\FeatureToggle.Application\FeatureToggle.Application.csproj" />
+		<ProjectReference Include="..\FeatureToggle.Domain\FeatureToggle.Domain.csproj" />
+		<ProjectReference Include="..\FeatureToggle.Infrastructure\FeatureToggle.Infrastructure.csproj" />
+	</ItemGroup>
+
 
 </Project>
