@@ -1,4 +1,5 @@
-﻿using FeatureToggle.Application.Requests.Commands.LogCommands;
+﻿using FeatureToggle.Application.Events;
+using FeatureToggle.Application.Requests.Commands.LogCommands;
 using FeatureToggle.Domain.Entity.BusinessSchema;
 using FeatureToggle.Domain.Entity.Enum;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
@@ -8,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
 {
-    public class UpdateToggleCommandHandler(BusinessContext businessContext, FeatureManagementContext featureManagementContext, IMediator mediator) : IRequestHandler<UpdateToggleCommand, int>
+    public class UpdateToggleCommandHandler(BusinessContext businessContext,
+                                            FeatureManagementContext featureManagementContext,
+                                            IMediator mediator,
+                                            RabbitMQEventBus.RabbitMQPublisher eventBus) : IRequestHandler<UpdateToggleCommand, int>
     {
         public async Task<int> Handle(UpdateToggleCommand request, CancellationToken cancellationToken)
         {
@@ -41,6 +45,15 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         };
 
                         await mediator.Send(addLog, cancellationToken);
+
+                        var updateFeatureEvent = new UpdateFeatureEvent
+                        {
+                            FeatureId = request.FeatureId,
+                            BusinessId = null,
+                            Action = Actions.Enabled,
+                        };
+
+                        await eventBus.Publish("update.feature",updateFeatureEvent);
                         
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -63,6 +76,15 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         };
 
                         await mediator.Send(addLog, cancellationToken);
+
+                        var updateFeatureEvent = new UpdateFeatureEvent
+                        {
+                            FeatureId = request.FeatureId,
+                            BusinessId = null,
+                            Action = Actions.Enabled,
+                        };
+
+                        await eventBus.Publish("update.feature", updateFeatureEvent);
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
                     }
@@ -87,6 +109,15 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     };
 
                     await mediator.Send(addLog, cancellationToken);
+
+                    var updateFeatureEvent = new UpdateFeatureEvent
+                    {
+                        FeatureId = request.FeatureId,
+                        BusinessId = null,
+                        Action = Actions.Disabled,
+                    };
+
+                    await eventBus.Publish("update.feature", updateFeatureEvent);
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -125,6 +156,14 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         };
 
                         await mediator.Send(addLog, cancellationToken);
+                        var updateFeatureEvent = new UpdateFeatureEvent
+                        {
+                            FeatureId = request.FeatureId,
+                            BusinessId = request.BusinessId,
+                            Action = Actions.Enabled,
+                        };
+
+                        await eventBus.Publish("update.feature", updateFeatureEvent);   
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -149,6 +188,14 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         };
 
                         await mediator.Send(addLog, cancellationToken);
+                        var updateFeatureEvent = new UpdateFeatureEvent
+                        {
+                            FeatureId = request.FeatureId,
+                            BusinessId = request.BusinessId,
+                            Action = Actions.Enabled,
+                        };
+
+                        await eventBus.Publish("update.feature", updateFeatureEvent);
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -174,6 +221,14 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                     };
 
                     await mediator.Send(addLog, cancellationToken);
+                    var updateFeatureEvent = new UpdateFeatureEvent
+                    {
+                        FeatureId = request.FeatureId,
+                        BusinessId = request.BusinessId,
+                        Action = Actions.Disabled,
+                    };
+
+                    await eventBus.Publish("update.feature", updateFeatureEvent);
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
 

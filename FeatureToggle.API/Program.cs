@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using FeatureToggle.API.Identity;
+using FeatureToggle.Application.RabbitMQEventBus;
 using FeatureToggle.Application.Requests.Commands.UserCommands;
 using FeatureToggle.Domain.ConfigurationModels;
 using FeatureToggle.Domain.Entity.FeatureManagementSchema;
@@ -9,6 +10,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -23,7 +25,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddIdentityApiEndpoints<User>()
                 .AddEntityFrameworkStores<FeatureManagementContext>();
 
-///below used addidentity earlier
+
 builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<FeatureManagementContext>()
     .AddDefaultTokenProviders();
@@ -100,6 +102,14 @@ builder.Services.AddDbContext<BusinessContext>(x => x.UseSqlServer(builder.Confi
 builder.Services.AddMediatR(x =>
     x.RegisterServicesFromAssembly(Assembly.Load("FeatureToggle.Application"))
     );
+
+// Register IEventBus
+builder.Services.AddScoped<RabbitMQPublisher>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("RabbitMQ");
+    var brokerName = "FeatureToggleExchange"; 
+    return new RabbitMQPublisher(connectionString, brokerName);
+});
 
 var app = builder.Build();
 
