@@ -4,10 +4,10 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureStatus, FeatureType } from '../enum/feature.enum';
-import { IBusiness, IUpdateToggle, IselectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
-
-import { FeatureService } from '../feature.service';
+import { IBusiness, IUpdateToggle, ISelectedFilters, IPaginatedFeatures } from '../interface/feature.interface';
 import { ToastrService } from 'ngx-toastr';
+import { FeatureService } from '../services/feature.service';
+import { AuthService } from '../services/auth.service';
 
 
 
@@ -20,32 +20,13 @@ import { ToastrService } from 'ngx-toastr';
 })
 
 export class FeatureCardComponent {
-  isAdmin: number = 0;
+  isAdmin: boolean;
   currentUser: string | undefined;
   pageNumber: number = 0;
-  business: string | undefined;  // for displaying bussiness id in dialog
+  business: IBusiness | undefined;  // for displaying bussiness id in dialog
   isLoading: boolean = true;
-
-  constructor(
-    public dialog: MatDialog,
-    private featureService: FeatureService,
-    private toastr: ToastrService
-  ) {
-
-    //payload from jwt token
-    const payload = this.featureService.decodeToken();
-
-    payload.IsAdmin === "True" ? this.isAdmin = 1 : this.isAdmin = 0;
-
-    this.currentUser = payload.UserID
-  }
-
   featureTypeEnum = FeatureType;
   featureStatusEnum = FeatureStatus;
-
-
-
-  @Input() selectedFilters: IselectedFilters | null = null;
   paginatedfeatures: IPaginatedFeatures = {
     pageSize: 0,
     featureCount: 0,
@@ -53,9 +34,22 @@ export class FeatureCardComponent {
     featureList: []
   };
 
+  @Input() selectedFilters : ISelectedFilters | null = null
+  constructor(
+    public dialog: MatDialog,
+    private featureService: FeatureService,
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {
+
+    //payload from jwt token
+    this.isAdmin = this.authService.checkIsAdmin();
+    this.currentUser = this.authService.getUserId();
+
+  }
 
   ngOnChanges() {
-    if (this.selectedFilters) {
+     if (this.selectedFilters) {
       this.isLoading = true;
       this.pageNumber = 0;
       this.fetchFeatures();
@@ -65,9 +59,9 @@ export class FeatureCardComponent {
   fetchFeatures() {
     this.featureService.getFeatures(this.selectedFilters!, this.pageNumber).subscribe({
       next: (response) => {
-        
         this.paginatedfeatures = response;
         this.isLoading = false;
+        if(this.paginatedfeatures.featureCount === 0) this.toastr.warning("We couldn't find what you searched for","Sorry!");
       },
       error: (err) => {
         console.error('Error fetching features:', err);
@@ -97,20 +91,9 @@ export class FeatureCardComponent {
     }
   }
 
-
-
-
   openDialog(action: true | false, featureId: number): void {
-
-    const apiEndpoint = action === true
-      ? `/api/Business/Enable`
-      : `/api/Business/Disable`;
-
-
-    // Call the API to fetch businesses
-    this.featureService.getBusinesses(apiEndpoint, featureId).subscribe({
+    this.featureService.getBusinesses(action, featureId).subscribe({
       next: (response: IBusiness[]) => {
-        // Open the dialog with the fetched businesses
         const dialogRef = this.dialog.open(DialogComponent, {
           width: '20%',
           data: {
@@ -118,11 +101,9 @@ export class FeatureCardComponent {
           }
         });
 
-        // Handle dialog close
         dialogRef.afterClosed().subscribe((result: IBusiness | null) => {
           if (result) {
-            this.business = result.businessId;
-            this.update_Toggle(featureId, Number(result.businessId), action);
+            this.updateFeatureToggle(featureId, Number(result.businessId), action);
           }
         });
       },
@@ -134,23 +115,20 @@ export class FeatureCardComponent {
   }
 
 
-
-
-  update_Toggle(featureId: number, businessId: number | null, featureStatus: boolean) {
+  updateFeatureToggle(featureId: number, businessId: number | null, featureStatus: boolean) {
 
     const data: IUpdateToggle = {
       UserId: this.currentUser,
       featureId: featureId,
       businessId: businessId,
-      enableOrDisable: featureStatus == true ? true : false
-
     }
 
+    const enableOrDisable : string = featureStatus === true ? 'enable' : 'disable'
 
-    this.featureService.updateToggle(data).subscribe({
+    this.featureService.updateToggle(enableOrDisable,data).subscribe({
       next: (response: number) => {
         if (response === 1) {
-          if (data.enableOrDisable == true) {
+          if (featureStatus === true) {
 
             this.toastr.success('Update Successful', 'Feature Enabled')
           }
@@ -169,6 +147,5 @@ export class FeatureCardComponent {
       }
     });
   }
-
 
 }

@@ -10,9 +10,9 @@
   <div class="w-75 mx-5 my-3">
       <form class="navbar-form navbar-left ">
           <div class="d-flex">
-              <input type="text" class="form-control" placeholder="Enter Feature Name" name="searchQuery" [(ngModel)]="searchBarInput"/>
-              <button type="submit" (click)="resetPageNo();fetchPaginatedLog()" class="btn btn-primary ms-3 w-25">Search Feature</button>
-              <button (click)="downloadTrigger()" class="btn btn-primary ms-3 w-25">Download report</button>
+              <input type="text" class="form-control rounded-4" placeholder="Enter Feature Name" name="searchQuery" [(ngModel)]="searchBarInput"/>
+              <button type="submit" (click)="resetPageNo();fetchPaginatedLog()" class="btn btn-primary ms-3 w-25 rounded-4">Search Feature</button>
+              <button (click)="downloadTrigger()" class="btn btn-primary ms-3 w-25 rounded-4">Download report</button>
           </div>
       </form>
   </div>
@@ -28,11 +28,6 @@
     <ng-container matColumnDef="serialNo">
       <th mat-header-cell *matHeaderCellDef> No. </th>
       <td mat-cell *matCellDef="let element; let i = index"> {{ (this.dataSource.currentPage * this.dataSource.pageSize) + (i+1)}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="UserId">
-      <th mat-header-cell *matHeaderCellDef> User ID </th>
-      <td mat-cell *matCellDef="let element"> {{ element.userId }} </td>
     </ng-container>
 
     <ng-container matColumnDef="Username">
