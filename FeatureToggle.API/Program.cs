@@ -103,12 +103,14 @@ builder.Services.AddMediatR(x =>
     x.RegisterServicesFromAssembly(Assembly.Load("FeatureToggle.Application"))
     );
 
-// Register IEventBus
-builder.Services.AddScoped<RabbitMQPublisher>(sp =>
+builder.Services.AddSingleton<RabbitMQPublisher>(sp =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("RabbitMQ");
-    var brokerName = "FeatureToggleExchange"; 
-    return new RabbitMQPublisher(connectionString, brokerName);
+    string connectionString = builder.Configuration.GetConnectionString("RabbitMQ")!;
+    string exchangeName = "FeatureToggleExchange";
+
+    var publisher = new RabbitMQPublisher(exchangeName);
+    publisher.InitializeAsync(connectionString!).GetAwaiter().GetResult(); // Block on initialization
+    return publisher;
 });
 
 var app = builder.Build();

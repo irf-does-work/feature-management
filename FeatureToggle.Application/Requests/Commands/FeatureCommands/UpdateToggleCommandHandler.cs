@@ -53,7 +53,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             Action = Actions.Enabled,
                         };
 
-                        await eventBus.Publish("update.feature",updateFeatureEvent);
+                        await eventBus.Publish("feature.update",updateFeatureEvent);
                         
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -84,7 +84,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             Action = Actions.Enabled,
                         };
 
-                        await eventBus.Publish("update.feature", updateFeatureEvent);
+                        await eventBus.Publish("feature.update", updateFeatureEvent);
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
                     }
@@ -117,7 +117,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         Action = Actions.Disabled,
                     };
 
-                    await eventBus.Publish("update.feature", updateFeatureEvent);
+                    await eventBus.Publish("feature.update", updateFeatureEvent);
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -163,7 +163,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             Action = Actions.Enabled,
                         };
 
-                        await eventBus.Publish("update.feature", updateFeatureEvent);   
+                        await eventBus.Publish("feature.update", updateFeatureEvent);   
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -195,7 +195,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                             Action = Actions.Enabled,
                         };
 
-                        await eventBus.Publish("update.feature", updateFeatureEvent);
+                        await eventBus.Publish("feature.update", updateFeatureEvent);
 
                         return await businessContext.SaveChangesAsync(cancellationToken);
 
@@ -228,7 +228,7 @@ namespace FeatureToggle.Application.Requests.Commands.FeatureCommands
                         Action = Actions.Disabled,
                     };
 
-                    await eventBus.Publish("update.feature", updateFeatureEvent);
+                    await eventBus.Publish("feature.update", updateFeatureEvent);
 
                     return await businessContext.SaveChangesAsync(cancellationToken);
 
